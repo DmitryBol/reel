@@ -1,3 +1,4 @@
 print('hello world')
 print('1223')
-print('1177427')
+for i in '1488':
+    print(i)
