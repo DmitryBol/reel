@@ -1,0 +1,1 @@
+print("pomiluy gospodi")
