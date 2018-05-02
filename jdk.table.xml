@@ -1,23 +1,18 @@
 <application>
   <component name="ProjectJdkTable">
     <jdk version="2">
-      <name value="Python 3.6" />
+      <name value="Python 3.6 (untiteled)" />
       <type value="Python SDK" />
-      <version value="Python 3.6.1" />
-      <homePath value="C:\Users\milk1\Anaconda3\python.exe" />
+      <version value="Python 3.6.5" />
+      <homePath value="D:\Anaconda\envs\untiteled\python.exe" />
       <roots>
         <classPath>
           <root type="composite">
-            <root url="file://$USER_HOME$/Anaconda3/DLLs" type="simple" />
-            <root url="file://$USER_HOME$/Anaconda3/Lib" type="simple" />
-            <root url="file://$USER_HOME$/Anaconda3" type="simple" />
-            <root url="file://$USER_HOME$/Anaconda3/Lib/site-packages" type="simple" />
-            <root url="file://$USER_HOME$/Anaconda3/Lib/site-packages/Sphinx-1.5.6-py3.6.egg" type="simple" />
-            <root url="file://$USER_HOME$/Anaconda3/Lib/site-packages/win32" type="simple" />
-            <root url="file://$USER_HOME$/Anaconda3/Lib/site-packages/win32/lib" type="simple" />
-            <root url="file://$USER_HOME$/Anaconda3/Lib/site-packages/pythonwin" type="simple" />
-            <root url="jar://$USER_HOME$/Anaconda3/Lib/site-packages/setuptools-27.2.0-py3.6.egg!/" type="simple" />
-            <root url="file://$USER_HOME$/.PyCharmCE2018.1/system/python_stubs/1142023519" type="simple" />
+            <root url="file://D:/Anaconda/envs/untiteled/DLLs" type="simple" />
+            <root url="file://D:/Anaconda/envs/untiteled/Lib" type="simple" />
+            <root url="file://D:/Anaconda/envs/untiteled" type="simple" />
+            <root url="file://D:/Anaconda/envs/untiteled/Lib/site-packages" type="simple" />
+            <root url="file://$USER_HOME$/.PyCharmCE2018.1/system/python_stubs/1423088833" type="simple" />
             <root url="file://$APPLICATION_HOME_DIR$/helpers/python-skeletons" type="simple" />
             <root url="file://$APPLICATION_HOME_DIR$/helpers/typeshed/stdlib/3.6" type="simple" />
             <root url="file://$APPLICATION_HOME_DIR$/helpers/typeshed/stdlib/3.5" type="simple" />
@@ -33,7 +28,7 @@
           <root type="composite" />
         </sourcePath>
       </roots>
-      <additional />
+      <additional ASSOCIATED_PROJECT_PATH="D:/PyCharm/PycharmProjects/untiteled" />
     </jdk>
   </component>
 </application>
