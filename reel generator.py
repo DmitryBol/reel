@@ -1,27 +1,85 @@
 import random
 import json
-free = [10,1,1,1,1,1,1,1,1,1,1]#массивы частот
-base = [1,1,1,1,1,1,1,1,1,1,1]
+import copy
+import numpy as np
+import math
+
+h = 0.005
+def g(bag, available, length, reel, alpha):
+    for k in range(length):
+        probabilities = np.empty(available.size)
+        vse_horosho = False
+        available_in_bag = 0
+        for j in available:
+            available_in_bag += bag[j]
+        if(available_in_bag == 0):
+            ostatok = []
+            for i in range(len(bag)):
+                if(bag[i] > 0):
+                    for j in range(bag[i]):
+                        ostatok.append(names[i])
+            reel[k:] = ostatok
+            break
+        else:
+
+            temp = 0
+            for j in range(available.size):
+                temp += math.pow(bag[available[j]], alpha)
+                probabilities[j] = math.pow(bag[available[j]], alpha)
+            probabilities = probabilities/temp
+            r = random.random()
+            left = 0
+            number = ' '
+            for i in range(probabilities.size):
+                right = left + probabilities[i]
+                if(r <= right and r >= left):
+                    number = i
+                    break
+                left = right
+            bag[available[number]] -= 1
+            reel[k] = names[available[number]]
+            if(k == 0 or k == 1):
+                available = np.delete(available,number)
+            else:
+                available = np.arange(len(bag))
+                temp_1 = reel[k]
+                temp_2 = reel[k-1]
+                available = np.delete(available, [names.index(temp_1), names.index(temp_2)])
+            if(reel[0] != reel[length - 1] and reel[0] != reel[length - 2] and reel[1] != reel[length - 1]):
+                vse_horosho = True
+    result = [vse_horosho, reel]
+    return result
+
 
 class reel_generator(object):
     def __init__(self, array, names):
         tmp = []
         for i in range(len(array)):
             for j in range(array[i]):
-                tmp.append(names[i]['name'])
-        self.ReelStrip = tmp
-        reel_1 = tmp.copy()
+                tmp.append('empty')
+        reel_1 = copy.deepcopy(tmp)
         reel_2 = tmp.copy()
         reel_3 = tmp.copy()
         reel_4 = tmp.copy()
         reel_5 = tmp.copy()
         self.len = len(tmp)
-        random.shuffle(reel_1)
-        random.shuffle(reel_2)
-        random.shuffle(reel_3)
-        random.shuffle(reel_4)
-        random.shuffle(reel_5)
         self.reels = [reel_1, reel_2, reel_3, reel_4, reel_5]
+        for i in range(5):
+            alpha = 1
+            bag = copy.deepcopy(frequency)
+            available = np.arange(len(array))
+            tmp = g(bag, available, self.len, self.reels[i], alpha)
+            vse_horosho = tmp[0]
+            while(not vse_horosho):
+                bag = copy.deepcopy(frequency)
+                alpha += h
+                available = np.arange(len(array))
+                np.delete(available, [names.index(tmp[1][len(tmp[1]) - 1]),names.index(tmp[1][len(tmp[1]) - 2])])
+                tmp = g(bag, available, self.len, self.reels[i], alpha)
+                vse_horosho = tmp[0]
+            self.reels[i] = tmp[1]
+
+
 #конструктор принимает на вход два массива: 1ый - массив количества элементов, 2ой- их имена. Класс содержит список барабанов
 def print_game(test):
     for i in range(len(test.reels[0])):
@@ -32,91 +90,39 @@ def print_game(test):
         print(test.reels[4][i], end=(9 - len(test.reels[4][i]))*' ')
         print('\n')
 #распечатывает сгенерированные барабаны
-def counting_combinations(symbol_name, line_number, length_of_sequence, rules):
-    line = rules['lines'][line_number]
-    name = symbol_name
-    unique = list(set(line))
-    counter = 0
-    length = length_of_sequence
-    if(len(unique) == 1):
-        for j in range(game.len):
-            if(game.reels[0][j] == name):
-                print('on raw number our combination ', j)
-                tmp = 1
-                for k in range(1,length):
-                    if(game.reels[k][j] == name):
-                        tmp += 1
-                if(tmp == length):
-                    counter += 1
-                print(tmp, length)
-    if(len(unique) == 2):
-        if(line[0] == min(line)):
-            for j in range(game.len - 1):
-                if(game.reels[0][j] == name):
-                    tmp = 1
-                    for k in range(1,length):
-                        if(game.reels[k][j + line[k] - line[0]] == name):
-                            tmp += 1
-                    if(tmp == length):
-                        print('on raw number our combination', j)
-                        counter += 1
-        elif(line[0] == max(line)):
-            for j in range(1, game.len):
-                if(game.reels[0][j] == name):
-                    tmp = 1
-                    for k in range(1,length):
-                        if(game.reels[k][j + line[k] - line[0]] == name):
-                            tmp += 1
-                    if(tmp == length):
-                        print('on raw number our combination ', j)
-                        counter += 1
-    if(len(unique) == 3):
-        if(line[0] == min(line)):
-            for j in range(game.len - 2):
-                if(game.reels[0][j] == name):
-                    tmp = 1
-                    for k in range(1,length):
-                        if(game.reels[k][j + line[k] - line[0]] == name):
-                            tmp += 1
-                    if(tmp == length):
-                        print('on raw number our combination', j)
-                        counter += 1
-        elif(line[0] == max(line)):
-            for j in range(2, game.len):
-                if(game.reels[0][j] == name):
-                    tmp = 1
-                    for k in range(1,length):
-                        if(game.reels[k][j + line[k] - line[0]] == name):
-                            tmp += 1
-                    if(tmp == length):
-                        print('on raw number our combination ', j)
-                        counter += 1
-        else:
-            for j in range(1, game.len - 1):
-                if(game.reels[0][j] == name):
-                    tmp = 1
-                    for k in range(1,length):
-                        if(game.reels[k][j + line[k] - line[0]] == name):
-                            tmp += 1
-                    if(tmp == length):
-                        print('on raw number our combination ', j)
-                        counter += 1
-    print(line)
-    #print(unique)
-    return(counter)
-#первая переменная - строка, имя символа, вторая - номер линии, 3 - длина куска линии, 4 - структура полученная с помощью json
+
+def is_wild(a):
+    if(str(a) == 'Crown'):
+        return True
+    else:
+        return False
+
 
 
 f = open('Shining_Crown.txt', 'r')
 text = f.read()
 rules = json.loads(text)
 
-game = reel_generator(free, rules['symbol'])
+
+frequency = [3, 7, 3, 3, 2, 3, 4, 15, 3, 6, 3]
 
 
+names = []
+for i in range(len(rules['symbol'])):
+    names.append(rules['symbol'][i]['name'])
+
+
+game = reel_generator(frequency, names)
 
 print_game(game)
 
-counter = counting_combinations(rules['symbol'][0]['name'], 7, 3, rules)
 
-print('counter is ', counter)
+
+
+
+
+#print_game(game)
+
+#counter = counting_combinations(rules['symbol'][0]['name'], 7, 3, rules)
+
+#print('counter is ', counter)
