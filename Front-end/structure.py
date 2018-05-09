@@ -1,6 +1,18 @@
 import numpy as np
 
 
+def transsubst (i, arr, type, interim, vav):
+    if "substitute" in interim["symbol"][i][type]["wild"]:
+        for j in range(len(interim["symbol"][i][type]["wild"]["substitute"])):
+            for k in range(len(interim["symbol"])):
+                if interim["symbol"][i][type]["wild"]["substitute"][j] == interim["symbol"][k]["name"]:
+                    arr.append(k)
+    else:
+        for j in range(len(vav)):
+            if not vav[j].base.scatter:
+                arr.append(j)
+
+
 class Wild:
     def __init__(self, type, interim, i):
         if "multiplier" in interim["symbol"][i][type]["wild"]:
@@ -8,7 +20,7 @@ class Wild:
         else:
             self.multiplier = 1
         self.expand = interim["symbol"][i][type]["wild"].get("expand")
-
+        self.substitute = []
 
 
 class Gametype:
@@ -36,7 +48,10 @@ class Symbol:
         self.name = interim["symbol"][i]["name"]
         self.payment = interim["symbol"][i]["payment"]
         self.base = Gametype("base", interim, i)
-        self.free = Gametype("free", interim, i)
+        if "free" in interim["symbol"][i]:
+            self.free = Gametype("free", interim, i)
+        else:
+            self.free = Gametype("base", interim, i)
 
 
 class Game:
@@ -61,25 +76,73 @@ class Game:
         self.borders = interim.get("borders")
         self.weights = interim.get("weights")
 
+        # массив индексов неэкспандящихся вайлдов в базовой игре
         self.set_of_base_wilds = []
+        # массив индексов экспандящихся вайлдов в базовой игре
+        self.set_of_base_ewilds = []
+        # заполнение этих массивов
         for i in range(len(self.symbol)):
             if self.symbol[i].base.wild:
-                self.set_of_base_wilds.append(i)
+                if self.symbol[i].base.wild.expand:
+                    self.set_of_base_ewilds.append(i)
+                else:
+                    self.set_of_base_wilds.append(i)
 
+        # заполнение массива substitute для каждого вайлда из базовой игры
         for i in self.set_of_base_wilds:
-            self.symbol[i].base.wild.substitute = []
-            if "substitute" in interim["symbol"][i]["base"]["wild"]:
-                for j in range(len(interim["symbol"][i]["base"]["wild"]["substitute"])):
-                    for k in range(len(interim["symbol"])):
-                        if interim["symbol"][i]["base"]["wild"]["substitute"][j] == interim["symbol"][k]["name"]:
-                            self.symbol[i].base.wild.substitute.append(k)
-            else:
-                for j in range(len(self.symbol)):
-                    if not self.symbol[j].base.scatter:
-                        self.symbol[i].base.wild.substitute.append(j)
+            transsubst(i, self.symbol[i].base.wild.substitute, "base", interim, self.symbol)
 
+        for i in self.set_of_base_ewilds:
+            transsubst(i, self.symbol[i].base.wild.substitute, "base", interim, self.symbol)
+
+        # для каждого символа создание и заполнение массива индексов неэкспандящихся вайлдов, заменяющих данный символ
         for i in range(len(self.symbol)):
             self.symbol[i].base.substituted_by = []
             for j in self.set_of_base_wilds:
                 if i in self.symbol[j].base.wild.substitute:
                     self.symbol[i].base.substituted_by.append(j)
+
+        # для каждого символа создание и заполнение массива индексов экспандящихся вайлдов, заменяющих данный символ
+        for i in range(len(self.symbol)):
+            self.symbol[i].base.substituted_by_e = []
+            for j in self.set_of_base_ewilds:
+                if i in self.symbol[j].base.wild.substitute:
+                    self.symbol[i].base.substituted_by_e.append(j)
+
+        # массив индексов неэкспандящихся вайлдов в бесплатной игре
+        self.set_of_free_wilds = []
+        # массив индексов экспандящихся вайлдов в бесплатной игре
+        self.set_of_free_ewilds = []
+        # заполнение этих массивов
+        for i in range(len(self.symbol)):
+            if self.symbol[i].free.wild:
+                if self.symbol[i].free.wild.expand:
+                    self.set_of_free_ewilds.append(i)
+                else:
+                    self.set_of_free_wilds.append(i)
+
+        # заполнение массива substitute для каждого вайлда из бесплатной игры
+        for i in self.set_of_free_wilds:
+            if "free" in interim["symbol"][i]:
+                transsubst(i, self.symbol[i].free.wild.substitute, "free", interim, self.symbol)
+            else:
+                self.symbol[i].free.wild.substitute = self.symbol[i].base.wild.substitute
+        for i in self.set_of_free_ewilds:
+            if "free" in interim["symbol"][i]:
+                transsubst(i, self.symbol[i].free.wild.substitute, "free", interim, self.symbol)
+            else:
+                self.symbol[i].free.wild.substitute = self.symbol[i].base.wild.substitute
+
+        # для каждого символа создание и заполнение массива индексов неэкспандящихся вайлдов, заменяющих данный символ
+        for i in range(len(self.symbol)):
+            self.symbol[i].free.substituted_by = []
+            for j in self.set_of_free_wilds:
+                if i in self.symbol[j].free.wild.substitute:
+                    self.symbol[i].free.substituted_by.append(j)
+
+        # для каждого символа создание и заполнение массива индексов экспандящихся вайлдов, заменяющих данный символ
+        for i in range(len(self.symbol)):
+            self.symbol[i].free.substituted_by_e = []
+            for j in self.set_of_free_ewilds:
+                if i in self.symbol[j].free.wild.substitute:
+                    self.symbol[i].free.substituted_by_e.append(j)
