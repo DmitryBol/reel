@@ -28,9 +28,15 @@ class Gametype:
             self.direction = interim["symbol"][i][type].get("direction")
             self.position = interim["symbol"][i][type].get("position")
             if str(interim["symbol"][i][type].get("scatter")) == "0":
-                self.scatter = [0] * interim["window"][0]
+                self.scatter = [0] * (interim["window"][0] + 1)
             else:
-                self.scatter = interim["symbol"][i][type].get("scatter")
+                if interim["symbol"][i][type].get("scatter"):
+                    self.scatter = [0] * (interim["window"][0] + 1)
+                    for j in range(len(interim["symbol"][i][type]["scatter"])):
+                        self.scatter[interim["symbol"][i][type]["scatter"][j][0]] = interim["symbol"][i][type]["scatter"][j][1]
+                else:
+                    self.scatter = interim["symbol"][i][type].get("scatter")
+
             if "wild" in interim["symbol"][i][type]:
                 self.wild = Wild(type, interim, i)
             else:

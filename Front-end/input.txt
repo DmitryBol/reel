@@ -42,7 +42,8 @@
                 "position": [2, 3, 4],
                 "wild":
                 {
-                    "expand": true
+                    "expand": true,
+                    "substitute": ["Cherry", "Lemon", "Plum"]
                 }
             }
         },
@@ -60,7 +61,11 @@
             "base":
             {
                 "position": [1, 3, 5],
-                "scatter": 0
+                "scatter": [[3, 10], [5, 20]]
+            },
+            "free":
+            {
+                "position": []
             }
         }
     ],
