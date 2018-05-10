@@ -1,7 +1,7 @@
 import json
 import structure as Q
 
-file = open('input.txt', 'r')
+file = open('input3.txt', 'r')
 j = file.read()
 
 interim = json.loads(j)
@@ -21,6 +21,8 @@ for i in range(len(obj.symbol)):
         print("\t\t\tbase_wild_multiplier : ", obj.symbol[i].base.wild.multiplier)
         print("\t\t\tbase_wild_expand : ", obj.symbol[i].base.wild.expand)
         print("\t\t\tbase_wild_substitute : ", obj.symbol[i].base.wild.substitute)
+    else:
+        print("\t\tbase_wild : ", obj.symbol[i].base.wild)
     print("\t\tbase_substituted_by : ", obj.symbol[i].base.substituted_by)
     print("\t\tbase_substituted_by_e : ", obj.symbol[i].base.substituted_by_e)
     print("\tfree")
@@ -31,6 +33,8 @@ for i in range(len(obj.symbol)):
         print("\t\t\tfree_wild_multiplier : ", obj.symbol[i].free.wild.multiplier)
         print("\t\t\tfree_wild_expand : ", obj.symbol[i].free.wild.expand)
         print("\t\t\tfree_wild_substitute : ", obj.symbol[i].free.wild.substitute)
+    else:
+        print("\t\tfree_wild : ", obj.symbol[i].free.wild)
     print("\t\tfree_substituted_by : ", obj.symbol[i].free.substituted_by)
     print("\t\tfree_substituted_by_e : ", obj.symbol[i].free.substituted_by_e)
     print("_____________________________________________________________")

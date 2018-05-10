@@ -23,17 +23,23 @@ class Wild:
 
 
 class Gametype:
-    def __init__(self, type, interim, i):
+    def __init__(self, type, interim, i, w):
         self.substituted_by = []
         self.substituted_by_e = []
         if type in interim["symbol"][i]:
-            self.direction = interim["symbol"][i][type].get("direction")
-            self.position = interim["symbol"][i][type].get("position")
+            if "derection" in interim["symbol"][i][type]:
+                self.direction = interim["symbol"][i][type]["direction"]
+            else:
+                self.direction = "left"
+            if "position" in interim["symbol"][i][type]:
+                self.position = interim["symbol"][i][type]["position"]
+            else:
+                self.position = np.arange(1, w + 1, 1)
             if str(interim["symbol"][i][type].get("scatter")) == "0":
-                self.scatter = [0] * (interim["window"][0] + 1)
+                self.scatter = [0] * (w + 1)
             else:
                 if interim["symbol"][i][type].get("scatter"):
-                    self.scatter = [0] * (interim["window"][0] + 1)
+                    self.scatter = [0] * (w + 1)
                     for j in range(len(interim["symbol"][i][type]["scatter"])):
                         self.scatter[interim["symbol"][i][type]["scatter"][j][0]] = interim["symbol"][i][type]["scatter"][j][1]
                 else:
@@ -45,7 +51,7 @@ class Gametype:
                 self.wild = False
         else:
             self.direction = "left"
-            self.position = np.arange(1, interim["window"][0] + 1, 1)
+            self.position = np.arange(1, w + 1, 1)
             self.scatter = False
             self.wild = False
 
@@ -56,16 +62,19 @@ class Symbol:
         self.payment = [0]*(w+1)
         for j in range(len(interim["symbol"][i]["payment"])):
             self.payment[interim["symbol"][i]["payment"][j][0]] = interim["symbol"][i]["payment"][j][1]
-        self.base = Gametype("base", interim, i)
+        self.base = Gametype("base", interim, i, w)
         if "free" in interim["symbol"][i]:
-            self.free = Gametype("free", interim, i)
+            self.free = Gametype("free", interim, i, w)
         else:
-            self.free = Gametype("base", interim, i)
+            self.free = Gametype("base", interim, i, w)
 
 
 class Game:
     def __init__(self, interim):
-        self.window = interim["window"]
+        if "window" in interim:
+            self.window = interim["window"]
+        else:
+            self.window = [5, 3]
         self.symbol = [None] * len(interim["symbol"])
         for i in range(len(interim["symbol"])):
             self.symbol[i] = Symbol(interim, i, self.window[0])
@@ -79,7 +88,7 @@ class Game:
         if "distance" in interim:
             self.distance = interim["distance"]
         else:
-            self.distance = interim["window"][1]
+            self.distance = self.window[1]
         self.RTP = interim.get("RTP")
         self.volatility = interim.get("volatility")
         self.hitrate = interim.get("hitrate")
