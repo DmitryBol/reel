@@ -24,6 +24,8 @@ class Wild:
 
 class Gametype:
     def __init__(self, type, interim, i):
+        self.substituted_by = []
+        self.substituted_by_e = []
         if type in interim["symbol"][i]:
             self.direction = interim["symbol"][i][type].get("direction")
             self.position = interim["symbol"][i][type].get("position")
@@ -103,14 +105,14 @@ class Game:
 
         # для каждого символа создание и заполнение массива индексов неэкспандящихся вайлдов, заменяющих данный символ
         for i in range(len(self.symbol)):
-            self.symbol[i].base.substituted_by = []
+            # self.symbol[i].base.substituted_by = []
             for j in self.set_of_base_wilds:
                 if i in self.symbol[j].base.wild.substitute:
                     self.symbol[i].base.substituted_by.append(j)
 
         # для каждого символа создание и заполнение массива индексов экспандящихся вайлдов, заменяющих данный символ
         for i in range(len(self.symbol)):
-            self.symbol[i].base.substituted_by_e = []
+            # self.symbol[i].base.substituted_by_e = []
             for j in self.set_of_base_ewilds:
                 if i in self.symbol[j].base.wild.substitute:
                     self.symbol[i].base.substituted_by_e.append(j)
@@ -136,14 +138,14 @@ class Game:
 
         # для каждого символа создание и заполнение массива индексов неэкспандящихся вайлдов, заменяющих данный символ
         for i in range(len(self.symbol)):
-            self.symbol[i].free.substituted_by = []
+            # self.symbol[i].free.substituted_by = []
             for j in self.set_of_free_wilds:
                 if i in self.symbol[j].free.wild.substitute:
                     self.symbol[i].free.substituted_by.append(j)
 
         # для каждого символа создание и заполнение массива индексов экспандящихся вайлдов, заменяющих данный символ
         for i in range(len(self.symbol)):
-            self.symbol[i].free.substituted_by_e = []
+            # self.symbol[i].free.substituted_by_e = []
             for j in self.set_of_free_ewilds:
                 if i in self.symbol[j].free.wild.substitute:
                     self.symbol[i].free.substituted_by_e.append(j)
