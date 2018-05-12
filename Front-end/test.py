@@ -39,8 +39,8 @@ for i in range(len(obj.symbol)):
     print("\t\tfree_substituted_by_e : ", obj.symbol[i].free.substituted_by_e)
     print("_____________________________________________________________")
 
-for i in range(len(obj.lines)):
-    print("line ", i, " = ", obj.lines[i])
+for i in range(len(obj.line)):
+    print("line ", i, " = ", obj.line[i])
 
 print("free_multiplier = ", obj.free_multiplier)
 print("distance = ", obj.distance)

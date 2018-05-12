@@ -78,9 +78,9 @@ class Game:
         self.symbol = [None] * len(interim["symbol"])
         for i in range(len(interim["symbol"])):
             self.symbol[i] = Symbol(interim, i, self.window[0])
-        self.lines = []
+        self.line = []
         for i in range(len(interim["lines"])):
-            self.lines.append(interim["lines"][i])
+            self.line.append(interim["lines"][i])
         if "free_multiplier" in interim:
             self.free_multiplier = interim["free_multiplier"]
         else:
