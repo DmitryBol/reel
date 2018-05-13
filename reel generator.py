@@ -156,8 +156,7 @@ def more_expensive_combination(payment, wild_num, length, object):#возращ�
     possible_elements = object.symbol[wild_num].base.wild.substitute
     l = []
     for i in possible_elements:
-        for j in range(1, min(length + 1, object.window[0])):
-            l.append(object.symbol[i].payment[j])
+        l.append(object.symbol[i].payment[length])
     result = max(l)
     if(result > payment):
         return True
@@ -191,6 +190,9 @@ def count_combinations(game, line_num, element_num, length, obj):
                         if(v == j):
                             tmp += frequency[i][j]
             temp.append(tmp)
+        for i in range(object.window[0], object.window[0] + 2):
+            tmp = 0
+            temp.append(tmp)
         wild_alpha.append(temp)
     for v in expands:
         temp = []
@@ -204,7 +206,7 @@ def count_combinations(game, line_num, element_num, length, obj):
             temp.append(tmp)
         e_wild_alpha.append(temp)
 
-    line = obj.lines[line_num]
+    line = obj.line[line_num]
     element = obj.symbol[element_num].name
     for i in range(obj.window[0]):
         reel = i
@@ -234,8 +236,14 @@ def count_combinations(game, line_num, element_num, length, obj):
         n.append(1)
     tmp = 1
     for i in range(length):
-        tmp = tmp*(k[i] + w[i] + 3*e[i] - m[i])
-    tmp = tmp*(n[length] - k[length] - w[length] - 3*e[length] + m[length])
+        tmp2 = 0
+        for v in range(len(wilds)):
+            tmp2 += wild_alpha[v][i]
+        tmp = tmp*(k[i] + tmp2 + 3*e[i] - m[i])
+    tmp2 = 0
+    for v in range(len(wilds)):
+        tmp2 += wild_alpha[v][length]
+    tmp = tmp*(n[length] - k[length] - tmp2 - 3*e[length] + m[length])
     for i in range(length+1, obj.window[1]):
         tmp = tmp*n[i]
 
@@ -250,19 +258,36 @@ def count_combinations(game, line_num, element_num, length, obj):
     print('printing wild alpha', wild_alpha)
     print('printing expand wild alpha', e_wild_alpha)
     for l in range(len(wild_alpha)):
-        if(more_expensive_combination(payment, wilds[l], length, object)):
+
+        for j in range(1, length):
             tmp1 = 1
-            for j in range(length):
-                for i in range(j):
-                    tmp1 = tmp1*wild_alpha[l][i]
-                #tmp1 = tmp1*(k[j+1] + w[j+1] - wild_alpha[l][j+1] + 3*e[j+1] - m[j+1])
-                print('number = ', k[j+1] + w[j+1] - wild_alpha[l][j+1] + 3*e[j+1] - m[j+1])
-                '''for i in range(j+2, length):
-                    tmp1 = tmp1*(k[i] + w[i] + 3*e[i] - m[i])
-                tmp1 = tmp1*(n[length + 1] - k[length + 1] - w[length + 1] - 3*e[length + 1] + m[length +1])
-                for i in range(length + 2, object.window[0]):
-                    tmp1 = tmp1*n[i]'''
-            second += tmp1
+            for i in range(j):
+                tmp1 = tmp1*wild_alpha[l][i]
+            #print(tmp1)
+            tmp1 = tmp1*(k[j+1] + w[j+1] - wild_alpha[l][j+1] + 3*e[j+1] - m[j+1])
+            #print(tmp1)
+            #print('number = ', k[j+1] + w[j+1] - wild_alpha[l][j+1] + 3*e[j+1] - m[j+1])
+            for i in range(j+2, length + 1):
+                tmp1 = tmp1*(k[i] + w[i] + 3*e[i] - m[i])
+                #print('4islo = ', (k[i] + w[i] + 3*e[i] - m[i]))
+            #print(tmp1)
+            tmp1 = tmp1*(n[length + 1] - k[length + 1] - w[length + 1] - 3*e[length + 1] + m[length +1])
+            #print('eto gavno', n[length + 1] - k[length + 1] - w[length + 1] - 3*e[length + 1] + m[length +1])
+            for i in range(length + 2, object.window[0] + 2):
+                tmp1 = tmp1*n[i]
+            tmp1 = tmp1 * int(more_expensive_combination(payment, wilds[l], j, object))
+            #print(length, j, more_expensive_combination(payment, wilds[l], j, object) )
+        second += tmp1
+        tmp1 = 1
+        for i in range(length):
+            tmp1 = tmp1 * wild_alpha[l][i]
+        tmp1 = tmp1*(n[length + 1] - k[length + 1] - w[length +1] - 3*e[length+1] + m[length + 1])
+        for i in range(length + 2, object.window[0] + 2):
+            tmp1 = tmp1*n[i]
+        tmp1 = tmp1*more_expensive_combination(payment, wilds[l], length, object)
+        second += tmp1
+
+
     return(first, second)
 
 
@@ -292,7 +317,7 @@ game = reel_generator(frequency, object)
 print_game(game)
 
 element_number = 2
-length = 4
+length = 5
 
 print('element = ', object.symbol[element_number].name)
 
