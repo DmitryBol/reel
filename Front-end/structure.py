@@ -1,16 +1,23 @@
 import numpy as np
 import itertools
 
-def transsubst (i, arr, type, interim, vav):
+
+def transsubst (i, substitute, type, interim, everyone):
     if "substitute" in interim["symbol"][i][type]["wild"]:
+        substitute.append(i)
         for j in range(len(interim["symbol"][i][type]["wild"]["substitute"])):
             for k in range(len(interim["symbol"])):
                 if interim["symbol"][i][type]["wild"]["substitute"][j] == interim["symbol"][k]["name"]:
-                    arr.append(k)
+                    substitute.append(k)
     else:
-        for j in range(len(vav)):
-            if not vav[j].base.scatter:
-                arr.append(j)
+        if type == "base":
+            for j in range(len(everyone)):
+                if not everyone[j].base.scatter:
+                    substitute.append(j)
+        if type == "free":
+            for j in range(len(everyone)):
+                if not everyone[j].free.scatter:
+                    substitute.append(j)
 
 
 class Wild:
@@ -27,14 +34,15 @@ class Gametype:
         self.substituted_by = []
         self.substituted_by_e = []
         if type in interim["symbol"][i]:
-            if "derection" in interim["symbol"][i][type]:
+            if "direction" in interim["symbol"][i][type]:
                 self.direction = interim["symbol"][i][type]["direction"]
             else:
                 self.direction = "left"
             if "position" in interim["symbol"][i][type]:
-                self.position = interim["symbol"][i][type]["position"]
+                self.position = interim["symbol"][i][type]["position"][:]
+                self.position[:] = [x - 1 for x in self.position]
             else:
-                self.position = np.arange(1, w + 1, 1)
+                self.position = np.arange(0, w, 1)
             if str(interim["symbol"][i][type].get("scatter")) == "0":
                 self.scatter = [0] * (w + 1)
             else:
@@ -51,7 +59,7 @@ class Gametype:
                 self.wild = False
         else:
             self.direction = "left"
-            self.position = np.arange(1, w + 1, 1)
+            self.position = np.arange(0, w, 1)
             self.scatter = False
             self.wild = False
 
@@ -96,50 +104,62 @@ class Game:
         self.borders = interim.get("borders")
         self.weights = interim.get("weights")
 
+        # массив индексов скаттеров в базовой игре
+        self.base_scatterlist = []
+        # заполнение этого массива
+        for i in range(len(self.symbol)):
+            if self.symbol[i].base.scatter:
+                self.base_scatterlist.append(i)
+
+        # массив индексов скаттеров в бесплатной игре
+        self.free_scatterlist = []
+        # заполнение этого массива
+        for i in range(len(self.symbol)):
+            if self.symbol[i].free.scatter:
+                self.free_scatterlist.append(i)
+
         # массив индексов неэкспандящихся вайлдов в базовой игре
-        self.set_of_base_wilds = []
+        self.base_wildlist = []
         # массив индексов экспандящихся вайлдов в базовой игре
-        self.set_of_base_ewilds = []
+        self.base_ewildlist = []
         # заполнение этих массивов
         for i in range(len(self.symbol)):
             if self.symbol[i].base.wild:
                 if self.symbol[i].base.wild.expand:
-                    self.set_of_base_ewilds.append(i)
+                    self.base_ewildlist.append(i)
                 else:
-                    self.set_of_base_wilds.append(i)
+                    self.base_wildlist.append(i)
 
         # заполнение массива substitute для каждого вайлда из базовой игры
-        for i in itertools.chain(self.set_of_base_wilds, self.set_of_base_ewilds):
+        for i in itertools.chain(self.base_wildlist, self.base_ewildlist):
             transsubst(i, self.symbol[i].base.wild.substitute, "base", interim, self.symbol)
 
         # для каждого символа создание и заполнение массива индексов неэкспандящихся вайлдов, заменяющих данный символ
         for i in range(len(self.symbol)):
-            # self.symbol[i].base.substituted_by = []
-            for j in self.set_of_base_wilds:
-                if i in self.symbol[j].base.wild.substitute:
+            for j in self.base_wildlist:
+                if i in self.symbol[j].base.wild.substitute and i != j:
                     self.symbol[i].base.substituted_by.append(j)
 
         # для каждого символа создание и заполнение массива индексов экспандящихся вайлдов, заменяющих данный символ
         for i in range(len(self.symbol)):
-            # self.symbol[i].base.substituted_by_e = []
-            for j in self.set_of_base_ewilds:
-                if i in self.symbol[j].base.wild.substitute:
+            for j in self.base_ewildlist:
+                if i in self.symbol[j].base.wild.substitute and i != j:
                     self.symbol[i].base.substituted_by_e.append(j)
 
         # массив индексов неэкспандящихся вайлдов в бесплатной игре
-        self.set_of_free_wilds = []
+        self.free_wildlist = []
         # массив индексов экспандящихся вайлдов в бесплатной игре
-        self.set_of_free_ewilds = []
+        self.free_ewildlist = []
         # заполнение этих массивов
         for i in range(len(self.symbol)):
             if self.symbol[i].free.wild:
                 if self.symbol[i].free.wild.expand:
-                    self.set_of_free_ewilds.append(i)
+                    self.free_ewildlist.append(i)
                 else:
-                    self.set_of_free_wilds.append(i)
+                    self.free_wildlist.append(i)
 
         # заполнение массива substitute для каждого вайлда из бесплатной игры
-        for i in itertools.chain(self.set_of_free_wilds, self.set_of_free_ewilds):
+        for i in itertools.chain(self.free_wildlist, self.free_ewildlist):
             if "free" in interim["symbol"][i]:
                 transsubst(i, self.symbol[i].free.wild.substitute, "free", interim, self.symbol)
             else:
@@ -148,13 +168,36 @@ class Game:
         # для каждого символа создание и заполнение массива индексов неэкспандящихся вайлдов, заменяющих данный символ
         for i in range(len(self.symbol)):
             # self.symbol[i].free.substituted_by = []
-            for j in self.set_of_free_wilds:
-                if i in self.symbol[j].free.wild.substitute:
+            for j in self.free_wildlist:
+                if i in self.symbol[j].free.wild.substitute and i != j:
                     self.symbol[i].free.substituted_by.append(j)
 
         # для каждого символа создание и заполнение массива индексов экспандящихся вайлдов, заменяющих данный символ
         for i in range(len(self.symbol)):
             # self.symbol[i].free.substituted_by_e = []
-            for j in self.set_of_free_ewilds:
-                if i in self.symbol[j].free.wild.substitute:
+            for j in self.free_ewildlist:
+                if i in self.symbol[j].free.wild.substitute and i != j:
                     self.symbol[i].free.substituted_by_e.append(j)
+
+    def combination_value(self, i, comb, type):
+        if type == "base":
+            return self.symbol[i].payment[comb]
+        if type == "free":
+            return self.symbol[i].payment[comb] * self.free_multiplier
+
+    def combination_freespins(self, i, comb, type):
+        if type == "base":
+            return self.symbol[i].base.scatter[comb]
+        if type == "free":
+            return self.symbol[i].free.scatter[comb]
+
+    def freemean(self):
+        s = 0
+        v = 0
+        for i in range(len(self.symbol)):
+            for comb in range(1, self.window[0] + 1):
+                s = s + count_combination(game, line, self.symbol[i], comb, names) * self.symbol[i].payment[comb]
+        for i in itertools.chain(self.base_scatterlist, self.free_scatterlist):
+            for comb in range(1, self.window[0] + 1):
+                v = v + count_combination(game, line, self.symbol[i], comb, names) * self.symbol[i].free.scatter[comb]
+        return s * 1.0 / (1 - v)

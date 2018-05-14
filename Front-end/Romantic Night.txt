@@ -32,6 +32,7 @@
             {
                 "wild":
                 {
+                    "substitute": ["A"]
                 }
             },
             "free":

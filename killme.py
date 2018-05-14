@@ -3,7 +3,10 @@ import sys
 sys.path.insert(0, 'Front-end/')
 import structure as Q
 print("pomiluy gospodi")
-
+A = [1, 2, 3, 4]
+print(A)
+A[:] = [x - 1 for x in A]
+print(A)
 j = """{"kill": "me"}"""
 
 sas = json.loads(j)
