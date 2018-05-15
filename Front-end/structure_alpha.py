@@ -7,7 +7,7 @@ def sought(dictionary, string):
     K = list(dictionary.keys())[:]
     for i in range(len(K)):
         prob = re.compile(K[i], re.IGNORECASE)
-        if prob.search(string):
+        if prob.match(string) or prob.match(string + 's'):
             return dictionary[K[i]]
     return None
 
@@ -15,42 +15,42 @@ def sought(dictionary, string):
 class Wild:
     def __init__(self, interim, type, i):
         self.multiplier = 1
-        if "multiplier" in interim["symbol"][i][type]["wild"]:
-            self.multiplier = interim["symbol"][i][type]["wild"]["multiplier"]
-        self.expand = interim["symbol"][i][type]["wild"].get("expand")
+        if sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'multiplier'):
+            self.multiplier = sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'multiplier')
+        self.expand = sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'expand')
         self.substitute = []
 
 
 class Symbol:
     def __init__(self, interim, type, i, w):
-        self.name = interim["symbol"][i]["name"]
+        self.name = sought(sought(interim, 'symbol')[i], 'name')
         self.payment = [0]*(w+1)
-        for j in range(len(interim["symbol"][i]["payment"])):
-            self.payment[interim["symbol"][i]["payment"][j][0]] = interim["symbol"][i]["payment"][j][1]
+        for j in range(len(sought(sought(interim, 'symbol')[i], 'payment'))):
+            self.payment[sought(sought(interim, 'symbol')[i], 'payment')[j][0]] = sought(sought(interim, 'symbol')[i], 'payment')[j][1]
 
         self.substituted_by = []
         self.substituted_by_e = []
-        if type in interim["symbol"][i]:
-            if "direction" in interim["symbol"][i][type]:
-                self.direction = interim["symbol"][i][type]["direction"]
+        if sought(sought(interim, 'symbol')[i], type):
+            if sought(sought(sought(interim, 'symbol')[i], type), 'direction'):
+                self.direction = sought(sought(sought(interim, 'symbol')[i], type), 'direction')
             else:
                 self.direction = "left"
-            if "position" in interim["symbol"][i][type]:
-                self.position = interim["symbol"][i][type]["position"][:]
+            if sought(sought(sought(interim, 'symbol')[i], type), 'position'):
+                self.position = sought(sought(sought(interim, 'symbol')[i], type), 'position')[:]
                 self.position[:] = [x - 1 for x in self.position]
             else:
                 self.position = np.arange(0, w, 1)
-            if str(interim["symbol"][i][type].get("scatter")) == "0":
+            if str(sought(sought(sought(interim, 'symbol')[i], type), 'scatter')) == "0":
                 self.scatter = [0] * (w + 1)
             else:
-                if interim["symbol"][i][type].get("scatter"):
+                if sought(sought(sought(interim, 'symbol')[i], type), 'scatter'):
                     self.scatter = [0] * (w + 1)
-                    for j in range(len(interim["symbol"][i][type]["scatter"])):
-                        self.scatter[interim["symbol"][i][type]["scatter"][j][0]] = interim["symbol"][i][type]["scatter"][j][1]
+                    for j in range(len(sought(sought(sought(interim, 'symbol')[i], type), 'scatter'))):
+                        self.scatter[sought(sought(sought(interim, 'symbol')[i], type), 'scatter')[j][0]] = sought(sought(sought(interim, 'symbol')[i], type), 'scatter')[j][1]
                 else:
-                    self.scatter = interim["symbol"][i][type].get("scatter")
+                    self.scatter = sought(sought(sought(interim, 'symbol')[i], type), 'scatter')
 
-            if "wild" in interim["symbol"][i][type]:
+            if sought(sought(sought(interim, 'symbol')[i], type), 'wild'):
                 self.wild = Wild(interim, type, i)
             else:
                 self.wild = False
@@ -63,12 +63,16 @@ class Symbol:
 
 class Gametype:
     def __init__(self, interim, type, w):
-        self.symbol = [None] * len(interim["symbol"])
-        for i in range(len(interim["symbol"])):
-            if type in interim["symbol"][i]:
-                self.symbol[i] = Symbol(interim, type, i, w)
-            else:
-                self.symbol[i] = Symbol(interim, 'base', i, w)
+        if sought(interim, 'symbol'):
+            self.symbol = [None] * len(sought(interim, 'symbol'))
+            for i in range(len(sought(interim, 'symbol'))):
+                if sought(sought(interim, 'symbol')[i], type):
+                    self.symbol[i] = Symbol(interim, type, i, w)
+                else:
+                    self.symbol[i] = Symbol(interim, 'base', i, w)
+        else:
+            raise Exception('Field "symbol" is not found in json file.')
+
         self.wildlist = []
         self.ewildlist = []
         self.scatterlist = []
@@ -87,11 +91,11 @@ class Gametype:
                 self.scatterlist.append(i)
 
     def transsubst(self, interim, type, i):
-        if "substitute" in interim["symbol"][i][type]["wild"]:
+        if sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute'):
             self.symbol[i].wild.substitute.append(i)
-            for j in range(len(interim["symbol"][i][type]["wild"]["substitute"])):
-                for k in range(len(interim["symbol"])):
-                    if interim["symbol"][i][type]["wild"]["substitute"][j] == interim["symbol"][k]["name"]:
+            for j in range(len(sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute'))):
+                for k in range(len(sought(interim, 'symbol'))):
+                    if sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute')[j] == sought(sought(interim, 'symbol')[k], 'name'):
                         self.symbol[i].wild.substitute.append(k)
         else:
             for j in range(len(self.symbol)):
@@ -123,32 +127,35 @@ class Gametype:
 class Game:
     def __init__(self, interim):
 
-        if "window" in interim:
-            self.window = interim["window"][:]
+        if sought(interim, 'window'):
+            self.window = sought(interim, 'window')[:]
         else:
             self.window = [5, 3]
 
         self.base = Gametype(interim, 'base', self.window[0])
         self.free = Gametype(interim, 'free', self.window[0])
 
-        self.line = interim["lines"][:]
+        if sought(interim, 'line'):
+            self.line = sought(interim, 'line')[:]
+        else:
+            raise Exception('Field "line" is not found in json file.')
 
-        if "free_multiplier" in interim:
-            self.free_multiplier = interim["free_multiplier"]
+        if sought(interim, 'free_multiplier'):
+            self.free_multiplier = sought(interim, 'free_multiplier')
         else:
             self.free_multiplier = 1
 
-        if "distance" in interim:
-            self.distance = interim["distance"]
+        if sought(interim, 'distance'):
+            self.distance = sought(interim, 'distance')
         else:
             self.distance = self.window[1]
 
-        self.RTP = interim.get("RTP")
-        self.volatility = interim.get("volatility")
-        self.hitrate = interim.get("hitrate")
-        self.baseRTP = interim.get("baseRTP")
-        self.borders = interim.get("borders")
-        self.weights = interim.get("weights")
+        self.RTP = sought(interim, 'RTP')
+        self.volatility = sought(interim, 'volatility')
+        self.hitrate = sought(interim, 'hitrate')
+        self.baseRTP = sought(interim, 'baseRTP')
+        self.borders = sought(interim, 'border')
+        self.weights = sought(interim, 'weight')
 
         self.base.wildlists()
         self.base.scatterlists()
@@ -162,7 +169,7 @@ class Game:
 
         # заполнение массива substitute для каждого вайлда из бесплатной игры
         for i in itertools.chain(self.free.wildlist, self.free.ewildlist):
-            if "free" in interim["symbol"][i]:
+            if sought(sought(interim, 'symbol')[i], 'free'):
                 self.free.transsubst(interim, 'free', i)
             else:
                 self.free.symbol[i].wild.substitute = self.base.symbol[i].wild.substitute
