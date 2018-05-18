@@ -4,7 +4,7 @@ import structure_alpha as A
 
 file = open('DiStORteD.txt', 'r')
 j = file.read()
-file2 = open('Shining Crown.txt', 'r')
+file2 = open('Romantic Night.txt', 'r')
 h = file2.read()
 
 interim = json.loads(j)

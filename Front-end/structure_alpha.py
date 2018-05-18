@@ -3,7 +3,8 @@ import itertools
 import re
 import sys
 sys.path.insert(0, '/')
-import reel generator as rg
+#import reel generator as rg
+
 
 def sought(dictionary, string):
     K = list(dictionary.keys())[:]
@@ -17,9 +18,12 @@ def sought(dictionary, string):
 class Wild:
     def __init__(self, interim, type, i):
         self.multiplier = 1
-        if sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'multiplier'):
-            self.multiplier = sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'multiplier')
-        self.expand = sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'expand')
+        if sought(sought(sought(interim, 'symbol')[i], type), 'wild'):
+            if sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'multiplier'):
+                self.multiplier = sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'multiplier')
+            self.expand = sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'expand')
+        else:
+            self.expand = False
         self.substitute = []
 
 
@@ -52,7 +56,7 @@ class Symbol:
                 else:
                     self.scatter = sought(sought(sought(interim, 'symbol')[i], type), 'scatter')
 
-            if sought(sought(sought(interim, 'symbol')[i], type), 'wild'):
+            if str(sought(sought(sought(interim, 'symbol')[i], type), 'wild')) != 'None':
                 self.wild = Wild(interim, type, i)
             else:
                 self.wild = False
@@ -93,16 +97,17 @@ class Gametype:
                 self.scatterlist.append(i)
 
     def transsubst(self, interim, type, i):
-        if sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute'):
-            self.symbol[i].wild.substitute.append(i)
-            for j in range(len(sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute'))):
-                for k in range(len(sought(interim, 'symbol'))):
-                    if sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute')[j] == sought(sought(interim, 'symbol')[k], 'name'):
-                        self.symbol[i].wild.substitute.append(k)
-        else:
-            for j in range(len(self.symbol)):
-                if not self.symbol[j].scatter:
-                    self.symbol[i].wild.substitute.append(j)
+        if sought(sought(sought(interim, 'symbol')[i], type), 'wild'):
+            if sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute'):
+                self.symbol[i].wild.substitute.append(i)
+                for j in range(len(sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute'))):
+                    for k in range(len(sought(interim, 'symbol'))):
+                        if sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute')[j] == sought(sought(interim, 'symbol')[k], 'name'):
+                            self.symbol[i].wild.substitute.append(k)
+            else:
+                for j in range(len(self.symbol)):
+                    if not self.symbol[j].scatter:
+                        self.symbol[i].wild.substitute.append(j)
 
     def substituted_by(self):
         for i in range(len(self.symbol)):
@@ -187,6 +192,7 @@ class Game:
 
         # для каждого символа создание и заполнение массива индексов экспандящихся вайлдов, заменяющих данный символ
         self.free.substituted_by_e()
+
     def all_combinations(self, reel):
         c = 1
         for i in range(len(reel)):
