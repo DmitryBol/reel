@@ -3,7 +3,7 @@ import itertools
 import re
 import sys
 sys.path.insert(0, '/')
-#rg = __import__("reel generator")
+rg = __import__("reel generator")
 
 
 def sought(dictionary, string):
@@ -204,11 +204,11 @@ class Game:
         v = 0
         for i in range(len(self.free.symbol)):
             for comb in range(1, self.window[0] + 1):
-                s = s + (rg.count_combination(game, line, self.free.symbol[i], comb, self) / self.all_combinations(game)) \
+                s = s + (rg.count_combination(game, line, i, comb, self) / self.all_combinations(game)) \
                     * self.free.combination_value(i, comb) * self.free_multiplier
         for i in self.free.scatterlist:
             for comb in range(1, self.window[0] + 1):
-                v = v + (rg.count_combination(game, line, self.free.symbol[i], comb, self) / self.all_combinations(game)) * self.free.combination_freespins(i, comb)
+                v = v + (rg.count_combination(game, line, i, comb, self) / self.all_combinations(game)) * self.free.combination_freespins(i, comb)
         return s * 1.0 / (1 - v)
 
     def RTP(self, game, line):
@@ -223,7 +223,7 @@ class Game:
         s = 0
         for i in range(len(self.base.symbol)):
             for comb in range(1, self.window[0] + 1):
-                s = s + (rg.count_combination(game, line, self.free.symbol[i], comb, self) / self.all_combinations(game)) * (
+                s = s + (rg.count_combination(game, line, i, comb, self) / self.all_combinations(game)) * (
                             self.base.combination_value(i, comb) + self.base.combination_freespins(i, comb) * self.freemean(game, line))**2
         return np.sqrt(s - self.RTP()**2)
 
@@ -232,12 +232,12 @@ class Game:
         for i in self.base.scatterlist:
             for comb in range(len(self.base.symbol[i].scatter)):
                 if self.base.symbol[i].scatter[comb] > 0:
-                    s = s + rg.count_combination(game, line, self.free.symbol[i], comb, self)
+                    s = s + rg.count_combination(game, line, i, comb, self)
         return s / self.all_combinations(game)
 
     def baseRTP(self, game, line):
         s = 0
         for i in range(len(self.base.symbol)):
             for comb in range(1, self.window[0] + 1):
-                s = s + (rg.count_combination(game, line, self.free.symbol[i], comb, self) / self.all_combinations(game)) * self.base.combination_value(i, comb)
+                s = s + (rg.count_combination(game, line, i, comb, self) / self.all_combinations(game)) * self.base.combination_value(i, comb)
         return s
