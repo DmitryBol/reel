@@ -224,8 +224,7 @@ class Game:
         for i in range(len(self.base.symbol)):
             for comb in range(1, self.window[0] + 1):
                 s = s + (rg.count_combination(game, line, self.free.symbol[i], comb, self) / self.all_combinations(game)) * (
-                            self.base.combination_value(i, comb) + self.base.combination_freespins(i,
-                                                                                                   comb) * self.freemean(game, line))**2
+                            self.base.combination_value(i, comb) + self.base.combination_freespins(i, comb) * self.freemean(game, line))**2
         return np.sqrt(s - self.RTP()**2)
 
     def hitrate(self, game, line):

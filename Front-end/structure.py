@@ -179,25 +179,62 @@ class Game:
                 if i in self.symbol[j].free.wild.substitute and i != j:
                     self.symbol[i].free.substituted_by_e.append(j)
 
-    def combination_value(self, i, comb, type):
-        if type == "base":
-            return self.symbol[i].payment[comb]
-        if type == "free":
-            return self.symbol[i].payment[comb] * self.free_multiplier
+        self.base_scatterlist = []
+        self.free_scatterlist = []
 
-    def combination_freespins(self, i, comb, type):
-        if type == "base":
-            return self.symbol[i].base.scatter[comb]
-        if type == "free":
-            return self.symbol[i].free.scatter[comb]
+        for i in range(len(self.symbol)):
+            if self.symbol[i].base.scatter:
+                self.base_scatterlist.append(i)
 
-    def freemean(self):
+        for i in range(len(self.symbol)):
+            if self.symbol[i].free.scatter:
+                self.free_scatterlist.append(i)
+
+    def all_combinations(self, game):
+        c = 1
+        for i in range(len(game.reels)):
+            c = c * len(game.reels[i])
+        return c
+
+    def freemean(self, game, line):
         s = 0
         v = 0
         for i in range(len(self.symbol)):
             for comb in range(1, self.window[0] + 1):
-                s = s + count_combination(game, line, self.symbol[i], comb, names) * self.symbol[i].payment[comb]
-        for i in itertools.chain(self.base_scatterlist, self.free_scatterlist):
+                s = s + (rg.count_combination(game, line, i, comb, self) / self.all_combinations(game)) \
+                    * self.symbol[i].payment[comb] * self.free_multiplier
+        for i in self.free_scatterlist:
             for comb in range(1, self.window[0] + 1):
-                v = v + count_combination(game, line, self.symbol[i], comb, names) * self.symbol[i].free.scatter[comb]
+                v = v + (rg.count_combination(game, line, i, comb, self) / self.all_combinations(game)) * self.symbol[i].free.scatter[comb]
         return s * 1.0 / (1 - v)
+
+    def RTP(self, game, line):
+        s = 0
+        for i in range(len(self.symbol)):
+            for comb in range(1, self.window[0] + 1):
+                s = s + (rg.count_combination(game, line, i, comb, self) / self.all_combinations(game)) \
+                    * (self.symbol[i].payment[comb] + self.symbol[i].base.scatter[comb] * self.freemean(game, line))
+        return s
+
+    def volatility(self, game, line):
+        s = 0
+        for i in range(len(self.symbol)):
+            for comb in range(1, self.window[0] + 1):
+                s = s + (rg.count_combination(game, line, i, comb, self) / self.all_combinations(game)) * (
+                        self.symbol[i].payment[comb] + self.symbol[i].base.scatter[comb] * self.freemean(game, line))**2
+        return np.sqrt(s - self.RTP()**2)
+
+    def hitrate(self, game, line):
+        s = 0
+        for i in self.base_scatterlist:
+            for comb in range(len(self.symbol[i].base.scatter)):
+                if self.symbol[i].base.scatter[comb] > 0:
+                    s = s + rg.count_combination(game, line, i, comb, self)
+        return s / self.all_combinations(game)
+
+    def baseRTP(self, game, line):
+        s = 0
+        for i in range(len(self.symbol)):
+            for comb in range(1, self.window[0] + 1):
+                s = s + (rg.count_combination(game, line, i, comb, self) / self.all_combinations(game)) * self.symbol[i].payment[comb]
+        return s
