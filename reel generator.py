@@ -5,8 +5,21 @@ import copy
 import numpy as np
 import math
 
+
+
 sys.path.insert(0, 'Front-end/')
 import structure
+import support
+
+
+def plus(a, b, l, sup):
+    temp = a + b
+    result = np.zeros(l)
+    add = 0
+    for i in range(l-1, -1, -1):
+        result[i] = (temp[i] + add)%sup
+        add = (temp[i] + add)//sup
+    return(result)
 
 h = 0.005
 def g(bag, available, length, reel, alpha, names):
@@ -106,32 +119,11 @@ def is_expand_wild(a):
         return False
 
 
-def count_killed(reel, game, line, element, d):#старая версия функции ниже
-    m = 0
-    for i in range(len(game.reels[reel])):
-        if(line[reel] == 1):
-            if(game.reels[reel][i].name == element):#здесь еще нужна проверка на wild - or is_wild(game.reels[reel][i])
-                if(game.reels[reel][(i + 1) % len(game.reels[reel])].base.wild != False and game.reels[reel][(i + 1) % len(game.reels[reel])].base.wild.expand == True):
-                    m += 1
-                elif(game.reels[reel][(i + 2) % len(game.reels[reel])].base.wild != False and game.reels[reel][(i + 2) % len(game.reels[reel])].base.wild.expand == True):
-                    m += 1
-        elif(line[reel] == 2):
-            if(game.reels[reel][i].name == element):#здесь еще нужна проверка на wild - or is_wild(game.reels[reel][i])
-                if(game.reels[reel][(i + 1) % len(game.reels[reel])].base.wild != False and game.reels[reel][(i + 1) % len(game.reels[reel])].base.wild.expand == True):
-                    m += 1
-                elif(game.reels[reel][(i - 1) % len(game.reels[reel])].base.wild != False and game.reels[reel][(i - 1) % len(game.reels[reel])].base.wild.expand == True):
-                    m += 1
-        elif(line[reel] == 3):
-            if(game.reels[reel][i].name == element):#здесь еще нужна проверка на wild - or is_wild(game.reels[reel][i])
-                if(game.reels[reel][(i - 1) % len(game.reels[reel])].base.wild != False and game.reels[reel][(i - 1) % len(game.reels[reel])].base.wild.expand == True):
-                    m += 1
-                elif(game.reels[reel][(i - 2) % len(game.reels[reel])].base.wild != False and game.reels[reel][(i - 2) % len(game.reels[reel])].base.wild.expand == True):
-                    m += 1
-    return(m)
 
 
 def count_killed_2(reel, game, line, element, d):
     m = 0
+
     for i in range(len(game.reels[reel])):
         if(game.reels[reel][i].name == element):#здесь еще нужна проверка на wild - or is_wild(game.reels[reel][i])
             is_upper = False
@@ -152,16 +144,6 @@ def count_killed_2(reel, game, line, element, d):
 def payment_for_combination(element_num, length, obj):
     return(obj.symbol[element_num].payment[length])
 
-def more_expensive_combination(payment, wild_num, length, object):#возращает True если из length wild_num можно составить комбинацию длины <= length с большей выплатой чем length подрядя element_num, иначе - False
-    possible_elements = object.symbol[wild_num].base.wild.substitute
-    l = []
-    for i in possible_elements:
-        l.append(object.symbol[i].payment[length])
-    result = max(l)
-    if(result > payment):
-        return True
-    else:
-        return False
 
 
 
@@ -176,6 +158,7 @@ def count_combinations(game, line_num, element_num, length, obj):
     names = []
     wilds = obj.symbol[element_num].base.substituted_by
     expands = obj.symbol[element_num].base.substituted_by_e
+    #print('Expands ', expands)
     wild_alpha = []
     e_wild_alpha = []
     for i in obj.symbol:
@@ -205,8 +188,30 @@ def count_combinations(game, line_num, element_num, length, obj):
                             tmp += frequency[i][j]
             temp.append(tmp)
         e_wild_alpha.append(temp)
+    bad = []
+    for i in range(len(obj.symbol)):
+        if( i != element_num):
+            if(obj.symbol[i].base.wild == False):
+                bad.append(i)
+            elif(element_num not in obj.symbol[i].base.wild.substitute):
+                bad.append(i)
+    bad_m = []
+
+
+
+
 
     line = obj.line[line_num]
+
+    for j in range(len(bad)):
+        temp = []
+        badElem = obj.symbol[bad[j]].name
+        for i in range(obj.window[0]):
+            reel = i
+            temp.append(count_killed_2(reel, game, line, badElem, obj.window[1]))
+        bad_m.append(temp)
+
+
     element = obj.symbol[element_num].name
     for i in range(obj.window[0]):
         reel = i
@@ -218,7 +223,7 @@ def count_combinations(game, line_num, element_num, length, obj):
                 if(obj.symbol[j].base.wild.expand != True):
                     if(element_num in obj.symbol[j].base.wild.substitute):
                         tmp += frequency[i][j]
-        w.append(tmp)#в shining crown нет обычных wild
+        w.append(tmp)
         n.append(len(game.reels[i]))
         tmp = 0
         for j in range(len(obj.symbol)):
@@ -227,7 +232,7 @@ def count_combinations(game, line_num, element_num, length, obj):
                     if(element_num in obj.symbol[j].base.wild.substitute):
                         tmp += frequency[i][j]
         e.append(tmp)
-        m.append(count_killed_2(reel, game, line, element, 3))
+        m.append(count_killed_2(reel, game, line, element, obj.window[1]))
     for i in range(2):
         k.append(0)
         w.append(0)
@@ -244,92 +249,151 @@ def count_combinations(game, line_num, element_num, length, obj):
     for v in range(len(wilds)):
         tmp2 += wild_alpha[v][length]
     tmp = tmp*(n[length] - k[length] - tmp2 - 3*e[length] + m[length])
-    for i in range(length+1, obj.window[1]):
+    for i in range(length+1, obj.window[0]):
         tmp = tmp*n[i]
 
-    print(k, w, e, m,  n)
-    print(line)
+    #print(k, w, e, m,  n)
+    #print(line)
     payment = payment_for_combination(element_num, length, obj)
-    print('payment for combination',payment)
-
-
+    #print('payment for combination',payment)
     first = tmp
-    second = 0
-    print('printing wild alpha', wild_alpha)
-    print('printing expand wild alpha', e_wild_alpha)
-    for l in range(len(wild_alpha)):
 
-        for j in range(1, length):
-            tmp1 = 1
-            for i in range(j):
-                tmp1 = tmp1*wild_alpha[l][i]
-            #print(tmp1)
-            tmp1 = tmp1*(k[j+1] + w[j+1] - wild_alpha[l][j+1] + 3*e[j+1] - m[j+1])
-            #print(tmp1)
-            #print('number = ', k[j+1] + w[j+1] - wild_alpha[l][j+1] + 3*e[j+1] - m[j+1])
-            for i in range(j+2, length + 1):
-                tmp1 = tmp1*(k[i] + w[i] + 3*e[i] - m[i])
-                #print('4islo = ', (k[i] + w[i] + 3*e[i] - m[i]))
-            #print(tmp1)
-            tmp1 = tmp1*(n[length + 1] - k[length + 1] - w[length + 1] - 3*e[length + 1] + m[length +1])
-            #print('eto gavno', n[length + 1] - k[length + 1] - w[length + 1] - 3*e[length + 1] + m[length +1])
-            for i in range(length + 2, object.window[0] + 2):
-                tmp1 = tmp1*n[i]
-            tmp1 = tmp1 * int(more_expensive_combination(payment, wilds[l], j, object))
-            #print(length, j, more_expensive_combination(payment, wilds[l], j, object) )
-        second += tmp1
-        tmp1 = 1
-        for i in range(length):
-            tmp1 = tmp1 * wild_alpha[l][i]
-        tmp1 = tmp1*(n[length + 1] - k[length + 1] - w[length +1] - 3*e[length+1] + m[length + 1])
-        for i in range(length + 2, object.window[0] + 2):
-            tmp1 = tmp1*n[i]
-        tmp1 = tmp1*more_expensive_combination(payment, wilds[l], length, object)
-        second += tmp1
+    #print('printing wild alpha', wild_alpha)#список частот wilds
+    #print('printing expand wild alpha', e_wild_alpha)# список частот expand wild
 
 
-    return(first, second)
 
 
-f = open('Front-end/input2.txt', 'r')
+    alls = len(obj.symbol)
+    combinations = support.combinations2(obj.window[0], bad, alls, wilds, length)
+    #print('combinations \n', combinations)
+    sec = 0
+    for i in range(len(combinations)):
+        subst = obj.symbol[int(combinations[i,0])].base.wild.substitute
+        subst_l = []
+        for j in range(len(subst)):
+            tmp = 1
+            for p in range(1, length):
+                if(obj.symbol[int(combinations[i,p])].base.wild != False):
+                    if(subst[j] in obj.symbol[int(combinations[i,p])].base.wild.substitute):
+                        tmp += 1
+                else:
+                    if(subst[j] == int(combinations[i,p])):
+                        tmp += 1
+            subst_l.append(tmp)
+        #print('combinations', combinations[i, ])
+        #print('subst', subst)
+        #print('subst length', subst_l)
+        payments = []
+        for j in range(len(subst)):
+           # if(obj.symbol[subst[j]].payment[subst_l[j]] > payment):
+            payments.append(obj.symbol[subst[j]].payment[subst_l[j]])
+        if(max(payments) > payment):
+            tmp = 1
+            j = payments.index(max(payments))
+            for p in range(length):
+                tmp = tmp*wild_alpha[wilds.index(int(combinations[i,p]))][p]
+            tmp2 = 1
+            if(length < obj.window[0]):
+                tmp2 = (frequency[length][int(combinations[i,length])] - bad_m[bad.index(int(combinations[i,length]))][length])
+            tmp = tmp2*tmp
+            tmp2 = 1
+            for p in range(length + 1, object.window[0]):
+                tmp2 = tmp2*frequency[p][int(combinations[i,p])]
+            tmp = tmp*tmp2
+            #print(tmp)
+            sec += tmp
+            #print(subst[j],subst_l[j], obj.symbol[subst[j]].payment[subst_l[j]])
+        #print('tmp', tmp)
+        #print('sec', sec)
+
+    #print(combinations[0:64, ])
+    combinations = support.combinations2(obj.window[0], bad, alls, expands, length)
+    #print('combinations \n', combinations)
+    third = 0
+    for i in range(len(combinations)):
+        subst = obj.symbol[int(combinations[i,0])].base.wild.substitute
+        subst_l = []
+        for j in range(len(subst)):
+            tmp = 1
+            for p in range(1, length):
+                if(obj.symbol[int(combinations[i,p])].base.wild != False):
+                    if(subst[j] in obj.symbol[int(combinations[i,p])].base.wild.substitute):
+                        tmp += 1
+                else:
+                    if(subst[j] == int(combinations[i,p])):
+                        tmp += 1
+            subst_l.append(tmp)
+        payments = []
+        for j in range(len(subst)):
+            # if(obj.symbol[subst[j]].payment[subst_l[j]] > payment):
+            payments.append(obj.symbol[subst[j]].payment[subst_l[j]])
+        if(max(payments) > payment):
+            tmp = 1
+            for p in range(length):
+                tmp = 3*tmp*e_wild_alpha[expands.index(int(combinations[i,p]))][p]
+            tmp2 = 1
+            if(length < obj.window[0]):
+                tmp2 = (frequency[length][int(combinations[i,length])] - bad_m[bad.index(int(combinations[i,length]))][length])
+            tmp = tmp2*tmp
+            tmp2 = 1
+            for p in range(length + 1, object.window[0]):
+                tmp2 = tmp2*frequency[p][int(combinations[i,p])]
+            tmp = tmp*tmp2
+            #print('tmp is ', tmp)
+            third += tmp
+
+
+
+
+
+    #print('bad ', bad)
+    #print('bad m ', bad_m)
+    #print('expands ', expands)
+    return(first - sec - third)
+
+
+f = open('Front-end/input1.txt', 'r')
 text = f.read()
 rules = json.loads(text)
 object = structure.Game(rules)
 
-#frequency_1 = [3, 5, 3, 3, 2, 3, 4, 2, 0, 1, 3]
-#frequency_2 = [3, 5, 3, 3, 2, 3, 4, 2, 2, 1, 0]
-#frequency_3 = [3, 5, 3, 3, 2, 3, 4, 2, 3, 1, 3]
-#frequency_4 = [3, 5, 3, 3, 2, 3, 4, 2, 4, 1, 0]
-#frequency_5 = [3, 5, 3, 3, 2, 3, 4, 2, 0, 1, 3]
+frequency_1 = [3, 5, 3, 3, 2, 3, 4, 2, 0, 1, 3]
+frequency_2 = [3, 5, 3, 3, 2, 3, 4, 2, 2, 1, 0]
+frequency_3 = [3, 5, 3, 3, 2, 3, 4, 2, 3, 1, 3]
+frequency_4 = [3, 5, 3, 3, 2, 3, 4, 2, 4, 1, 0]
+frequency_5 = [3, 5, 3, 3, 2, 3, 4, 2, 0, 1, 3]
 
 
 
-frequency_1 = [3, 5, 3, 3, 2, 3, 4, 2]
-frequency_2 = [3, 5, 3, 3, 2, 3, 4, 2]
-frequency_3 = [3, 5, 3, 3, 2, 3, 4, 2]
-frequency_4 = [3, 5, 3, 3, 2, 3, 4, 2]
-frequency_5 = [3, 5, 3, 3, 2, 3, 4, 2]
+#frequency_1 = [3, 5, 3, 3, 2, 3, 4, 2]
+#frequency_2 = [3, 5, 3, 3, 2, 3, 4, 2]
+#frequency_3 = [3, 5, 3, 3, 2, 3, 4, 2]
+#frequency_4 = [3, 5, 3, 3, 2, 3, 4, 2]
+#frequency_5 = [3, 5, 3, 3, 2, 3, 4, 2]
 
 frequency = [frequency_1, frequency_2, frequency_3, frequency_4, frequency_5]
 
 game = reel_generator(frequency, object)
 
-print_game(game)
+#print_game(game)
 
-element_number = 2
-length = 5
-
-print('element = ', object.symbol[element_number].name)
-
-print(count_combinations(game, 3, element_number, length, object))
-
-print(object.symbol[2].base.substituted_by_e)
-print(object.set_of_base_ewilds)
+element_number = 0
+length = 1
+line = 3
 
 
-payment = payment_for_combination(element_number, length, object)
-print('is there more expensive combination ', more_expensive_combination(payment, 6, length, object))
-print(object.symbol[6].payment[length])
+#print('element = ', object.symbol[element_number].name)
+
+print(count_combinations(game, line, element_number, length, object))
+
+#print(object.symbol[element_number].base.substituted_by_e)
+#print(object.set_of_base_ewilds)
+
+
+#payment = payment_for_combination(element_number, length, object)
+
+#print(object.symbol[8].payment[length])
 
 
 
