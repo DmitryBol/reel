@@ -3,7 +3,7 @@ import itertools
 import re
 import sys
 sys.path.insert(0, '/')
-#import reel generator as rg
+#rg = __import__("reel generator")
 
 
 def sought(dictionary, string):
@@ -193,52 +193,52 @@ class Game:
         # для каждого символа создание и заполнение массива индексов экспандящихся вайлдов, заменяющих данный символ
         self.free.substituted_by_e()
 
-    def all_combinations(self, reel):
+    def all_combinations(self, game):
         c = 1
-        for i in range(len(reel)):
-            c = c * len(reel[i])
+        for i in range(len(game.reels)):
+            c = c * len(game.reels[i])
         return c
 
-    def freemean(self):
+    def freemean(self, game, line):
         s = 0
         v = 0
         for i in range(len(self.free.symbol)):
             for comb in range(1, self.window[0] + 1):
-                s = s + (rg.count_combination(game, line, self.free.symbol[i], comb, names) / self.all_combinations(reel)) \
+                s = s + (rg.count_combination(game, line, self.free.symbol[i], comb, self) / self.all_combinations(game)) \
                     * self.free.combination_value(i, comb) * self.free_multiplier
         for i in self.free.scatterlist:
             for comb in range(1, self.window[0] + 1):
-                v = v + (rg.count_combination(game, line, self.free.symbol[i], comb, names) / self.all_combinations(reel)) * self.free.combination_freespins(i, comb)
+                v = v + (rg.count_combination(game, line, self.free.symbol[i], comb, self) / self.all_combinations(game)) * self.free.combination_freespins(i, comb)
         return s * 1.0 / (1 - v)
 
-    def RTP(self):
+    def RTP(self, game, line):
         s = 0
         for i in range(len(self.base.symbol)):
             for comb in range(1, self.window[0] + 1):
-                s = s + (rg.count_combination(game, line, self.free.symbol[i], comb, names) / self.all_combinations(reel)) \
-                    * (self.base.combination_value(i, comb) + self.base.combination_freespins(i, comb) * freemean())
+                s = s + (rg.count_combination(game, line, i, comb, self) / self.all_combinations(game)) \
+                    * (self.base.combination_value(i, comb) + self.base.combination_freespins(i, comb) * self.freemean(game, line))
         return s
 
-    def volatility(self):
+    def volatility(self, game, line):
         s = 0
         for i in range(len(self.base.symbol)):
             for comb in range(1, self.window[0] + 1):
-                s = s + (rg.count_combination(game, line, self.free.symbol[i], comb, names) / self.all_combinations(reel)) * (
+                s = s + (rg.count_combination(game, line, self.free.symbol[i], comb, self) / self.all_combinations(game)) * (
                             self.base.combination_value(i, comb) + self.base.combination_freespins(i,
-                                                                                                   comb) * freemean())**2
+                                                                                                   comb) * self.freemean(game, line))**2
         return np.sqrt(s - self.RTP()**2)
 
-    def hitrate(self):
+    def hitrate(self, game, line):
         s = 0
         for i in self.base.scatterlist:
             for comb in range(len(self.base.symbol[i].scatter)):
                 if self.base.symbol[i].scatter[comb] > 0:
-                    s = s + rg.count_combination(game, line, self.free.symbol[i], comb, names)
-        return s / self.all_combinations(reel)
+                    s = s + rg.count_combination(game, line, self.free.symbol[i], comb, self)
+        return s / self.all_combinations(game)
 
-    def baseRTP(self):
+    def baseRTP(self, game, line):
         s = 0
         for i in range(len(self.base.symbol)):
             for comb in range(1, self.window[0] + 1):
-                s = s + (rg.count_combination(game, line, self.free.symbol[i], comb, names) / self.all_combinations(reel)) * self.base.combination_value(i, comb)
+                s = s + (rg.count_combination(game, line, self.free.symbol[i], comb, self) / self.all_combinations(game)) * self.base.combination_value(i, comb)
         return s

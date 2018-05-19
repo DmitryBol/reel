@@ -1,7 +1,9 @@
 import numpy as np
 import itertools
 import re
-
+import sys
+sys.path.insert(0, '/')
+rg = __import__("reel generator")
 
 def sought(dictionary, string):
     K = list(dictionary.keys())[:]
@@ -179,36 +181,53 @@ class Game:
         # для каждого символа создание и заполнение массива индексов экспандящихся вайлдов, заменяющих данный символ
         self.free.substituted_by_e()
 
+    def all_combinations(self, reel):
+        c = 1
+        for i in range(len(reel)):
+            c = c * len(reel[i])
+        return c
+
     def freemean(self):
         s = 0
         v = 0
         for i in range(len(self.free.symbol)):
             for comb in range(1, self.window[0] + 1):
-                s = s + count_combination(game, line, self.free.symbol[i], comb, names) * self.free.combination_value(i, comb) * self.free_multiplier
+                s = s + (rg.count_combination(game, line, self.free.symbol[i], comb, names) / self.all_combinations(reel)) \
+                    * self.free.combination_value(i, comb) * self.free_multiplier
         for i in self.free.scatterlist:
             for comb in range(1, self.window[0] + 1):
-                v = v + count_combination(game, line, self.base.symbol[i], comb, names) * self.free.combination_freespins(i, comb)
+                v = v + (rg.count_combination(game, line, self.free.symbol[i], comb, names) / self.all_combinations(reel)) * self.free.combination_freespins(i, comb)
         return s * 1.0 / (1 - v)
 
     def RTP(self):
         s = 0
         for i in range(len(self.base.symbol)):
             for comb in range(1, self.window[0] + 1):
-                s = s + count_combination(game, line, self.base.symbol[i], comb, names) * (self.base.combination_value(i, comb) + self.base.combination_freespins(i, comb) * freemean())
+                s = s + (rg.count_combination(game, line, self.free.symbol[i], comb, names) / self.all_combinations(reel)) \
+                    * (self.base.combination_value(i, comb) + self.base.combination_freespins(i, comb) * freemean())
         return s
 
     def volatility(self):
         s = 0
         for i in range(len(self.base.symbol)):
             for comb in range(1, self.window[0] + 1):
-                s = s + count_combination(game, line, self.base.symbol[i], comb, names) * (
+                s = s + (rg.count_combination(game, line, self.free.symbol[i], comb, names) / self.all_combinations(reel)) * (
                             self.base.combination_value(i, comb) + self.base.combination_freespins(i,
                                                                                                    comb) * freemean())**2
         return np.sqrt(s - self.RTP()**2)
+
+    def hitrate(self):
+        s = 0
+        for i in self.base.scatterlist:
+            for comb in range(len(self.base.symbol[i].scatter)):
+                if self.base.symbol[i].scatter[comb] > 0:
+                    s = s + rg.count_combination(game, line, self.free.symbol[i], comb, names)
+        return s / self.all_combinations(reel)
 
     def baseRTP(self):
         s = 0
         for i in range(len(self.base.symbol)):
             for comb in range(1, self.window[0] + 1):
-                s = s + count_combination(game, line, self.base.symbol[i], comb, names) * self.base.combination_value(i, comb)
+                s = s + (rg.count_combination(game, line, self.free.symbol[i], comb, names) / self.all_combinations(reel)) * self.base.combination_value(i, comb)
         return s
+
