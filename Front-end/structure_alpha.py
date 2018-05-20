@@ -30,7 +30,7 @@ class Wild:
 class Symbol:
     def __init__(self, interim, type, i, w):
         self.name = sought(sought(interim, 'symbol')[i], 'name')
-        self.payment = [0]*(w+1)
+        self.payment = [0] * (w + 1)
         for j in range(len(sought(sought(interim, 'symbol')[i], 'payment'))):
             self.payment[sought(sought(interim, 'symbol')[i], 'payment')[j][0]] = sought(sought(interim, 'symbol')[i], 'payment')[j][1]
 
@@ -82,6 +82,8 @@ class Gametype:
         self.wildlist = []
         self.ewildlist = []
         self.scatterlist = []
+        self.num_comb = np.zeros((len(self.symbol), w + 1))
+        self.reel = [] * w
 
     def wildlists(self):
         for i in range(len(self.symbol)):

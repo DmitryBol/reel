@@ -328,20 +328,36 @@ def count_combinations(game, line_num, element_num, length, obj, frequency):
         for j in range(len(subst)):
             # if(obj.symbol[subst[j]].payment[subst_l[j]] > payment):
             payments.append(obj.base.symbol[subst[j]].payment[subst_l[j]])
-        if(max(payments) > payment):
-            tmp = 1
-            for p in range(length):
-                tmp = 3*tmp*e_wild_alpha[expands.index(int(combinations[i,p]))][p]
-            tmp2 = 1
-            if(length < obj.window[0]):
-                tmp2 = (frequency[length][int(combinations[i,length])] - bad_m[bad.index(int(combinations[i,length]))][length])
-            tmp = tmp2*tmp
-            tmp2 = 1
-            for p in range(length + 1, object.window[0]):
-                tmp2 = tmp2*frequency[p][int(combinations[i,p])]
-            tmp = tmp*tmp2
-            #print('tmp is ', tmp)
-            third += tmp
+        if(obj.base.symbol[element_num].wild == False):
+            if(max(payments) > payment):
+                tmp = 1
+                for p in range(length):
+                    tmp = 3*tmp*e_wild_alpha[expands.index(int(combinations[i,p]))][p]
+                tmp2 = 1
+                if(length < obj.window[0]):
+                    tmp2 = (frequency[length][int(combinations[i,length])] - bad_m[bad.index(int(combinations[i,length]))][length])
+                tmp = tmp2*tmp
+                tmp2 = 1
+                for p in range(length + 1, object.window[0]):
+                    tmp2 = tmp2*frequency[p][int(combinations[i,p])]
+                tmp = tmp*tmp2
+                #print('tmp is ', tmp)
+                third += tmp
+        else:
+            if(max(payments) >= payment):
+                tmp = 1
+                for p in range(length):
+                    tmp = 3*tmp*e_wild_alpha[expands.index(int(combinations[i,p]))][p]
+                tmp2 = 1
+                if(length < obj.window[0]):
+                    tmp2 = (frequency[length][int(combinations[i,length])] - bad_m[bad.index(int(combinations[i,length]))][length])
+                tmp = tmp2*tmp
+                tmp2 = 1
+                for p in range(length + 1, object.window[0]):
+                    tmp2 = tmp2*frequency[p][int(combinations[i,p])]
+                tmp = tmp*tmp2
+                #print('tmp is ', tmp)
+                third += tmp
 
 
 
@@ -350,6 +366,7 @@ def count_combinations(game, line_num, element_num, length, obj, frequency):
     #print('bad ', bad)
     #print('bad m ', bad_m)
     #print('expands ', expands)
+    print('second = ', sec)
     return(first - sec - third)
 
 
@@ -367,11 +384,11 @@ def count_combinations(game, line_num, element_num, length, obj, frequency):
 
 
 
-frequency_1 = [3, 5, 3, 3, 2, 3, 4, 2, 1, 1, 1, 1, 1]
-frequency_2 = [3, 5, 3, 3, 2, 3, 4, 2, 1, 1, 1, 1, 1]
-frequency_3 = [3, 5, 3, 3, 2, 3, 4, 2, 1, 1, 1, 1, 1]
-frequency_4 = [3, 5, 3, 3, 2, 3, 4, 2, 1, 1, 1, 1, 1]
-frequency_5 = [3, 5, 3, 3, 2, 3, 4, 2, 1, 1, 1, 1, 1]
+#frequency_1 = [3, 5, 3, 3, 2, 3, 4, 2, 1, 1, 1, 1, 1]
+#frequency_2 = [3, 5, 3, 3, 2, 3, 4, 2, 1, 1, 1, 1, 1]
+#frequency_3 = [3, 5, 3, 3, 2, 3, 4, 2, 1, 1, 1, 1, 1]
+#frequency_4 = [3, 5, 3, 3, 2, 3, 4, 2, 1, 1, 1, 1, 1]
+#frequency_5 = [3, 5, 3, 3, 2, 3, 4, 2, 1, 1, 1, 1, 1]
 
 #frequency = [frequency_1, frequency_2, frequency_3, frequency_4, frequency_5]
 
