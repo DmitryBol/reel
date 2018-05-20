@@ -14,11 +14,11 @@ interim = json.loads(j)
 obj = Q.Game(interim)
 
 
-frequency_1 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16]
-frequency_2 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16]
-frequency_3 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16]
-frequency_4 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16]
-frequency_5 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16]
+frequency_1 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16, 4]
+frequency_2 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16, 4]
+frequency_3 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16, 4]
+frequency_4 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16, 4]
+frequency_5 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16, 4]
 
 frequency = [frequency_1, frequency_2, frequency_3, frequency_4, frequency_5]
 
