@@ -97,7 +97,7 @@ class Gametype:
                 self.scatterlist.append(i)
 
     def transsubst(self, interim, type, i):
-        if sought(sought(sought(interim, 'symbol')[i], type), 'wild'):
+        if str(sought(sought(sought(interim, 'symbol')[i], type), 'wild')) != None:
             if sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute'):
                 self.symbol[i].wild.substitute.append(i)
                 for j in range(len(sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute'))):
