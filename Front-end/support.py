@@ -1,7 +1,7 @@
 import numpy as np
 import math
 import random
-
+import pandas
 
 # noinspection SpellCheckingInspection
 def plus_1(a, b, alls):
@@ -15,7 +15,53 @@ def plus_1(a, b, alls):
     return result
 
 
-def combinations2(width, numbers):
+def super_plus(array, possible_symbols):
+    width = len(possible_symbols)
+    add = np.zeros((1, width))
+    add[0, width - 1] = 1
+    temp = array + add
+    res = np.zeros((1, width))
+    ost = 0
+    for i in range(width - 1, -1, -1):
+        res[0, i] = (temp[0, i] + ost) % len(possible_symbols[i])
+        ost = (temp[0, i] + ost) // len(possible_symbols[i])
+    return res
+
+
+# noinspection SpellCheckingInspection
+def combinations2(gametype, width, numbers):
+
+    combs = np.zeros((1, width))
+    for symbol_index in range(len(gametype.symbol)):
+        for index in range(len(gametype.symbol[symbol_index].payment)):
+            if gametype.symbol[symbol_index].payment[index] > 0:
+                possible_symbols = [[] for i in range(width)]
+                for j in range(index):
+                    possible_symbols[j].append(symbol_index)
+                    for subs in gametype.symbol[symbol_index].substituted_by:
+                        possible_symbols[j].append(subs)
+                for j in range(index, width):
+                    for s1 in range(len(gametype.symbol)):
+                        possible_symbols[j].append(s1)
+                for j in range(width):
+                    possible_symbols[j].sort()
+                big_len = 1
+                for j in range(width):
+                    big_len = big_len * len(possible_symbols[j])
+                possible_combs = np.zeros((big_len, width))
+                for j in range(1, big_len):
+                    possible_combs[j] = super_plus(possible_combs[j - 1], possible_symbols)
+                for i in range(big_len):
+                    for j in range(width):
+                        possible_combs[i, j] = possible_symbols[j][int(possible_combs[i, j])]
+                combs = np.concatenate((combs, possible_combs), axis=0)
+    data = pandas.DataFrame(combs)
+    data = data.drop_duplicates()
+    data.to_csv('data.txt')
+    return data.values
+
+
+'''
     combs = np.zeros((numbers ** width, width))
     neutral = np.zeros(width)
     neutral[len(neutral) - 1] = 1
@@ -24,7 +70,7 @@ def combinations2(width, numbers):
         combs[i, ] = temp
         temp = plus_1(temp, neutral, numbers)
     return combs
-
+'''
 
 # noinspection SpellCheckingInspection,PyChainedComparisons
 def g(bag, available, length, reel, alpha, names):

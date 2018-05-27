@@ -1,7 +1,7 @@
 import copy
 import numpy as np
 import math
-import support
+support = __import__("support")
 
 h = 0.005
 
@@ -149,7 +149,7 @@ def get_simple_combination(self, string, width):
 
 def fill_num_comb(self, window, lines):
     self.num_comb = np.zeros((len(self.symbol), window[0] + 1))
-    combinations = support.combinations2(window[0], len(self.symbol))
+    combinations = support.combinations2(self, window[0], len(self.symbol))
     count_combinations2(self, combinations, window, lines)
 
 
@@ -167,10 +167,13 @@ def count_combinations2(self, combinations, window, lines):
             self.num_comb[scat, int(sum(flag))] += res_cnt
     temp = -1
 
+    print(len(combinations))
+
+
     for string in combinations:
-        if string[0] != temp:
-            print(string)
-            temp += 1
+        #if string[0] != temp:
+        #    print(string)
+        #    temp += 1
         comb = get_simple_combination(self, string, window[0])
         #возвращает список элементов (индекс символа, длина комбинации)
         for t_comb in comb:
@@ -202,7 +205,7 @@ def get_all_flags(max_len):
     add = np.zeros(max_len)
     add[max_len - 1] = 1
     for i in range(1, total_cnt):
-        res[i] = support.plus_1(res[i - 1], add, max_len, 2)
+        res[i] = support.plus_1(res[i - 1], add, 2)
     return res
 
 
