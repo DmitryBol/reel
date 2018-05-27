@@ -44,7 +44,7 @@ class Symbol:
                 self.position[:] = [x - 1 for x in self.position]
             else:
                 self.position = np.arange(0, w, 1)
-            if str(sought(sought(sought(interim, 'symbol')[i], type), 'scatter')) == "0":
+            if str(sought(sought(sought(interim, 'symbol')[i], type), 'scatter')) == "0" or str(sought(sought(sought(interim, 'symbol')[i], type), 'scatter')) == '[]':
                 self.scatter = [0] * (w + 1)
             else:
                 if sought(sought(sought(interim, 'symbol')[i], type), 'scatter'):

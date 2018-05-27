@@ -62,7 +62,7 @@
             "direction": "any",
             "base":
             {
-                "scatter": 0
+                "scatter": []
             }
         }
     ],
