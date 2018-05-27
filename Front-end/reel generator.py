@@ -163,6 +163,32 @@ def count_killed_2(reel, game, line, element, d):
                 m += 1
     return(m)
 
+
+def count_killed_3(reel, game, line, element, d, self):
+    m = 0
+
+    for i in range(len(game[reel])):
+        if(game[reel][i] == element):#здесь еще нужна проверка на wild - or is_wild(game.reels[reel][i])
+            is_upper = False
+            is_lower = False
+            for j in range(1, d+1):
+                if(line[reel] == j):
+                    for k in range(1, j):
+                        if(game[reel][(i + k - j) % len(game[reel])] in self.base.wildlist  and game[reel][(i + k - j) % len(game[reel])] in self.base.ewildlist):
+                            is_upper = True
+                    for k in range(j+1, d+1):
+                        if(game[reel][(i + k - j) % len(game[reel])] in self.base.wildlist  and game[reel][(i + k - j) % len(game[reel])] in self.base.ewildlist):
+                            is_lower = True
+                    break
+            if(is_upper == True or is_lower == True):
+                m += 1
+    return(m)
+
+
+
+
+
+
 def payment_for_combination(element_num, length, obj):
     return(obj.base.symbol[element_num].payment[length])
 
@@ -360,7 +386,7 @@ def count_combinations(game, line_num, element_num, length, obj, frequency):
         badElem = obj.base.symbol[bad[j]].name
         for i in range(obj.window[0]):
             reel = i
-            temp.append(count_killed_2(reel, game, line, badElem, obj.window[1]))
+            temp.append(count_killed_3(reel, game, line, badElem, obj.window[1], obj))
         bad_m.append(temp)
 
 
@@ -376,7 +402,7 @@ def count_combinations(game, line_num, element_num, length, obj, frequency):
                     if(element_num in obj.base.symbol[j].wild.substitute):
                         tmp += frequency[i][j]
         w.append(tmp)
-        n.append(len(game.reels[i]))
+        n.append(len(game[i]))
         tmp = 0
         for j in range(len(obj.base.symbol)):
             if(obj.base.symbol[j].wild != False):
@@ -384,7 +410,7 @@ def count_combinations(game, line_num, element_num, length, obj, frequency):
                     if(element_num in obj.base.symbol[j].wild.substitute):
                         tmp += frequency[i][j]
         e.append(tmp)
-        m.append(count_killed_2(reel, game, line, element, obj.window[1]))
+        m.append(count_killed_3(reel, game, line, element, obj.window[1]), obj)
     for i in range(2):
         k.append(0)
         w.append(0)

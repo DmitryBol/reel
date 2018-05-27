@@ -1,7 +1,7 @@
 import json
 import structure_alpha as Q
 
-file = open('Shining Crown.txt', 'r')
+file = open('HappyBrauer.txt', 'r')
 j = file.read()
 
 interim = json.loads(j)
@@ -57,3 +57,4 @@ print("list of base scatters = ", obj.base.scatterlist)
 print("list of free wilds = ", obj.free.wildlist)
 print("list of free expanding wilds = ", obj.free.ewildlist)
 print("list of free scatters = ", obj.free.scatterlist)
+
