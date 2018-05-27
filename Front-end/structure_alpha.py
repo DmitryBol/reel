@@ -44,7 +44,7 @@ class Symbol:
                 self.position[:] = [x - 1 for x in self.position]
             else:
                 self.position = np.arange(0, w, 1)
-            if str(sought(sought(sought(interim, 'symbol')[i], type), 'scatter')) == "0":
+            if str(sought(sought(sought(interim, 'symbol')[i], type), 'scatter')) == "0" or str(sought(sought(sought(interim, 'symbol')[i], type), 'scatter')) == "[]":
                 self.scatter = [0] * (w + 1)
             else:
                 if sought(sought(sought(interim, 'symbol')[i], type), 'scatter'):
@@ -227,6 +227,7 @@ class Game:
             for comb in range(1, self.window[0] + 1):
                 if self.base.num_comb[i, comb] > 0 and self.base.symbol[i].payment[comb] > 0:
                     print('printing freq of', i, 'symbol on ',comb, 'combination:', self.base.all_combinations() / self.base.num_comb[i, comb])
+                    #print('the old one = ', self.base.all_combinations()/rg.count_combinations(self.base.reels, 0, i, comb, self, self.base.frequency))
                 s += (self.base.num_comb[i, comb]/self.base.all_combinations()) \
                      * (self.base.combination_value(i, comb) + self.base.combination_freespins(i, comb) * FreeMean)
         return s
