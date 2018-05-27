@@ -1,7 +1,7 @@
 import numpy as np
 import itertools
 import re
-rg = __import__("reel generator")
+rg = __import__("reel_generator_2")
 
 
 def sought(dictionary, string):
@@ -135,7 +135,7 @@ class Gametype:
         self.frequency = frequency
 
     reel_generator = rg.reel_generator
-    get_combination = rg.get_combination
+    get_combination = rg.get_simple_combination
     count_combinations2 = rg.count_combinations2
     count_num_comb = rg.count_num_comb
     fill_num_comb = rg.fill_num_comb
