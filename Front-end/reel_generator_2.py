@@ -1,18 +1,7 @@
 import copy
 import numpy as np
-import support
 import math
-
-
-def plus(a, b, l, sup):
-    temp = a + b
-    result = np.zeros(l)
-    add = 0
-    for i in range(l-1, -1, -1):
-        result[i] = (temp[i] + add) % sup
-        add = (temp[i] + add)//sup
-    return result
-
+import support
 
 h = 0.005
 
@@ -44,20 +33,6 @@ def reel_generator(self, array, width):
 
 # конструктор принимает на вход два массива: 1ый - массив количества элементов, 2ой- их имена. Класс содержит список
 # барабанов
-def print_game(test):
-    c = []
-    for i in range(len(test.reels)):
-        c.append(len(test.reels[i]))
-    a = max(c)
-    for i in range(a):
-        for j in range(len(test.reels)):
-            if i < len(test.reels[j]):
-                print(test.reels[j][i].name, end=(25 - len(test.reels[j][i].name))*' ')
-            else:
-                s = 24*' '
-                print(s, end=' ')
-        print('\n')
-#распечатывает сгенерированные барабаны
 
 
 def count_killed_2(reel, game, line, element, d):
@@ -174,13 +149,11 @@ def get_simple_combination(self, string, width):
 
 def fill_num_comb(self, window, lines):
     self.num_comb = np.zeros((len(self.symbol), window[0] + 1))
-    combinations = support.combinations2(window[0], window[1], len(self.symbol))
-    #for line_num in range(len(lines)):
+    combinations = support.combinations2(window[0], len(self.symbol))
     count_combinations2(self, combinations, window, lines)
 
 
 def count_combinations2(self, combinations, window, lines):
-    #numbers = len(self.symbol)
 
     for scat in self.scatterlist:
         flags = get_all_flags(window[0])
@@ -192,7 +165,6 @@ def count_combinations2(self, combinations, window, lines):
                 else:
                     res_cnt = res_cnt * (sum(self.frequency[j]) - window[1] * self.frequency[j][scat])
             self.num_comb[scat, int(sum(flag))] += res_cnt
-    #combinations = support.combinations2(window[0], window[1], numbers)
     temp = -1
 
     for string in combinations:
@@ -230,7 +202,7 @@ def get_all_flags(max_len):
     add = np.zeros(max_len)
     add[max_len - 1] = 1
     for i in range(1, total_cnt):
-        res[i] = plus(res[i - 1], add, max_len, 2)
+        res[i] = support.plus_1(res[i - 1], add, max_len, 2)
     return res
 
 
