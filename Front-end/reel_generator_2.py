@@ -174,28 +174,27 @@ def get_simple_combination(self, string, width):
 
 def fill_num_comb(self, window, lines):
     self.num_comb = np.zeros((len(self.symbol), window[0] + 1))
-    for line_num in range(len(lines)):
-        count_combinations2(self, lines[line_num], window)
+    combinations = support.combinations2(window[0], window[1], len(self.symbol))
+    #for line_num in range(len(lines)):
+    count_combinations2(self, combinations, window, lines)
 
 
-def count_combinations2(self, line, window):
-    numbers = len(self.symbol)
+def count_combinations2(self, combinations, window, lines):
+    #numbers = len(self.symbol)
 
+    print(self.scatterlist)
     for scat in self.scatterlist:
-        for i in range(window[0] + 1):
-            flags = get_all_flags(window[0], i)
-            res = 0
-            for flag in flags:
-                res_cnt = 1
-                for j in range(window[0]):
-                    if flag[j] == 1:
-                        res_cnt = res_cnt * 3 * self.frequency[j][scat]
-                    else:
-                        res_cnt = res_cnt * (sum(self.frequency[j]) - 3 * self.frequency[j][scat])
-                res += res_cnt
-            self.num_comb[scat][i] += res
+        flags = get_all_flags(window[0])
+        for flag in flags:
+            res_cnt = 1
+            for j in range(window[0]):
+                if flag[j] == 1:
+                    res_cnt = res_cnt * 3 * self.frequency[j][scat]
+                else:
+                    res_cnt = res_cnt * (sum(self.frequency[j]) - 3 * self.frequency[j][scat])
+            self.num_comb[scat][sum(flag)] += res_cnt
 
-    combinations = support.combinations2(window[0], window[1], numbers)
+    #combinations = support.combinations2(window[0], window[1], numbers)
     temp = -1
 
     for string in combinations:
@@ -205,18 +204,19 @@ def count_combinations2(self, line, window):
         comb = get_simple_combination(self, string, window[0])
         #возвращает список элементов (индекс символа, длина комбинации)
         for t_comb in comb:
-            self.num_comb[t_comb[0], t_comb[1]] += count_num_comb(self, string, line, window)
+            for line in lines:
+                self.num_comb[t_comb[0], t_comb[1]] += count_num_comb(self, string, line, window)
 
 
 # noinspection PySimplifyBooleanCheck
-def count_num_comb(self, string, line_num, window):
+def count_num_comb(self, string, line, window):
 
     string = string.astype(int)
 
     cnt = 1
     for i in range(len(string)):
         k = self.frequency[i][string[i]]
-        m = count_killed_2(i, self, line_num, self.symbol[string[i]].name, window[1])
+        m = count_killed_2(i, self, line, self.symbol[string[i]].name, window[1])
         if self.symbol[string[i]].wild != False:
             if self.symbol[string[i]].wild.expand == True:
                 k = k * window[1]
@@ -226,8 +226,8 @@ def count_num_comb(self, string, line_num, window):
     return cnt
 
 
-def get_all_flags(max_len, count):
-    total_cnt = binomial_c(max_len, count)
+def get_all_flags(max_len):
+    total_cnt = 2**max_len
     res = np.zeros(total_cnt, max_len)
     add = np.zeros(max_len)
     add[max_len - 1] = 1
