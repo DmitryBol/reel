@@ -227,8 +227,12 @@ class Game:
             for comb in range(1, self.window[0] + 1):
                 if self.base.num_comb[i, comb] > 0 and self.base.symbol[i].payment[comb] > 0:
                     print('printing freq of', i, 'symbol on ',comb, 'combination:', self.base.all_combinations() / self.base.num_comb[i, comb])
-                s += (self.base.num_comb[i, comb]/self.base.all_combinations()) \
-                     * (self.base.combination_value(i, comb) + self.base.combination_freespins(i, comb) * FreeMean)
+                if i not in self.base.scatterlist:
+                    s += (self.base.num_comb[i, comb]/self.base.all_combinations()) \
+                        * (self.base.combination_value(i, comb) + self.base.combination_freespins(i, comb) * FreeMean)
+                else:
+                    s += (self.base.num_comb[i, comb] / self.base.all_combinations()) \
+                         * (self.base.combination_value(i, comb) * len(self.line) + self.base.combination_freespins(i, comb) * FreeMean)
         return s
 
     def count_volatility(self, FreeMean, rtp):
