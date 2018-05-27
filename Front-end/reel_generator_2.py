@@ -188,9 +188,9 @@ def count_combinations2(self, combinations, window, lines):
             res_cnt = 1
             for j in range(window[0]):
                 if flag[j] == 1:
-                    res_cnt = res_cnt * 3 * self.frequency[j][scat]
+                    res_cnt = res_cnt * window[1] * self.frequency[j][scat]
                 else:
-                    res_cnt = res_cnt * (sum(self.frequency[j]) - 3 * self.frequency[j][scat])
+                    res_cnt = res_cnt * (sum(self.frequency[j]) - window[1] * self.frequency[j][scat])
             self.num_comb[scat, int(sum(flag))] += res_cnt
     #combinations = support.combinations2(window[0], window[1], numbers)
     temp = -1
