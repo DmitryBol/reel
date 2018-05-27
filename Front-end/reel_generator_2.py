@@ -100,7 +100,7 @@ def get_simple_combination(self, string, width):
                 else:
                     break
 
-        payments = [self.symbol[i].payment[lens[i]] for i in range(len(self.symbol))]
+        payments = [self.symbol[i].payment[lens[i]] for i in range(len(self.symbol)) if i not in self.scatterlist]
         max_ = max(payments)
         index = payments.index(max_)
         return [[index, lens[index]]]
@@ -120,7 +120,7 @@ def get_simple_combination(self, string, width):
                         flag = False
                 else:
                     break
-        payments = [self.symbol[subst[i]].payment[subst_l[i]] for i in range(len(subst))]
+        payments = [self.symbol[subst[i]].payment[subst_l[i]] for i in range(len(subst)) if i not in self.scatterlist]
         max_ = max(payments)
         index = payments.index(max_)
         return [[subst[index], subst_l[index]]]
@@ -141,7 +141,7 @@ def get_simple_combination(self, string, width):
                         flag = False
                 else:
                     break
-        payments = [self.symbol[subst[i]].payment[subst_l[i]] for i in range(len(subst))]
+        payments = [self.symbol[subst[i]].payment[subst_l[i]] for i in range(len(subst)) if i not in self.scatterlist]
         max_ = max(payments)
         index = payments.index(max_)
         res_left = [subst[index], subst_l[index]]
@@ -161,7 +161,7 @@ def get_simple_combination(self, string, width):
                         flag = False
                 else:
                     break
-        payments = [self.symbol[subst[i]].payment[subst_l[i]] for i in range(len(subst))]
+        payments = [self.symbol[subst[i]].payment[subst_l[i]] for i in range(len(subst)) if i not in self.scatterlist]
         max_ = max(payments)
         index = payments.index(max_)
         res_right = [subst[index], subst_l[index]]
@@ -182,7 +182,6 @@ def fill_num_comb(self, window, lines):
 def count_combinations2(self, combinations, window, lines):
     #numbers = len(self.symbol)
 
-    print(self.scatterlist)
     for scat in self.scatterlist:
         flags = get_all_flags(window[0])
         for flag in flags:
@@ -192,8 +191,7 @@ def count_combinations2(self, combinations, window, lines):
                     res_cnt = res_cnt * 3 * self.frequency[j][scat]
                 else:
                     res_cnt = res_cnt * (sum(self.frequency[j]) - 3 * self.frequency[j][scat])
-            self.num_comb[scat][sum(flag)] += res_cnt
-
+            self.num_comb[scat, int(sum(flag))] += res_cnt
     #combinations = support.combinations2(window[0], window[1], numbers)
     temp = -1
 
@@ -227,8 +225,8 @@ def count_num_comb(self, string, line, window):
 
 
 def get_all_flags(max_len):
-    total_cnt = 2**max_len
-    res = np.zeros(total_cnt, max_len)
+    total_cnt = int(2**max_len)
+    res = np.zeros((total_cnt, max_len))
     add = np.zeros(max_len)
     add[max_len - 1] = 1
     for i in range(1, total_cnt):

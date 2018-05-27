@@ -59,9 +59,10 @@
         {
             "name": "Scat",
             "payment": [[5, 50], [4, 15], [3, 5]],
+            "direction": "any",
             "base":
             {
-                "scatter": []
+                "scatter": 0
             }
         }
     ],

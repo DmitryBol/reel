@@ -28,17 +28,18 @@ obj.base.fill_frequency(frequency)
 obj.free.fill_frequency(frequency)
 
 
-string = np.array([1., 0., 0., 0., 2.])
-res = obj.base.get_combination(string, 5)
-print(res)
+#string = np.array([1., 0., 0., 0., 2.])
+#res = obj.base.get_combination(string, 5)
+#print(res)
 
-res = obj.base.count_num_comb(string, [2, 2, 2, 2, 2], [5, 3])
-print(res)
+#res = obj.base.count_num_comb(string, [2, 2, 2, 2, 2], [5, 3])
+#print(res)
 
+#print(obj.base.scatterlist)
 obj.base.fill_num_comb(obj.window, obj.line)
 obj.free.fill_num_comb(obj.window, obj.line)
 
-print(obj.base.num_comb[1][5])
+#print(obj.base.num_comb[1][5])
 
 print('All combinations =', obj.base.all_combinations())
 LAL = obj.freemean()
