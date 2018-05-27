@@ -165,11 +165,8 @@ def count_combinations2(self, combinations, window, lines):
                 else:
                     res_cnt = res_cnt * (sum(self.frequency[j]) - window[1] * self.frequency[j][scat])
             self.num_comb[scat, int(sum(flag))] += res_cnt
-    temp = -1
 
-    print(len(combinations))
-
-
+    #print(len(combinations))
     for string in combinations:
         #if string[0] != temp:
         #    print(string)

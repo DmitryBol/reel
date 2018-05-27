@@ -3,6 +3,7 @@ import math
 import random
 import pandas
 
+
 # noinspection SpellCheckingInspection
 def plus_1(a, b, alls):
     temp = a + b
@@ -28,7 +29,7 @@ def super_plus(array, possible_symbols):
     return res
 
 
-# noinspection SpellCheckingInspection
+# noinspection SpellCheckingInspection,PyUnusedLocal
 def combinations2(gametype, width, numbers):
 
     combs = np.zeros((1, width))
@@ -40,6 +41,8 @@ def combinations2(gametype, width, numbers):
                     possible_symbols[j].append(symbol_index)
                     for subs in gametype.symbol[symbol_index].substituted_by:
                         possible_symbols[j].append(subs)
+                    for e_subs in gametype.symbol[symbol_index].substituted_by_e:
+                        possible_symbols[j].append(e_subs)
                 for j in range(index, width):
                     for s1 in range(len(gametype.symbol)):
                         possible_symbols[j].append(s1)
@@ -71,6 +74,7 @@ def combinations2(gametype, width, numbers):
         temp = plus_1(temp, neutral, numbers)
     return combs
 '''
+
 
 # noinspection SpellCheckingInspection,PyChainedComparisons
 def g(bag, available, length, reel, alpha, names):
