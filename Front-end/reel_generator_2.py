@@ -71,7 +71,7 @@ def get_simple_combination(self, string, width):
         lens = [0]*len(self.symbol)
         for i in range(len(lens)):
             for j in range(0, width):
-                if string[j] == i or string[j] in self.symbol[i].substituted_by:
+                if string[j] == i or string[j] in self.symbol[i].substituted_by or string[j] in self.symbol[i].substituted_by_e:
                     lens[i] += 1
                 else:
                     break

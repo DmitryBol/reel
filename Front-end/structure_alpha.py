@@ -1,6 +1,7 @@
 import numpy as np
 import itertools
 import re
+import copy
 rg = __import__("reel_generator_2")
 
 
@@ -145,6 +146,9 @@ class Gametype:
         for i in range(len(self.reels)):
             c = c * len(self.reels[i])
         return c
+
+    def fill_reels(self, in_reels):
+        self.reels = copy.deepcopy(in_reels)
 
 
 class Game:
