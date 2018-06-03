@@ -77,7 +77,18 @@ def get_simple_combination(self, string, width):
                 else:
                     break
 
-        payments = [self.symbol[i].payment[lens[i]] for i in range(len(self.symbol)) if i not in self.scatterlist]
+        payments = [self.symbol[i].payment[lens[i]] for i in range(len(self.symbol))]
+        for i in self.scatterlist:
+            payments[i] = 0
+
+        all_wilds = self.wildlist + self.ewildlist
+
+        for i in range(len(self.symbol)):
+            for j in range(lens[i]):
+                symbol = string[j]
+                if symbol in all_wilds:
+                    payments[i] = payments[i] * self.symbol[symbol].wild.multiplier
+
         max_ = max(payments)
         index = payments.index(max_)
         return [[index, lens[index]]]
