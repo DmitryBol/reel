@@ -190,8 +190,8 @@ def count_num_comb(self, string, line, window):
         if self.symbol[string[i]].wild != False:
             if self.symbol[string[i]].wild.expand == True:
                 k = k * window[1]
-        if self.symbol[string[i]].scatter:
-            k = k * window[1]
+        # if self.symbol[string[i]].scatter:
+        #   k = k * window[1]
         cnt = cnt * (k - m)
     return cnt
 
