@@ -7,6 +7,7 @@ import random
 import numpy as np
 
 
+# noinspection SpellCheckingInspection,PyShadowingNames
 def scatter_payment(obj, gametype, matrix):
     cnt = 0
     res = 0
@@ -34,18 +35,38 @@ frequency_5 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16, 4]
 
 frequency = [frequency_1, frequency_2, frequency_3, frequency_4, frequency_5]
 
-obj.base.reel_generator(frequency, obj.window[0])
-obj.free.reel_generator(frequency, obj.window[0])
-obj.base.fill_frequency(frequency)
-obj.free.fill_frequency(frequency)
-
-REPEAT_CNT = 1000000
+REPEAT_CNT = 100000000
 
 matrix = np.zeros((obj.window[1], obj.window[0]))
 
 total_payment = 0
 
 WILD = 0
+
+bad = True
+counter = 0
+while bad and counter < 100000:
+
+    obj.base.reel_generator(frequency, obj.window[0])
+    obj.free.reel_generator(frequency, obj.window[0])
+    obj.base.fill_frequency(frequency)
+    obj.free.fill_frequency(frequency)
+
+    #print(frequency)
+
+    bad = False
+
+    for reel in obj.base.reels:
+        for symbol_index in range(len(reel)):
+            symbol = reel[symbol_index]
+            near = []
+            for i in range(-obj.window[1] + 1, 0, 1):
+                near.append(reel[(symbol_index + i) % len(reel)].name)
+            if symbol.name == 'wild' and 'Scat' in near:
+                bad = True
+    counter += 1
+if counter == 100000:
+    exit(0)
 
 for cnt in range(REPEAT_CNT):
     for i in range(obj.window[0]):
@@ -59,7 +80,7 @@ for cnt in range(REPEAT_CNT):
                 for k in range(obj.window[1]):
                     matrix[k, j] = WILD
 
-    if cnt % int(REPEAT_CNT/10) == 0:
+    if cnt % int(REPEAT_CNT/100) == 0:
         print(matrix, '\n')
 
     total_payment += scatter_payment(obj, obj.base, matrix)

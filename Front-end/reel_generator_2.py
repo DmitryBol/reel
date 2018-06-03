@@ -9,6 +9,7 @@ h = 0.005
 
 # noinspection SpellCheckingInspection
 def reel_generator(self, array, width):
+    self.reels = [] * width
     for k in range(width):
         tmp = []
         for i in range(len(array[k])):

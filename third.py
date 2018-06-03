@@ -7,6 +7,21 @@ import structure_alpha as Q
 import time
 
 
+def print_game(test):
+    c = []
+    for i in range(len(test.reels)):
+        c.append(len(test.reels[i]))
+    a = max(c)
+    for i in range(a):
+        for j in range(len(test.reels)):
+            if(i < len(test.reels[j])):
+                print(test.reels[j][i].name, end=(25 - len(test.reels[j][i].name))*' ')
+            else:
+                s = 24*' '
+                print(s, end=' ')
+        print('\n')
+
+
 file = open('HappyBrauer.txt', 'r')
 j = file.read()
 
@@ -23,10 +38,30 @@ frequency_5 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16, 4]
 
 frequency = [frequency_1, frequency_2, frequency_3, frequency_4, frequency_5]
 
-obj.base.reel_generator(frequency, obj.window[0])
-obj.free.reel_generator(frequency, obj.window[0])
-obj.base.fill_frequency(frequency)
-obj.free.fill_frequency(frequency)
+bad = True
+counter = 0
+while bad and counter < 100000:
+
+    obj.base.reel_generator(frequency, obj.window[0])
+    obj.free.reel_generator(frequency, obj.window[0])
+    obj.base.fill_frequency(frequency)
+    obj.free.fill_frequency(frequency)
+
+    bad = False
+
+    for reel in obj.base.reels:
+        for symbol_index in range(len(reel)):
+            symbol = reel[symbol_index]
+            near = []
+            for i in range(-obj.window[1] + 1, 0, 1):
+                near.append(reel[(symbol_index + i) % len(reel)].name)
+            if symbol.name == 'wild' and 'Scat' in near or symbol.name == 'Scat' and 'wild' in near:
+                bad = True
+    counter += 1
+if counter == 100000:
+    exit('cant shuffle')
+
+print_game(obj.base)
 
 
 #string = np.array([1., 0., 0., 0., 2.])
