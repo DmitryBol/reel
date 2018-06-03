@@ -4,6 +4,7 @@ import json
 import sys
 sys.path.insert(0, 'Front-end/')
 import structure_alpha as Q
+import time
 
 
 file = open('HappyBrauer.txt', 'r')
@@ -36,8 +37,11 @@ obj.free.fill_frequency(frequency)
 #print(res)
 
 #print(obj.base.scatterlist)
+start = time.time()
 obj.base.fill_num_comb(obj.window, obj.line)
 obj.free.fill_num_comb(obj.window, obj.line)
+
+print('filling ', time.time() - start)
 
 #print(obj.base.num_comb[1][5])
 

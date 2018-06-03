@@ -1,6 +1,7 @@
 import copy
 import numpy as np
 import math
+import time
 support = __import__("support")
 
 h = 0.005
@@ -149,7 +150,9 @@ def get_simple_combination(self, string, width):
 
 def fill_num_comb(self, window, lines):
     self.num_comb = np.zeros((len(self.symbol), window[0] + 1))
+    start = time.time()
     combinations = support.combinations2(self, window[0], len(self.symbol))
+    print('names ', time.time() - start)
     count_combinations2(self, combinations, window, lines)
 
 
@@ -168,9 +171,6 @@ def count_combinations2(self, combinations, window, lines):
 
     #print(len(combinations))
     for string in combinations:
-        #if string[0] != temp:
-        #    print(string)
-        #    temp += 1
         comb = get_simple_combination(self, string, window[0])
         #возвращает список элементов (индекс символа, длина комбинации)
         for t_comb in comb:
