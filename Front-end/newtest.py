@@ -1,7 +1,7 @@
 import json
 import structure_alpha as Q
 
-file = open('HappyBrauer.txt', 'r')
+file = open('DiStORteD.txt', 'r')
 j = file.read()
 
 interim = json.loads(j)
