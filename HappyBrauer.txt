@@ -9,6 +9,7 @@
 	        {
 	            "wild":
 	            {
+	                "expand": true
 		        }
 	        }
         },

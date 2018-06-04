@@ -1,6 +1,7 @@
 import copy
 import numpy as np
 import math
+import time
 support = __import__("support")
 
 h = 0.005
@@ -8,6 +9,7 @@ h = 0.005
 
 # noinspection SpellCheckingInspection
 def reel_generator(self, array, width):
+    self.reels = [] * width
     for k in range(width):
         tmp = []
         for i in range(len(array[k])):
@@ -70,12 +72,23 @@ def get_simple_combination(self, string, width):
         lens = [0]*len(self.symbol)
         for i in range(len(lens)):
             for j in range(0, width):
-                if string[j] == i or string[j] in self.symbol[i].substituted_by:
+                if string[j] == i or string[j] in self.symbol[i].substituted_by or string[j] in self.symbol[i].substituted_by_e:
                     lens[i] += 1
                 else:
                     break
 
-        payments = [self.symbol[i].payment[lens[i]] for i in range(len(self.symbol)) if i not in self.scatterlist]
+        payments = [self.symbol[i].payment[lens[i]] for i in range(len(self.symbol))]
+        for i in self.scatterlist:
+            payments[i] = 0
+
+        all_wilds = self.wildlist + self.ewildlist
+
+        for i in range(len(self.symbol)):
+            for j in range(lens[i]):
+                symbol = string[j]
+                if symbol in all_wilds:
+                    payments[i] = payments[i] * self.symbol[symbol].wild.multiplier
+
         max_ = max(payments)
         index = payments.index(max_)
         return [[index, lens[index]]]
@@ -149,7 +162,9 @@ def get_simple_combination(self, string, width):
 
 def fill_num_comb(self, window, lines):
     self.num_comb = np.zeros((len(self.symbol), window[0] + 1))
+    start = time.time()
     combinations = support.combinations2(self, window[0], len(self.symbol))
+    print('names ', time.time() - start)
     count_combinations2(self, combinations, window, lines)
 
 
@@ -168,9 +183,6 @@ def count_combinations2(self, combinations, window, lines):
 
     #print(len(combinations))
     for string in combinations:
-        #if string[0] != temp:
-        #    print(string)
-        #    temp += 1
         comb = get_simple_combination(self, string, window[0])
         #возвращает список элементов (индекс символа, длина комбинации)
         for t_comb in comb:
