@@ -1,26 +1,8 @@
-import numpy as np
 import json
-#rg = __import__("reel generator")
 import sys
 sys.path.insert(0, 'Front-end/')
 import structure_alpha as Q
 import time
-
-
-def print_game(test):
-    c = []
-    for i in range(len(test.reels)):
-        c.append(len(test.reels[i]))
-    a = max(c)
-    for i in range(a):
-        for j in range(len(test.reels)):
-            if(i < len(test.reels[j])):
-                print(test.reels[j][i].name, end=(25 - len(test.reels[j][i].name))*' ')
-            else:
-                s = 24*' '
-                print(s, end=' ')
-        print('\n')
-
 
 file = open('HappyBrauer.txt', 'r')
 j = file.read()
@@ -60,44 +42,20 @@ while bad and counter < 100000:
     counter += 1
 if counter == 100000:
     exit('cant shuffle')
-
-#print_game(obj.base)
-
 print('started')
-
 
 obj.base.fill_simple_num_comb(obj.window, obj.line)
 obj.base.fill_scatter_num_comb(obj.window)
 obj.free.fill_simple_num_comb(obj.window, obj.line)
 obj.free.fill_scatter_num_comb(obj.window)
-print('RTP2 = ', obj.count_base_RTP2('base'))
-print('freemean2 = ', obj.freemean2())
-#exit(0)
-#string = np.array([1., 0., 0., 0., 2.])
-#res = obj.base.get_combination(string, 5)
-#print(res)
-
-#res = obj.base.count_num_comb(string, [2, 2, 2, 2, 2], [5, 3])
-#print(res)
-
-#print(obj.base.scatterlist)
-start = time.time()
-obj.base.fill_num_comb(obj.window, obj.line)
-obj.free.fill_num_comb(obj.window, obj.line)
-
-print('filling ', time.time() - start)
-
-#print(obj.base.num_comb[1][5])
 
 print('All combinations =', obj.base.all_combinations())
-LAL = obj.freemean()
-print('Freemean =', LAL)
-print('Base RTP =', obj.count_baseRTP())
-rtp = obj.count_RTP(LAL)
-print('RTP =', rtp)
-print('Volatility =', obj.count_volatility(LAL, rtp))
-print('Hitrate =', obj.count_hitrate())
-
-obj.base.fill_scatter_num_comb(obj.window)
-obj.base.fill_simple_num_comb(obj.window, obj.line)
-
+base_rtp = obj.count_base_RTP2('base')
+print('Base RTP = ', base_rtp)
+freemean = obj.freemean2()
+rtp = obj.count_RTP2(freemean, base_rtp)
+print('RTP = ', rtp)
+sd = obj.count_volatility2(freemean, rtp)
+print('RTP SD = ', sd)
+hitrate = obj.count_hitrate()
+print('Hitrate = ', hitrate)

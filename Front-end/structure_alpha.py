@@ -85,6 +85,9 @@ class Gametype:
         self.reels = [] * w
         self.frequency = [] * w
 
+        self.scatter_num_comb = []
+        self.simple_num_comb = []
+
     def wildlists(self):
         for i in range(len(self.symbol)):
             if self.symbol[i].wild:
@@ -140,6 +143,11 @@ class Gametype:
     count_combinations2 = rg.count_combinations2
     count_num_comb = rg.count_num_comb
     fill_num_comb = rg.fill_num_comb
+
+    fill_scatter_num_comb = rg.fill_scatter_num_comb
+    fill_simple_num_comb = rg.fill_simple_num_comb
+    get_simple_payment = rg.get_simple_payment
+    get_wilds_in_comb = rg.get_wilds_in_comb
 
     def all_combinations(self):
         c = 1
@@ -261,3 +269,85 @@ class Game:
             for comb in range(1, self.window[0] + 1):
                 s = s + (self.base.num_comb[i, comb] / self.base.all_combinations()) * self.base.combination_value(i, comb)
         return s
+
+    # noinspection PyPep8Naming,SpellCheckingInspection
+    def count_base_RTP2(self, game):
+        if game == 'base':
+            s = 0
+            for str_with_count in self.base.simple_num_comb:
+                string = str_with_count[0]
+                payment = self.base.get_simple_payment(string)
+                s += str_with_count[1] / self.base.all_combinations() * payment
+
+            for scatter_comb in self.base.scatter_num_comb:
+                scat = scatter_comb[0]
+                counts = scatter_comb[1]
+                for cnt in range(self.window[0] + 1):
+                    s += self.base.symbol[scat].payment[cnt] * len(self.line) * counts[cnt] / self.base.all_combinations()
+            return s
+        elif game == 'free':
+            s = 0
+            for str_with_count in self.free.simple_num_comb:
+                string = str_with_count[0]
+                payment = self.free.get_simple_payment(string)
+                s += str_with_count[1] / self.free.all_combinations() * payment
+
+            for scatter_comb in self.free.scatter_num_comb:
+                scat = scatter_comb[0]
+                counts = scatter_comb[1]
+                for cnt in range(self.window[0] + 1):
+                    s += self.free.symbol[scat].payment[cnt] * len(self.line) * counts[
+                        cnt] / self.free.all_combinations()
+            return s
+
+    # noinspection SpellCheckingInspection
+    def freemean2(self):
+        s = self.count_base_RTP2('free')
+        v = 0
+        for scatter_comb in self.base.scatter_num_comb:
+            scat = scatter_comb[0]
+            counts = scatter_comb[1]
+            for cnt in range(self.window[0] + 1):
+                v += self.free.symbol[scat].scatter[cnt] * counts[cnt] / self.free.all_combinations()
+
+        return s * 1.0 / (1 - v)
+
+    # noinspection PyPep8Naming
+    def count_RTP2(self, FreeMean, base_rtp):
+        s = 0
+        s += base_rtp
+        for scatter_comb in self.base.scatter_num_comb:
+            scat = scatter_comb[0]
+            counts = scatter_comb[1]
+            for cnt in range(self.window[0] + 1):
+                s += FreeMean * self.base.symbol[scat].scatter[cnt] * counts[cnt] / self.base.all_combinations()
+        return s
+
+    # noinspection PyPep8Naming
+    def count_volatility2(self, FreeMean, rtp):
+        s = 0
+        for str_with_count in self.base.simple_num_comb:
+            string = str_with_count[0]
+            payment = self.base.get_simple_payment(string)
+            s += str_with_count[1] / self.base.all_combinations() * payment**2
+
+        for scatter_comb in self.base.scatter_num_comb:
+            scat = scatter_comb[0]
+            counts = scatter_comb[1]
+            for cnt in range(self.window[0] + 1):
+                s += (self.base.symbol[scat].payment[cnt]*len(self.line)+self.base.symbol[scat].scatter[cnt]*FreeMean)**2 \
+                     * counts[cnt] / self.base.all_combinations()
+        return np.sqrt(s - rtp ** 2)
+
+    def count_hitrate2(self):
+        hits = 0
+        for scatter_comb in self.base.scatter_num_comb:
+            scat = scatter_comb[0]
+            counts = scatter_comb[1]
+            for cnt in range(self.window[0] + 1):
+                if self.base.symbol[scat].scatter[cnt] > 0:
+                    hits += counts[cnt]
+        if hits > 0:
+            return self.base.all_combinations() / hits
+        else:
+            return 0
