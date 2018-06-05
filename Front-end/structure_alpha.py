@@ -71,7 +71,7 @@ class Gametype:
         if sought(interim, 'symbol'):
             self.symbol = [None] * len(sought(interim, 'symbol'))
             for i in range(len(sought(interim, 'symbol'))):
-                if sought(sought(interim, 'symbol')[i], type):
+                if str(sought(sought(interim, 'symbol')[i], type)) != 'None':
                     self.symbol[i] = Symbol(interim, type, i, w)
                 else:
                     self.symbol[i] = Symbol(interim, 'base', i, w)

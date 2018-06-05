@@ -37,10 +37,6 @@
             },
             "free":
             {
-                "wild":
-                {
-                    "expand": true
-                }
             }
         },
         {
