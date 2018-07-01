@@ -310,7 +310,7 @@ class Game:
             for cnt in range(self.window[0] + 1):
                 v += self.free.symbol[scat].scatter[cnt] * counts[cnt] / self.free.all_combinations()
 
-        return s * 1.0 / (1 - v)
+        return self.free_multiplier * s * 1.0 / (1 - v)
 
     # noinspection PyPep8Naming
     def count_RTP2(self, FreeMean, base_rtp):
