@@ -155,6 +155,12 @@ class Gametype:
             c = c * len(self.reels[i])
         return c
 
+    def all_combinations2(self):
+        c = 1
+        for reel in self.frequency:
+            c = c * sum(reel)
+        return c
+
     def fill_reels(self, in_reels):
         self.reels = copy.deepcopy(in_reels)
 
@@ -348,6 +354,6 @@ class Game:
                 if self.base.symbol[scat].scatter[cnt] > 0:
                     hits += counts[cnt]
         if hits > 0:
-            return self.base.all_combinations() / hits
+            return self.base.all_combinations2() / hits
         else:
             return 0

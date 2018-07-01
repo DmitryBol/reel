@@ -11,6 +11,7 @@ interim = json.loads(j)
 
 obj = Q.Game(interim)
 
+start_time = time.time()
 
 frequency_1 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16, 4]
 frequency_2 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16, 4]
@@ -44,6 +45,8 @@ if counter == 100000:
     exit('cant shuffle')
 print('started')
 
+
+
 obj.base.fill_simple_num_comb(obj.window, obj.line)
 obj.base.fill_scatter_num_comb(obj.window)
 obj.free.fill_simple_num_comb(obj.window, obj.line)
@@ -58,5 +61,7 @@ rtp = obj.count_RTP2(freemean, base_rtp)
 print('RTP = ', rtp)
 sd = obj.count_volatility2(freemean, rtp)
 print('RTP SD = ', sd)
-hitrate = obj.count_hitrate()
+hitrate = obj.count_hitrate2()
 print('Hitrate = ', hitrate)
+
+print(time.time() - start_time)

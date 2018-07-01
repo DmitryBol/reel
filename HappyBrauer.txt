@@ -63,7 +63,7 @@
             "direction": "any",
             "base":
             {
-                "scatter": []
+                "scatter": [[5, 10]]
             }
         }
     ],
