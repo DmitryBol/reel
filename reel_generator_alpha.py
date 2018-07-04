@@ -43,14 +43,14 @@ def get_element(array, seniors, last_symbols, senior_coef, power):
 
 def generate_one_reel(symbols, array, distance, seniors):
     s = sum(array)
-
+    res = []
     for j in range(10000):
         array_copy = copy.deepcopy(array)
         last_symbols = [-10] * (distance - 1)
         senior_coef = 2
         power = 1 + 0.01 * j
         good_shuffle = True
-        res = []
+
         for i in range(s):
             new_index = get_element(array_copy, seniors, last_symbols, senior_coef, power)
             if new_index == -1:
@@ -72,9 +72,10 @@ def generate_one_reel(symbols, array, distance, seniors):
         if good_shuffle:
             break
         else:
+            res = []
             continue
 
-    print(res)
+    #print(res)
     result = []
     for index in res:
         result.append(symbols[index])
