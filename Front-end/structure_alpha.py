@@ -2,7 +2,7 @@ import numpy as np
 import itertools
 import re
 import copy
-rg = __import__("reel_generator_2")
+rg = __import__("reel_generator_alpha")
 
 
 def sought(dictionary, string):

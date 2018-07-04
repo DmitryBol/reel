@@ -21,31 +21,12 @@ frequency_5 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16, 4]
 
 frequency = [frequency_1, frequency_2, frequency_3, frequency_4, frequency_5]
 
-bad = True
-counter = 0
-while bad and counter < 100000:
+obj.base.reel_generator(frequency, obj.window[0], obj.distance)
+obj.free.reel_generator(frequency, obj.window[0], obj.distance)
+obj.base.fill_frequency(frequency)
+obj.free.fill_frequency(frequency)
 
-    obj.base.reel_generator(frequency, obj.window[0])
-    obj.free.reel_generator(frequency, obj.window[0])
-    obj.base.fill_frequency(frequency)
-    obj.free.fill_frequency(frequency)
-
-    bad = False
-
-    for reel in obj.base.reels:
-        for symbol_index in range(len(reel)):
-            symbol = reel[symbol_index]
-            near = []
-            for i in range(-obj.window[1] + 1, 0, 1):
-                near.append(reel[(symbol_index + i) % len(reel)].name)
-            if symbol.name == 'wild' and 'Scat' in near or symbol.name == 'Scat' and 'wild' in near:
-                bad = True
-    counter += 1
-if counter == 100000:
-    exit('cant shuffle')
 print('started')
-
-
 
 obj.base.fill_simple_num_comb(obj.window, obj.line)
 obj.base.fill_scatter_num_comb(obj.window)
