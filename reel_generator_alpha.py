@@ -63,13 +63,18 @@ def generate_one_reel(symbols, array, distance, seniors):
             res.append(new_index)
         if good_shuffle:
             for i in range(distance - 1):
-                if not isComparable(res[i], res[(i - distance + 1) % s: i % s], seniors):
+                for_compare = []
+                for index in range(distance - 1):
+                    for_compare.append(res[i - distance + 1 + index])
+                #print(res[i], for_compare, seniors, isComparable(res[i], for_compare, seniors))
+                if not isComparable(res[i], for_compare, seniors):
                     good_shuffle = False
         if good_shuffle:
             break
         else:
             continue
 
+    print(res)
     result = []
     for index in res:
         result.append(symbols[index])
