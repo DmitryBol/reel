@@ -290,7 +290,7 @@ class Game:
                 counts = scatter_comb[1]
                 for cnt in range(self.window[0] + 1):
                     s += self.base.symbol[scat].payment[cnt] * len(self.line) * counts[cnt] / self.base.all_combinations()
-            return s
+            return s / len(self.line)
         elif game == 'free':
             s = 0
             for str_with_count in self.free.simple_num_comb:
@@ -304,7 +304,7 @@ class Game:
                 for cnt in range(self.window[0] + 1):
                     s += self.free.symbol[scat].payment[cnt] * len(self.line) * counts[
                         cnt] / self.free.all_combinations()
-            return s
+            return s / len(self.line)
 
     # noinspection SpellCheckingInspection
     def freemean2(self):
