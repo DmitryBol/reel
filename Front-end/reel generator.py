@@ -1,14 +1,9 @@
-import sys
 import random
 import json
 import copy
 import numpy as np
 import math
-
-
-
-sys.path.insert(0, 'Front-end/')
-import structure_alpha
+#import structure_alpha
 import support
 
 
@@ -168,11 +163,39 @@ def count_killed_2(reel, game, line, element, d):
                 m += 1
     return(m)
 
+
+def count_killed_3(reel, game, line, element, d, self):
+    m = 0
+
+    for i in range(len(game[reel])):
+        if(game[reel][i] == element):#здесь еще нужна проверка на wild - or is_wild(game.reels[reel][i])
+            is_upper = False
+            is_lower = False
+            for j in range(1, d+1):
+                if(line[reel] == j):
+                    for k in range(1, j):
+                        if(game[reel][(i + k - j) % len(game[reel])] in self.base.wildlist  and game[reel][(i + k - j) % len(game[reel])] in self.base.ewildlist):
+                            is_upper = True
+                    for k in range(j+1, d+1):
+                        if(game[reel][(i + k - j) % len(game[reel])] in self.base.wildlist  and game[reel][(i + k - j) % len(game[reel])] in self.base.ewildlist):
+                            is_lower = True
+                    break
+            if(is_upper == True or is_lower == True):
+                m += 1
+    return(m)
+
+
+
+
+
+
 def payment_for_combination(element_num, length, obj):
     return(obj.base.symbol[element_num].payment[length])
 
 
-def get_combination(string, self, width):
+def get_combination(self, string, width):
+
+    string = string.astype(int)
 
     scat_res = []
     for scat in self.scatterlist:
@@ -183,32 +206,25 @@ def get_combination(string, self, width):
         if self.symbol[scat].payment[cnt] > 0 or self.symbol[scat].scatter[cnt] > 0:
             scat_res.append([scat, cnt])
 
-    if self.direction == 'left':
-        begin = string[0]
-        subst = [begin]
-        if self.symbol[begin].wild != False:
-            subst = subst + self.symbol[begin].wild.substitute
-        subst_l = [0]*len(subst)
-        for i in range(len(subst)):
-            flag = True
-            for j in range(1, width):
-                if flag:
-                    if string[j] == begin or string[j] == subst[i]:
-                        subst_l[i] += 1
-                    else:
-                        flag = False
+    if self.symbol[0].direction == 'left':
+        lens = [0]*len(self.symbol)
+        for i in range(len(lens)):
+            for j in range(0, width):
+                if string[j] == i or string[j] in self.symbol[i].substituted_by:
+                    lens[i] += 1
                 else:
                     break
-        payments = [self.symbol[subst[i]].payment[subst_l[i]] for i in range(len(subst))]
+
+        payments = [self.symbol[i].payment[lens[i]] for i in range(len(self.symbol))]
         max_ = max(payments)
         index = payments.index(max_)
-        return scat_res + [[subst[index], subst_l[index]]]
+        return scat_res + [[index, lens[index]]]
     elif self.direction == 'right':
         begin = string[len(string) - 1]
         subst = [begin]
         if self.symbol[begin].wild != False:
             subst = subst + self.symbol[begin].wild.substitute
-        subst_l = [0]*len(subst)
+        subst_l = [1]*len(subst)
         for i in range(len(subst)):
             flag = True
             for j in range(width - 2, -1, -1):
@@ -229,7 +245,7 @@ def get_combination(string, self, width):
         subst = [begin]
         if self.symbol[begin].wild != False:
             subst = subst + self.symbol[begin].wild.substitute
-        subst_l = [0]*len(subst)
+        subst_l = [1]*len(subst)
         for i in range(len(subst)):
             flag = True
             for j in range(1, width):
@@ -249,7 +265,7 @@ def get_combination(string, self, width):
         subst = [begin]
         if self.symbol[begin].wild != False:
             subst = subst + self.symbol[begin].wild.substitute
-        subst_l = [0]*len(subst)
+        subst_l = [1]*len(subst)
         for i in range(len(subst)):
             flag = True
             for j in range(width - 2, -1, -1):
@@ -274,24 +290,28 @@ def get_combination(string, self, width):
 def fill_num_comb(self, window, lines):
     self.num_comb = np.zeros((len(self.symbol), window[0] + 1))
     for line_num in range(len(lines)):
-        count_combinations2(lines[line_num], self, window)
+        count_combinations2(self, lines[line_num], window)
     for scat in self.scatterlist:
         self.num_comb[scat] = self.num_comb[scat]//len(lines)
 
 
-def count_combinations2(line, self, window):
+def count_combinations2(self, line, window):
     numbers = len(self.symbol)
-    reels = self.reels
-    frequency = self.frequency
     combinations = support.combinations2(window[0], window[1], numbers)
-    scatters = self.scatterlist
+    temp = -1
     for string in combinations:
-        comb = get_combination(string, self)#возвращает индекс символа и длину
+        if string[0] != temp:
+            print(string)
+            temp += 1
+        comb = get_combination(self, string, window[0])#возвращает индекс символа и длину
         for t_comb in comb:
             self.num_comb[t_comb[0], t_comb[1]] += count_num_comb(self, string, line, window)
 
 
 def count_num_comb(self, string, line_num, window):
+
+    string = string.astype(int)
+
     cnt = 1
     for i in range(len(string)):
         k = self.frequency[i][string[i]]
@@ -366,7 +386,7 @@ def count_combinations(game, line_num, element_num, length, obj, frequency):
         badElem = obj.base.symbol[bad[j]].name
         for i in range(obj.window[0]):
             reel = i
-            temp.append(count_killed_2(reel, game, line, badElem, obj.window[1]))
+            temp.append(count_killed_3(reel, game, line, badElem, obj.window[1], obj))
         bad_m.append(temp)
 
 
@@ -382,7 +402,7 @@ def count_combinations(game, line_num, element_num, length, obj, frequency):
                     if(element_num in obj.base.symbol[j].wild.substitute):
                         tmp += frequency[i][j]
         w.append(tmp)
-        n.append(len(game.reels[i]))
+        n.append(len(game[i]))
         tmp = 0
         for j in range(len(obj.base.symbol)):
             if(obj.base.symbol[j].wild != False):
@@ -390,7 +410,7 @@ def count_combinations(game, line_num, element_num, length, obj, frequency):
                     if(element_num in obj.base.symbol[j].wild.substitute):
                         tmp += frequency[i][j]
         e.append(tmp)
-        m.append(count_killed_2(reel, game, line, element, obj.window[1]))
+        m.append(count_killed_3(reel, game, line, element, obj.window[1]), obj)
     for i in range(2):
         k.append(0)
         w.append(0)
