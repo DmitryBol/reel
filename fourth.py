@@ -42,6 +42,8 @@ rtp = obj.count_RTP2(freemean, base_rtp)
 print('RTP = ', rtp)
 sd = obj.count_volatility2(freemean, rtp)
 print('RTP SD = ', sd)
+sdnew = obj.count_volatility2new(freemean, rtp)
+print('RTP SD new = ', sdnew)
 hitrate = obj.count_hitrate2()
 print('Hitrate = ', hitrate)
 

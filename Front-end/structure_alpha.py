@@ -3,6 +3,7 @@ import itertools
 import re
 import copy
 rg = __import__("reel_generator_alpha")
+import moments
 
 
 def sought(dictionary, string):
@@ -149,6 +150,11 @@ class Gametype:
     get_simple_payment = rg.get_simple_payment
     get_wilds_in_comb = rg.get_wilds_in_comb
 
+    Exi2 = moments.Exi2
+    Exieta = moments.Exieta
+    Eeta = moments.Eeta
+    Eeta2 = moments.Eeta2
+
     def all_combinations(self):
         c = 1
         for i in range(len(self.reels)):
@@ -279,6 +285,25 @@ class Game:
             for cnt in range(self.window[0] + 1):
                 s += FreeMean * self.base.symbol[scat].scatter[cnt] * counts[cnt] / self.base.all_combinations()
         return s
+
+    def count_volatility2new(self, FreeMean, RTP):
+        # xi - random variable, equals payment for combination (base_rtp = Exi)
+        # eta - random variable, equals the number of freespins given for combination
+        # zeta - random variable, equals payment for freespin (FreeMean = Ezeta)
+        Exi2 = self.base.Exi2(self.window[0], self.line)
+        Exieta = self.base.Exieta(self.window[0], self.line)
+        Eeta = self.base.Eeta(self.window[0])
+        Eeta2 = self.base.Eeta2(self.window[0])
+
+        Efree_xi2 = self.free.Exi2(self.window[0], self.line)
+        Efree_xieta = self.free.Exieta(self.window[0], self.line)
+        Efree_eta2 = self.free.Eeta2(self.window[0])
+
+        Ezeta2 = (Efree_xi2 + 2 * FreeMean * Efree_xieta) / (1 - Efree_eta2)
+
+        s = np.sqrt(Exi2 + 2 * FreeMean * Exieta + Eeta * (Ezeta2 - FreeMean ** 2) + Eeta2 * FreeMean ** 2 - RTP ** 2)
+        return s
+
 
     # noinspection PyPep8Naming
     def count_volatility2(self, FreeMean, rtp):
