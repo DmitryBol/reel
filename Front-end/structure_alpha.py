@@ -227,55 +227,6 @@ class Game:
         # для каждого символа создание и заполнение массива индексов экспандящихся вайлдов, заменяющих данный символ
         self.free.substituted_by_e()
 
-    def freemean(self):
-        s = 0
-        v = 0
-        for i in range(len(self.free.symbol)):
-            for comb in range(1, self.window[0] + 1):
-                s += (self.free.num_comb[i, comb]/self.free.all_combinations()) * self.free.combination_value(i, comb) * self.free_multiplier
-
-        for i in self.free.scatterlist:
-            for comb in range(1, self.window[0] + 1):
-                v += (self.free.num_comb[i, comb]/self.free.all_combinations()) * self.free.combination_freespins(i, comb)
-        return s * 1.0 / (1 - v)
-
-    def count_RTP(self, FreeMean):
-        s = 0
-        for i in range(len(self.base.symbol)):
-            for comb in range(1, self.window[0] + 1):
-                if self.base.num_comb[i, comb] > 0 and self.base.symbol[i].payment[comb] > 0:
-                    print('printing freq of', i, 'symbol on ',comb, 'combination:', self.base.all_combinations() / self.base.num_comb[i, comb])
-                if i not in self.base.scatterlist:
-                    s += (self.base.num_comb[i, comb]/self.base.all_combinations()) \
-                        * (self.base.combination_value(i, comb) + self.base.combination_freespins(i, comb) * FreeMean)
-                else:
-                    s += (self.base.num_comb[i, comb] / self.base.all_combinations()) \
-                         * (self.base.combination_value(i, comb) * len(self.line) + self.base.combination_freespins(i, comb) * FreeMean)
-        return s
-
-    def count_volatility(self, FreeMean, rtp):
-        s = 0
-        for i in range(len(self.base.symbol)):
-            for comb in range(1, self.window[0] + 1):
-                s = s + (self.base.num_comb[i, comb]/self.base.all_combinations()) * (
-                        self.base.combination_value(i, comb) + self.base.combination_freespins(i, comb) * FreeMean) ** 2
-        return np.sqrt(s - rtp ** 2)
-
-    def count_hitrate(self):
-        s = 0
-        for i in self.base.scatterlist:
-            for comb in range(len(self.base.symbol[i].scatter)):
-                if self.base.symbol[i].scatter[comb] > 0:
-                    s = s + self.base.num_comb[i, comb]
-        return s / self.base.all_combinations()
-
-    def count_baseRTP(self):
-        s = 0
-        for i in range(len(self.base.symbol)):
-            for comb in range(1, self.window[0] + 1):
-                s = s + (self.base.num_comb[i, comb] / self.base.all_combinations()) * self.base.combination_value(i, comb)
-        return s
-
     # noinspection PyPep8Naming,SpellCheckingInspection
     def count_base_RTP2(self, game):
         if game == 'base':
@@ -343,7 +294,7 @@ class Game:
             for cnt in range(self.window[0] + 1):
                 s += (self.base.symbol[scat].payment[cnt]*len(self.line)+self.base.symbol[scat].scatter[cnt]*FreeMean)**2 \
                      * counts[cnt] / self.base.all_combinations()
-        return np.sqrt(s - rtp ** 2)
+        return np.sqrt(s - rtp ** 2) / len(self.line)
 
     def count_hitrate2(self):
         hits = 0
@@ -357,3 +308,4 @@ class Game:
             return self.base.all_combinations2() / hits
         else:
             return 0
+
