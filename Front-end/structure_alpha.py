@@ -289,7 +289,7 @@ class Game:
     def count_volatility2new(self, FreeMean, RTP):
         # xi - random variable, equals payment for combination (base_rtp = Exi)
         # eta - random variable, equals the number of freespins given for combination
-        # zeta - random variable, equals payment for freespin (FreeMean = Ezeta)
+        # zeta - random variable, equals payment for freespin (FreeMean = Ezeta) (ну потом я домножил на число линий, вдруг поможе)
         Exi2 = self.base.Exi2(self.window[0], self.line)
         Exieta = self.base.Exieta(self.window[0], self.line)
         Eeta = self.base.Eeta(self.window[0])
@@ -299,10 +299,11 @@ class Game:
         Efree_xieta = self.free.Exieta(self.window[0], self.line)
         Efree_eta2 = self.free.Eeta2(self.window[0])
 
-        Ezeta2 = (Efree_xi2 + 2 * FreeMean * Efree_xieta) / (1 - Efree_eta2)
+        Ezeta = FreeMean * len(self.line)
+        Ezeta2 = (Efree_xi2 + 2 * Ezeta * Efree_xieta) / (1 - Efree_eta2)
 
-        s = np.sqrt(Exi2 + 2 * FreeMean * Exieta + Eeta * (Ezeta2 - FreeMean ** 2) + Eeta2 * FreeMean ** 2 - RTP ** 2)
-        return s
+        s = np.sqrt(Exi2 + 2 * Ezeta * Exieta + Eeta * (Ezeta2 - Ezeta ** 2) + Eeta2 * Ezeta ** 2 - RTP ** 2)
+        return s / len(self.line)
 
     # noinspection PyPep8Naming
     def count_volatility2(self, FreeMean, rtp):

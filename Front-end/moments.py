@@ -15,7 +15,7 @@ def Exi2(self, width, lines):
         counts = scatter_comb[1]
         for cnt in range(width + 1):
             s += ((self.symbol[scat].payment[cnt] * len(lines)) ** 2) * counts[cnt] / self.all_combinations()
-    return s / len(lines)
+    return s
 
 
 def Exieta(self, width, lines):
@@ -26,7 +26,7 @@ def Exieta(self, width, lines):
         for cnt in range(width + 1):
             s += (self.symbol[scat].payment[cnt] * len(lines)) * self.symbol[scat].scatter[cnt] * \
                       counts[cnt] / self.all_combinations()
-    return s / len(lines)
+    return s
 
 
 def Eeta(self, width):
