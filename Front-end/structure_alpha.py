@@ -304,7 +304,6 @@ class Game:
         s = np.sqrt(Exi2 + 2 * FreeMean * Exieta + Eeta * (Ezeta2 - FreeMean ** 2) + Eeta2 * FreeMean ** 2 - RTP ** 2)
         return s
 
-
     # noinspection PyPep8Naming
     def count_volatility2(self, FreeMean, rtp):
         s = 0
