@@ -1,7 +1,6 @@
 import numpy as np
 import math
 import random
-import pandas
 
 
 # noinspection SpellCheckingInspection
@@ -58,22 +57,8 @@ def combinations2(gametype, width, numbers):
                     for j in range(width):
                         possible_combs[i, j] = possible_symbols[j][int(possible_combs[i, j])]
                 combs = np.concatenate((combs, possible_combs), axis=0)
-    data = pandas.DataFrame(combs)
-    data = data.drop_duplicates()
-    data.to_csv('data.txt')
-    return data.values
-
-
-'''
-    combs = np.zeros((numbers ** width, width))
-    neutral = np.zeros(width)
-    neutral[len(neutral) - 1] = 1
-    temp = np.zeros(width)
-    for i in range(numbers ** width):
-        combs[i, ] = temp
-        temp = plus_1(temp, neutral, numbers)
-    return combs
-'''
+    data_set = set(tuple(row) for row in combs)
+    return np.array(list(data_set))
 
 
 # noinspection SpellCheckingInspection,PyChainedComparisons
@@ -88,7 +73,7 @@ def g(bag, available, length, reel, alpha, names):
             ostatok = []
             for i in range(len(bag)):
                 if bag[i] > 0:
-                    for j in range(bag[i]):
+                    for _ in range(bag[i]):
                         ostatok.append(names[i])
             reel[k:] = ostatok
             break

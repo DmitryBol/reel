@@ -1,3 +1,4 @@
+# coding=utf-8
 import json
 import sys
 sys.path.insert(0, 'Front-end/')
@@ -29,15 +30,15 @@ def make_spin(type):
     if type == 'base':
         for i in range(obj.window[0]):
             temp = random.randint(0, len(obj.base.reels[i]))
-            for j in range(obj.window[1]):
-                matrix[obj.window[1] - 1 - j, i] = obj.base.symbol.index(
-                    obj.base.reels[i][(temp - j) % len(obj.base.reels[i])])
+            for j1 in range(obj.window[1]):
+                matrix[obj.window[1] - 1 - j1, i] = obj.base.symbol.index(
+                    obj.base.reels[i][(temp - j1) % len(obj.base.reels[i])])
 
         for i in range(obj.window[1]):
-            for j in range(obj.window[0]):
-                if matrix[i, j] in obj.base.ewildlist:
+            for j1 in range(obj.window[0]):
+                if matrix[i, j1] in obj.base.ewildlist:
                     for k in range(obj.window[1]):
-                        matrix[k, j] = matrix[i, j]
+                        matrix[k, j1] = matrix[i, j1]
 
         res += scatter_payment(obj, obj.base, matrix)
         for line in obj.line:
@@ -50,15 +51,15 @@ def make_spin(type):
     if type == 'free':
         for i in range(obj.window[0]):
             temp = random.randint(0, len(obj.free.reels[i]))
-            for j in range(obj.window[1]):
-                matrix[obj.window[1] - 1 - j, i] = obj.free.symbol.index(
-                    obj.free.reels[i][(temp - j) % len(obj.free.reels[i])])
+            for j1 in range(obj.window[1]):
+                matrix[obj.window[1] - 1 - j1, i] = obj.free.symbol.index(
+                    obj.free.reels[i][(temp - j1) % len(obj.free.reels[i])])
 
         for i in range(obj.window[1]):
-            for j in range(obj.window[0]):
-                if matrix[i, j] in obj.free.ewildlist:
+            for j1 in range(obj.window[0]):
+                if matrix[i, j1] in obj.free.ewildlist:
                     for k in range(obj.window[1]):
-                        matrix[k, j] = matrix[i, j]
+                        matrix[k, j1] = matrix[i, j1]
 
         res += scatter_payment(obj, obj.free, matrix)
         for line in obj.line:
@@ -86,7 +87,7 @@ frequency_5 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16, 4]
 
 frequency = [frequency_1, frequency_2, frequency_3, frequency_4, frequency_5]
 
-REPEAT_CNT = 1000000
+REPEAT_CNT = 300000
 
 matrix = np.zeros((obj.window[1], obj.window[0]))
 
@@ -109,5 +110,3 @@ rtp = payments_sum / REPEAT_CNT
 sd = (1/(REPEAT_CNT - 1) * (payments_square_sum - 1/REPEAT_CNT * payments_sum**2))**0.5
 print('simulation rtp = ', rtp)
 print('simulation sd = ', sd)
-
-

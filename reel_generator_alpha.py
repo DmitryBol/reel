@@ -1,3 +1,4 @@
+# coding=utf-8
 import copy
 import numpy as np
 import math
@@ -51,7 +52,7 @@ def generate_one_reel(symbols, array, distance, seniors):
         power = 1 + 0.01 * j
         good_shuffle = True
 
-        for i in range(s):
+        for _ in range(s):
             new_index = get_element(array_copy, seniors, last_symbols, senior_coef, power)
             if new_index == -1:
                 good_shuffle = False
@@ -110,13 +111,13 @@ def count_killed_2(reel, game, line, element, d):
             for j in range(1, d + 1):
                 if line[reel] == j:
                     for k in range(1, j):
-                        if game.reels[reel][(i + k - j) % len(game.reels[reel])].wild != False and game.reels[reel][
-                            (i + k - j) % len(game.reels[reel])].wild.expand == True:
-                            is_upper = True
+                        if game.reels[reel][(i + k - j) % len(game.reels[reel])].wild:
+                            if game.reels[reel][(i + k - j) % len(game.reels[reel])].wild.expand:
+                                is_upper = True
                     for k in range(j + 1, d + 1):
-                        if game.reels[reel][(i + k - j) % len(game.reels[reel])].wild != False and game.reels[reel][
-                            (i + k - j) % len(game.reels[reel])].wild.expand == True:
-                            is_lower = True
+                        if game.reels[reel][(i + k - j) % len(game.reels[reel])].wild:
+                            if game.reels[reel][(i + k - j) % len(game.reels[reel])].wild.expand:
+                                is_lower = True
                     break
             if is_upper == True or is_lower == True:
                 m += 1
@@ -223,16 +224,16 @@ def count_combinations2(self, combinations, window, lines):
                 self.num_comb[t_comb[0], t_comb[1]] += count_num_comb(self, string, line, window)
 
 
-# noinspection PySimplifyBooleanCheck
 def count_num_comb(self, string, line, window):
     string = string.astype(int)
 
     cnt = 1
     for i in range(len(string)):
         k = self.frequency[i][string[i]]
-        m = count_killed_2(i, self, line, self.symbol[string[i]].name, window[1])
-        if self.symbol[string[i]].wild != False:
-            if self.symbol[string[i]].wild.expand == True:
+        m = self.count_killed[self.lines.index(line)][string[i]][i]
+        #m = count_killed_2(i, self, line, self.symbol[string[i]].name, window[1])
+        if self.symbol[string[i]].wild:
+            if self.symbol[string[i]].wild.expand:
                 k = k * window[1]
         # if self.symbol[string[i]].scatter:
         #   k = k * window[1]
@@ -254,12 +255,31 @@ def binomial_c(n, k):
     return math.factorial(n) / math.factorial(k) / math.factorial(n - k)
 
 
+def fill_count_killed(self, window_width):
+    n_lines = len(self.lines)
+    for reel_id in range(window_width):
+        reel_len = len(self.reels[reel_id])
+        for symbol_position in range(reel_len):
+            if self.symbol[self.symbol.index(self.reels[reel_id][symbol_position])] in self.ewildlist:
+                for line_id in range(n_lines):
+
+                    if self.lines[line_id][reel_id] == 1:
+                        self.count_killed[line_id - 1][self.symbol.index(self.reels[symbol_position + 1])][reel_id] += 1
+                        self.count_killed[line_id - 1][self.symbol.index(self.reels[symbol_position + 2])][reel_id] += 1
+                    if self.lines[line_id][reel_id] == 2:
+                        self.count_killed[line_id - 1][self.symbol.index(self.reels[symbol_position - 1])][reel_id] += 1
+                        self.count_killed[line_id - 1][self.symbol.index(self.reels[symbol_position + 1])][reel_id] += 1
+                    if self.lines[line_id][reel_id] == 2:
+                        self.count_killed[line_id - 1][self.symbol.index(self.reels[symbol_position - 2])][reel_id] += 1
+                        self.count_killed[line_id - 1][self.symbol.index(self.reels[symbol_position - 1])][reel_id] += 1
+
+
 def fill_scatter_num_comb(self, window):
     self.scatter_num_comb = []
     ind = 0
     for scat in self.scatterlist:
         self.scatter_num_comb.append([scat, []])
-        for j in range(window[0] + 1):
+        for _ in range(window[0] + 1):
             self.scatter_num_comb[ind][1].append(0)
         ind += 1
 
