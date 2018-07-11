@@ -1,3 +1,4 @@
+# coding=utf-8
 import numpy as np
 import itertools
 import re
@@ -182,6 +183,7 @@ class Gametype:
         self.reels = copy.deepcopy(in_reels)
 
 
+# noinspection PyArgumentList
 class Game:
     def __init__(self, interim):
 

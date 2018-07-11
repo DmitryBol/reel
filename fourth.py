@@ -32,9 +32,15 @@ print('started')
 
 time1 = time.time()
 
+time_killed = time.time()
 obj.base.fill_count_killed(obj.window[0])
+print('base count killed: ', round(time.time() - time_killed, 2), ' seconds')
+time_simple = time.time()
 obj.base.fill_simple_num_comb(obj.window, obj.line)
+print('base simple num comb: ', round(time.time() - time_simple, 2), ' seconds')
+time_scatter = time.time()
 obj.base.fill_scatter_num_comb(obj.window)
+print('base scatter num comb: ', round(time.time() - time_scatter, 2), 'seconds')
 
 obj.free.fill_count_killed(obj.window[0])
 obj.free.fill_simple_num_comb(obj.window, obj.line)

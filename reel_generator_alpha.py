@@ -224,7 +224,6 @@ def count_combinations2(self, combinations, window, lines):
                 self.num_comb[t_comb[0], t_comb[1]] += count_num_comb(self, string, line, window)
 
 
-# noinspection PySimplifyBooleanCheck
 def count_num_comb(self, string, line, window):
     string = string.astype(int)
 
@@ -233,8 +232,8 @@ def count_num_comb(self, string, line, window):
         k = self.frequency[i][string[i]]
         m = self.count_killed[self.lines.index(line)][string[i]][i]
         #m = count_killed_2(i, self, line, self.symbol[string[i]].name, window[1])
-        if self.symbol[string[i]].wild != False:
-            if self.symbol[string[i]].wild.expand == True:
+        if self.symbol[string[i]].wild:
+            if self.symbol[string[i]].wild.expand:
                 k = k * window[1]
         # if self.symbol[string[i]].scatter:
         #   k = k * window[1]
