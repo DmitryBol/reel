@@ -1,3 +1,4 @@
+# coding=utf-8
 import json
 import sys
 sys.path.insert(0, 'Front-end/')
@@ -6,7 +7,7 @@ import time
 import math
 
 
-class Out_result:
+class OutResult:
     def __init__(self, scatterlist):
         self.scatter_index_with_frequency = {scat: 1 for scat in scatterlist}
         self.total_length = 3*len(scatterlist)
@@ -37,7 +38,7 @@ def simple_iteration(base_game, window, res, temp_HR, HR):
         while index in base_game.scatterlist:
             index += 1
         reel[index] = res.total_length - res.total_scats
-        frequency = [reel for i in range(window[0])]
+        frequency = [reel for _ in range(window[0])]
         base_game.fill_frequency(frequency)
         base_game.fill_scatter_num_comb(window)
 
@@ -49,7 +50,7 @@ def get_scatter_frequency(gameFileName, HR, ERROR):
     game = Q.Game(interim)
     file.close()
 
-    res = Out_result(game.base.scatterlist)
+    res = OutResult(game.base.scatterlist)
 
     reel = [0]*len(game.base.symbol)
     for scat in game.base.scatterlist:
@@ -58,7 +59,7 @@ def get_scatter_frequency(gameFileName, HR, ERROR):
     while index in game.base.scatterlist:
         index += 1
     reel[index] = res.total_length - res.total_scats
-    frequency = [reel for i in range(game.window[0])]
+    frequency = [reel for _ in range(game.window[0])]
     game.base.fill_frequency(frequency)
     game.base.fill_scatter_num_comb(game.window)
 
@@ -89,7 +90,7 @@ def get_scatter_frequency(gameFileName, HR, ERROR):
             while index in game.base.scatterlist:
                 index += 1
             reel[index] = res.total_length - res.total_scats
-            frequency = [reel for i in range(game.window[0])]
+            frequency = [reel for _ in range(game.window[0])]
             game.base.fill_frequency(frequency)
             game.base.fill_scatter_num_comb(game.window)
         temp_HR = game.count_hitrate2()
