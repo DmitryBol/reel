@@ -1,3 +1,7 @@
+# coding=utf-8
+# coding=utf-8
+# coding=utf-8
+# coding=utf-8
 import copy
 import numpy as np
 import math
@@ -13,7 +17,7 @@ def reel_generator(self, array, width):
     for k in range(width):
         tmp = []
         for i in range(len(array[k])):
-            for j in range(array[k][i]):
+            for _ in range(array[k][i]):
                 tmp.append('empty')
         self.reels.append(tmp)
     names = self.symbol
@@ -198,7 +202,7 @@ def fill_scatter_num_comb(self, window):
     ind = 0
     for scat in self.scatterlist:
         self.scatter_num_comb.append([scat, []])
-        for j in range(window[0] + 1):
+        for _ in range(window[0] + 1):
             self.scatter_num_comb[ind][1].append(0)
         ind += 1
 
