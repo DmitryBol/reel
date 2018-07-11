@@ -2,6 +2,7 @@ import numpy as np
 import itertools
 import re
 import copy
+
 rg = __import__("reel_generator_alpha")
 import moments
 
@@ -32,7 +33,8 @@ class Symbol:
         self.name = sought(sought(interim, 'symbol')[i], 'name')
         self.payment = [0] * (w + 1)
         for j in range(len(sought(sought(interim, 'symbol')[i], 'payment'))):
-            self.payment[sought(sought(interim, 'symbol')[i], 'payment')[j][0]] = sought(sought(interim, 'symbol')[i], 'payment')[j][1]
+            self.payment[sought(sought(interim, 'symbol')[i], 'payment')[j][0]] = \
+            sought(sought(interim, 'symbol')[i], 'payment')[j][1]
 
         self.substituted_by = []
         self.substituted_by_e = []
@@ -46,13 +48,15 @@ class Symbol:
                 self.position[:] = [x - 1 for x in self.position]
             else:
                 self.position = np.arange(0, w, 1)
-            if str(sought(sought(sought(interim, 'symbol')[i], type), 'scatter')) == "0" or str(sought(sought(sought(interim, 'symbol')[i], type), 'scatter')) == '[]':
+            if str(sought(sought(sought(interim, 'symbol')[i], type), 'scatter')) == "0" or str(
+                    sought(sought(sought(interim, 'symbol')[i], type), 'scatter')) == '[]':
                 self.scatter = [0] * (w + 1)
             else:
                 if sought(sought(sought(interim, 'symbol')[i], type), 'scatter'):
                     self.scatter = [0] * (w + 1)
                     for j in range(len(sought(sought(sought(interim, 'symbol')[i], type), 'scatter'))):
-                        self.scatter[sought(sought(sought(interim, 'symbol')[i], type), 'scatter')[j][0]] = sought(sought(sought(interim, 'symbol')[i], type), 'scatter')[j][1]
+                        self.scatter[sought(sought(sought(interim, 'symbol')[i], type), 'scatter')[j][0]] = \
+                        sought(sought(sought(interim, 'symbol')[i], type), 'scatter')[j][1]
                 else:
                     self.scatter = sought(sought(sought(interim, 'symbol')[i], type), 'scatter')
 
@@ -68,7 +72,7 @@ class Symbol:
 
 
 class Gametype:
-    def __init__(self, interim, type, w):
+    def __init__(self, interim, type, w, lines):
         if sought(interim, 'symbol'):
             self.symbol = [None] * len(sought(interim, 'symbol'))
             for i in range(len(sought(interim, 'symbol'))):
@@ -89,6 +93,11 @@ class Gametype:
         self.scatter_num_comb = []
         self.simple_num_comb = []
 
+        self.lines = lines
+        # (line_id, symbol_id, count_killed for every reel from 0 to window_width)
+        self.count_killed = {line_id: {symbol_id: [0 for _ in range(w)] for symbol_id in range(len(self.symbol))} for
+                             line_id in range(len(self.lines))}
+
     def wildlists(self):
         for i in range(len(self.symbol)):
             if self.symbol[i].wild:
@@ -108,7 +117,8 @@ class Gametype:
                 self.symbol[i].wild.substitute.append(i)
                 for j in range(len(sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute'))):
                     for k in range(len(sought(interim, 'symbol'))):
-                        if sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute')[j] == sought(sought(interim, 'symbol')[k], 'name'):
+                        if sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute')[
+                            j] == sought(sought(interim, 'symbol')[k], 'name'):
                             self.symbol[i].wild.substitute.append(k)
             else:
                 for j in range(len(self.symbol)):
@@ -145,6 +155,7 @@ class Gametype:
     count_num_comb = rg.count_num_comb
     fill_num_comb = rg.fill_num_comb
 
+    fill_count_killed = rg.fill_count_killed
     fill_scatter_num_comb = rg.fill_scatter_num_comb
     fill_simple_num_comb = rg.fill_simple_num_comb
     get_simple_payment = rg.get_simple_payment
@@ -179,13 +190,13 @@ class Game:
         else:
             self.window = [5, 3]
 
-        self.base = Gametype(interim, 'base', self.window[0])
-        self.free = Gametype(interim, 'free', self.window[0])
-
         if sought(interim, 'line'):
             self.line = sought(interim, 'line')[:]
         else:
             raise Exception('Field "line" is not found in json file.')
+
+        self.base = Gametype(interim, 'base', self.window[0], self.line)
+        self.free = Gametype(interim, 'free', self.window[0], self.line)
 
         if sought(interim, 'free_multiplier'):
             self.free_multiplier = sought(interim, 'free_multiplier')
@@ -246,7 +257,8 @@ class Game:
                 scat = scatter_comb[0]
                 counts = scatter_comb[1]
                 for cnt in range(self.window[0] + 1):
-                    s += self.base.symbol[scat].payment[cnt] * len(self.line) * counts[cnt] / self.base.all_combinations()
+                    s += self.base.symbol[scat].payment[cnt] * len(self.line) * counts[
+                        cnt] / self.base.all_combinations()
             return s / len(self.line)
         elif game == 'free':
             s = 0
@@ -311,13 +323,14 @@ class Game:
         for str_with_count in self.base.simple_num_comb:
             string = str_with_count[0]
             payment = self.base.get_simple_payment(string)
-            s += str_with_count[1] / self.base.all_combinations() * payment**2
+            s += str_with_count[1] / self.base.all_combinations() * payment ** 2
 
         for scatter_comb in self.base.scatter_num_comb:
             scat = scatter_comb[0]
             counts = scatter_comb[1]
             for cnt in range(self.window[0] + 1):
-                s += (self.base.symbol[scat].payment[cnt]*len(self.line)+self.base.symbol[scat].scatter[cnt]*FreeMean)**2 \
+                s += (self.base.symbol[scat].payment[cnt] * len(self.line) + self.base.symbol[scat].scatter[
+                    cnt] * FreeMean) ** 2 \
                      * counts[cnt] / self.base.all_combinations()
         return np.sqrt(s - rtp ** 2) / len(self.line)
 
@@ -333,4 +346,3 @@ class Game:
             return self.base.all_combinations2() / hits
         else:
             return 0
-
