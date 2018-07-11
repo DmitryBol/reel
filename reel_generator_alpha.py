@@ -1,3 +1,4 @@
+# coding=utf-8
 import copy
 import numpy as np
 import math
@@ -51,7 +52,7 @@ def generate_one_reel(symbols, array, distance, seniors):
         power = 1 + 0.01 * j
         good_shuffle = True
 
-        for i in range(s):
+        for _ in range(s):
             new_index = get_element(array_copy, seniors, last_symbols, senior_coef, power)
             if new_index == -1:
                 good_shuffle = False
@@ -110,13 +111,13 @@ def count_killed_2(reel, game, line, element, d):
             for j in range(1, d + 1):
                 if line[reel] == j:
                     for k in range(1, j):
-                        if game.reels[reel][(i + k - j) % len(game.reels[reel])].wild != False and game.reels[reel][
-                            (i + k - j) % len(game.reels[reel])].wild.expand == True:
-                            is_upper = True
+                        if game.reels[reel][(i + k - j) % len(game.reels[reel])].wild:
+                            if game.reels[reel][(i + k - j) % len(game.reels[reel])].wild.expand:
+                                is_upper = True
                     for k in range(j + 1, d + 1):
-                        if game.reels[reel][(i + k - j) % len(game.reels[reel])].wild != False and game.reels[reel][
-                            (i + k - j) % len(game.reels[reel])].wild.expand == True:
-                            is_lower = True
+                        if game.reels[reel][(i + k - j) % len(game.reels[reel])].wild:
+                            if game.reels[reel][(i + k - j) % len(game.reels[reel])].wild.expand:
+                                is_lower = True
                     break
             if is_upper == True or is_lower == True:
                 m += 1
@@ -259,7 +260,7 @@ def fill_scatter_num_comb(self, window):
     ind = 0
     for scat in self.scatterlist:
         self.scatter_num_comb.append([scat, []])
-        for j in range(window[0] + 1):
+        for _ in range(window[0] + 1):
             self.scatter_num_comb[ind][1].append(0)
         ind += 1
 
