@@ -231,12 +231,9 @@ def count_num_comb(self, string, line, window):
     for i in range(len(string)):
         k = self.frequency[i][string[i]]
         m = self.count_killed[self.lines.index(line)][string[i]][i]
-        #m = count_killed_2(i, self, line, self.symbol[string[i]].name, window[1])
         if self.symbol[string[i]].wild:
             if self.symbol[string[i]].wild.expand:
                 k = k * window[1]
-        # if self.symbol[string[i]].scatter:
-        #   k = k * window[1]
         cnt = cnt * (k - m)
     return cnt
 
@@ -260,18 +257,18 @@ def fill_count_killed(self, window_width):
     for reel_id in range(window_width):
         reel_len = len(self.reels[reel_id])
         for symbol_position in range(reel_len):
-            if self.symbol[self.symbol.index(self.reels[reel_id][symbol_position])] in self.ewildlist:
+            if self.symbol.index(self.reels[reel_id][symbol_position]) in self.ewildlist:
                 for line_id in range(n_lines):
 
                     if self.lines[line_id][reel_id] == 1:
-                        self.count_killed[line_id - 1][self.symbol.index(self.reels[symbol_position + 1])][reel_id] += 1
-                        self.count_killed[line_id - 1][self.symbol.index(self.reels[symbol_position + 2])][reel_id] += 1
+                        self.count_killed[line_id][self.symbol.index(self.reels[line_id][(symbol_position + 1) % reel_len])][reel_id] += 1
+                        self.count_killed[line_id][self.symbol.index(self.reels[line_id][(symbol_position + 2) % reel_len])][reel_id] += 1
                     if self.lines[line_id][reel_id] == 2:
-                        self.count_killed[line_id - 1][self.symbol.index(self.reels[symbol_position - 1])][reel_id] += 1
-                        self.count_killed[line_id - 1][self.symbol.index(self.reels[symbol_position + 1])][reel_id] += 1
-                    if self.lines[line_id][reel_id] == 2:
-                        self.count_killed[line_id - 1][self.symbol.index(self.reels[symbol_position - 2])][reel_id] += 1
-                        self.count_killed[line_id - 1][self.symbol.index(self.reels[symbol_position - 1])][reel_id] += 1
+                        self.count_killed[line_id][self.symbol.index(self.reels[line_id][symbol_position - 1])][reel_id] += 1
+                        self.count_killed[line_id][self.symbol.index(self.reels[line_id][(symbol_position + 1) % reel_len])][reel_id] += 1
+                    if self.lines[line_id][reel_id] == 3:
+                        self.count_killed[line_id][self.symbol.index(self.reels[line_id][symbol_position - 2])][reel_id] += 1
+                        self.count_killed[line_id][self.symbol.index(self.reels[line_id][symbol_position - 1])][reel_id] += 1
 
 
 def fill_scatter_num_comb(self, window):
