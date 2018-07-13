@@ -1,9 +1,6 @@
 # coding=utf-8
 import json
-import sys
-sys.path.insert(0, 'Front-end/')
-import structure_alpha as Q
-import time
+import FrontEnd.structure_alpha as Q
 import random
 import numpy as np
 

@@ -99,34 +99,6 @@ def reel_generator(self, array, width, distance):
     self.reels = res
 
 
-def count_killed_2(reel, game, line, element, d):
-    m = 0
-
-    for i in range(len(game.reels[reel])):
-        if game.reels[reel][i].name == element:
-            # здесь еще нужна проверка на wild - or is_wild(game.reels[reel][i])
-            is_upper = False
-            is_lower = False
-            for j in range(1, d + 1):
-                if line[reel] == j:
-                    for k in range(1, j):
-                        if game.reels[reel][(i + k - j) % len(game.reels[reel])].wild:
-                            if game.reels[reel][(i + k - j) % len(game.reels[reel])].wild.expand:
-                                is_upper = True
-                    for k in range(j + 1, d + 1):
-                        if game.reels[reel][(i + k - j) % len(game.reels[reel])].wild:
-                            if game.reels[reel][(i + k - j) % len(game.reels[reel])].wild.expand:
-                                is_lower = True
-                    break
-            if is_upper == True or is_lower == True:
-                m += 1
-    return m
-
-
-def payment_for_combination(element_num, length, obj):
-    return obj.base.symbol[element_num].payment[length]
-
-
 # noinspection PySimplifyBooleanCheck
 def get_simple_combination(self, string, width):
     string = string.astype(int)
@@ -245,10 +217,6 @@ def get_all_flags(max_len):
     for i in range(1, total_cnt):
         res[i] = support.plus_1(res[i - 1], add, 2)
     return res
-
-
-def binomial_c(n, k):
-    return math.factorial(n) / math.factorial(k) / math.factorial(n - k)
 
 
 def fill_count_killed(self, window_width):

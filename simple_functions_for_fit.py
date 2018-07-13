@@ -1,9 +1,6 @@
 # coding=utf-8
 import json
-import sys
-sys.path.insert(0, 'Front-end/')
-import structure_alpha as Q
-import time
+import FrontEnd.structure_alpha as Q
 import math
 
 
@@ -12,35 +9,6 @@ class OutResult:
         self.scatter_index_with_frequency = {scat: 1 for scat in scatterlist}
         self.total_length = 3*len(scatterlist)
         self.total_scats = len(scatterlist)
-
-
-def simple_iteration(base_game, window, res, temp_HR, HR):
-    if temp_HR < HR:
-        res.total_length += 1
-        index = 0
-        while index in base_game.scatterlist:
-            index += 1
-        for i in range(window[0]):
-            base_game.frequency[i][index] += 1
-        base_game.fill_scatter_num_comb(window)
-    else:
-        for scat in base_game.scatterlist:
-            res.scatter_index_with_frequency[scat] += 1
-        s = 0
-        for key in res.scatter_index_with_frequency:
-            s += res.scatter_index_with_frequency[key]
-        res.total_scats = s
-        res.total_length = 5*s
-        reel = [0] * len(base_game.symbol)
-        for scat in base_game.scatterlist:
-            reel[scat] = res.scatter_index_with_frequency[scat]
-        index = 0
-        while index in base_game.scatterlist:
-            index += 1
-        reel[index] = res.total_length - res.total_scats
-        frequency = [reel for _ in range(window[0])]
-        base_game.fill_frequency(frequency)
-        base_game.fill_scatter_num_comb(window)
 
 
 def get_scatter_frequency(gameFileName, HR, ERROR):
