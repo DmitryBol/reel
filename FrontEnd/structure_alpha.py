@@ -4,8 +4,8 @@ import itertools
 import re
 import copy
 
-rg = __import__("reel_generator_alpha")
-import moments
+from . import moments
+from . import reel_generator_alpha as rg
 
 
 def sought(dictionary, string):

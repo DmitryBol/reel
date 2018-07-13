@@ -22,7 +22,7 @@ def print_game(test):
         print('\n')
 
 
-file = open('HappyBrauer.txt', 'r')
+file = open('..\Games\HappyBrauer.txt', 'r')
 j = file.read()
 
 interim = json.loads(j)

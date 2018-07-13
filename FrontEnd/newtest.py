@@ -1,5 +1,5 @@
 import json
-import structure_alpha as Q
+from . import structure_alpha as Q
 
 file = open('DiStORteD.txt', 'r')
 j = file.read()

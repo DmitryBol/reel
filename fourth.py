@@ -5,7 +5,7 @@ import time
 
 tf.func1()
 
-file = open('HappyBrauer.txt', 'r')
+file = open('Games\HappyBrauer.txt', 'r')
 j = file.read()
 
 interim = json.loads(j)

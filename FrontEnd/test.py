@@ -1,5 +1,5 @@
 import json
-import structure as Q
+from . import structure as Q
 
 file = open('Shining Crown.txt', 'r')
 j = file.read()

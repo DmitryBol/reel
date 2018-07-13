@@ -72,7 +72,7 @@ def make_spin(type):
     return res
 
 
-file = open('HappyBrauer.txt', 'r')
+file = open('Games\HappyBrauer.txt', 'r')
 j = file.read()
 
 interim = json.loads(j)
