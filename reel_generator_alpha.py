@@ -4,8 +4,7 @@ import numpy as np
 import math
 import time
 import random
-
-support = __import__("support")
+import FrontEnd.support as support
 
 
 def isComparable(new_symbol, array, seniors):

@@ -1,8 +1,9 @@
+import archive.test_file as tf
 import json
-import sys
-sys.path.insert(0, 'Front-end/')
-import structure_alpha as Q
+import FrontEnd.structure_alpha as Q
 import time
+
+tf.func1()
 
 file = open('HappyBrauer.txt', 'r')
 j = file.read()
