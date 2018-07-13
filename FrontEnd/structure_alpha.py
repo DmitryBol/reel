@@ -5,7 +5,7 @@ import re
 import copy
 
 from . import moments
-from . import reel_generator_alpha as rg
+import FrontEnd.reelWork.reel_generator_alpha as rg
 
 
 def sought(dictionary, string):
