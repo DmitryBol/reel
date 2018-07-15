@@ -1,14 +1,12 @@
 import json
-import sys
-sys.path.insert(0, 'Front-end/')
-import structure_alpha as Q
+import FrontEnd.structure_alpha as Q
 import time
 import simple_functions_for_fit as sm
 import copy
 import numpy as np
 
 
-rg = __import__("reel generator")
+#rg = __import__("reel generator")
 
 def freq(obj, out):#генерируем начальную ленту. 1 аргумент - структура игры, 2 аргумент - структура с нужными параметрами hit rate
     average = out.total_length
@@ -159,7 +157,7 @@ def parametrs(file_name, out):
 
     print(out.total_length)
     print(out.scatter_index_with_frequency)
-    print(out.scatter_index_with_frequency[12]/out.total_length) #количество скатеров с индексом 12 на одной ленте
+    print(out.scatter_index_with_frequency[11]/out.total_length) #количество скатеров с индексом 11 на одной ленте
 
 
     start_time = time.time()
@@ -207,12 +205,12 @@ def F(base_rtp, freemean, sdnew, r_base_rtp, r_freemean, r_sdnew, err_base_rtp, 
     t1 = np.fabs(base_rtp - r_base_rtp)/err_base_rtp
     t2 = np.fabs(freemean - r_freemean)/err_freemean
     t3 = np.fabs(sdnew - r_sdnew)/err_sdnew
-    return max([t1, t2, t3])
+    return max([t1, t2])
 
 
 
 
-file_name = 'HappyBrauer.txt'
+file_name = 'Games\HappyBrauer.txt'
 hitrate = 100
 
 
@@ -322,7 +320,7 @@ while 1:
     neighbours.fillParametrs(obj, base_rtp, freemean, sdnew, err_base_rtp, err_freemean, err_sdnew)
     neighbours.neighbourVal()
     print('iteration ', counter, ' value ', tmp_min.value, ' distribution ', tmp_min.frequency[0])
-    if counter > 5:
+    if counter > 500:
         print('222')
         break
 
