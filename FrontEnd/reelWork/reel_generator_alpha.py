@@ -263,13 +263,13 @@ def fill_scatter_num_comb(self, window):
 
 def fill_simple_num_comb(self, window, lines):
     all_strings = support.combinations2(self, window[0], len(self.symbol))
-    result = []
-    for string in all_strings:
+    len_ = len(all_strings)
+    for i in range(len_):
+        string = all_strings[i]
         count = 0
         for line in lines:
             count += count_num_comb(self, string, line, window)
-        result.append([string, count])
-    self.simple_num_comb = copy.deepcopy(result)
+        self.simple_num_comb[i][1] = count
 
 
 def get_wilds_in_comb(self, string, comb):
@@ -300,3 +300,11 @@ def get_simple_payment(self, string):
             comb_payment = comb_payment * self.symbol[int(wild)].wild.multiplier
         res += comb_payment
     return res
+
+
+def create_simple_num_comb(self, window, lines):
+    all_strings = support.combinations2(self, window[0], len(self.symbol))
+    result = []
+    for string in all_strings:
+        result.append([string, 0, self.get_simple_payment(string)])
+    self.simple_num_comb = copy.deepcopy(result)

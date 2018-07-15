@@ -110,8 +110,14 @@ class neighbourhood(object):
             obj.free.reel_generator(self.neighbour[i].frequency, obj.window[0], obj.window[1])
             obj.base.fill_frequency(self.neighbour[i].frequency)
             obj.free.fill_frequency(self.neighbour[i].frequency)
+
+            obj.base.fill_count_killed(obj.window[0])
+            #obj.base.create_simple_num_comb(obj.window, obj.line)
             obj.base.fill_simple_num_comb(obj.window, obj.line)
             obj.base.fill_scatter_num_comb(obj.window)
+
+            obj.free.fill_count_killed(obj.window[0])
+            #obj.free.create_simple_num_comb(obj.window, obj.line)
             obj.free.fill_simple_num_comb(obj.window, obj.line)
             obj.free.fill_scatter_num_comb(obj.window)
 
@@ -168,9 +174,13 @@ def parametrs(file_name, out):
     obj.base.fill_frequency(distr)
     obj.free.fill_frequency(distr)
 
-
+    obj.base.fill_count_killed(obj.window[0])
+    obj.base.create_simple_num_comb(obj.window, obj.line)
     obj.base.fill_simple_num_comb(obj.window, obj.line)
     obj.base.fill_scatter_num_comb(obj.window)
+
+    obj.free.fill_count_killed(obj.window[0])
+    obj.free.create_simple_num_comb(obj.window, obj.line)
     obj.free.fill_simple_num_comb(obj.window, obj.line)
     obj.free.fill_scatter_num_comb(obj.window)
 
@@ -259,7 +269,8 @@ print('neigh', neighbours.neighbour[0].frequency)
 print(len(neighbours.neighbour))
 print(root.frequency)
 
-
+obj.base.create_simple_num_comb(obj.window, obj.line)
+obj.free.create_simple_num_comb(obj.window, obj.line)
 
 neighbours.fillParametrs(obj, base_rtp, freemean, sdnew, err_base_rtp, err_freemean, err_sdnew)
 neighbours.neighbourVal()

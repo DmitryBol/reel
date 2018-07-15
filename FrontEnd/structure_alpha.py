@@ -162,6 +162,7 @@ class Gametype:
     fill_count_killed = rg.fill_count_killed
     fill_scatter_num_comb = rg.fill_scatter_num_comb
     fill_simple_num_comb = rg.fill_simple_num_comb
+    create_simple_num_comb = rg.create_simple_num_comb
     get_simple_payment = rg.get_simple_payment
     get_wilds_in_comb = rg.get_wilds_in_comb
 
@@ -259,7 +260,8 @@ class Game:
             s = 0
             for str_with_count in self.base.simple_num_comb:
                 string = str_with_count[0]
-                payment = self.base.get_simple_payment(string)
+                #payment = self.base.get_simple_payment(string)
+                payment = str_with_count[2]
                 s += str_with_count[1] / self.base.all_combinations() * payment
 
             for scatter_comb in self.base.scatter_num_comb:
@@ -273,7 +275,8 @@ class Game:
             s = 0
             for str_with_count in self.free.simple_num_comb:
                 string = str_with_count[0]
-                payment = self.free.get_simple_payment(string)
+                #payment = self.free.get_simple_payment(string)
+                payment = str_with_count[2]
                 s += str_with_count[1] / self.free.all_combinations() * payment
 
             for scatter_comb in self.free.scatter_num_comb:
@@ -332,7 +335,8 @@ class Game:
         s = 0
         for str_with_count in self.base.simple_num_comb:
             string = str_with_count[0]
-            payment = self.base.get_simple_payment(string)
+            #payment = self.base.get_simple_payment(string)
+            payment = str_with_count[2]
             s += str_with_count[1] / self.base.all_combinations() * payment ** 2
 
         for scatter_comb in self.base.scatter_num_comb:

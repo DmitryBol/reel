@@ -17,6 +17,7 @@ FILES = ['Games\Garage.txt', 'Games\HappyBrauer.txt', 'Games\Katana.txt', 'Games
 
 for sees in FILES:
     for i in range(10):
+        start_time = time.time()
         file = open(sees, 'r')
         j = file.read()
 
@@ -31,10 +32,18 @@ for sees in FILES:
         obj.free.fill_frequency(frequency)
 
         obj.base.fill_count_killed(obj.window[0])
+        obj.base.create_simple_num_comb(obj.window, obj.line)
         obj.base.fill_simple_num_comb(obj.window, obj.line)
         obj.base.fill_scatter_num_comb(obj.window)
+
+        obj.free.fill_count_killed(obj.window[0])
+        obj.free.create_simple_num_comb(obj.window, obj.line)
+        obj.free.fill_simple_num_comb(obj.window, obj.line)
+        obj.free.fill_scatter_num_comb(obj.window)
 
         param = obj.count_parameters()
         print('FILE: ', sees, 10 - i, 'lines')
         print(round(param['rtp'], 4), ' / ', round(param['sd'], 4), ' / ', round(param['sdnew'], 4))
+        print('time: ', round(time.time() - start_time, 4))
+        print('')
         file.close()
