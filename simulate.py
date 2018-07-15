@@ -69,41 +69,46 @@ def make_spin(type):
     return res
 
 
-file = open('Games\HappyBrauer.txt', 'r')
-j = file.read()
-
-interim = json.loads(j)
-
-obj = Q.Game(interim)
-
-frequency_1 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16, 4]
-frequency_2 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16, 4]
-frequency_3 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16, 4]
-frequency_4 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16, 4]
-frequency_5 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 16, 4]
-
+frequency_1 = [5, 6, 12, 12, 12, 12, 14, 16, 16, 4, 4, 4]
+frequency_2 = [5, 6, 12, 12, 12, 12, 14, 16, 16, 4, 4, 4]
+frequency_3 = [5, 6, 12, 12, 12, 12, 14, 16, 16, 4, 4, 4]
+frequency_4 = [5, 6, 12, 12, 12, 12, 14, 16, 16, 4, 4, 4]
+frequency_5 = [5, 6, 12, 12, 12, 12, 14, 16, 16, 4, 4, 4]
+# [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
 frequency = [frequency_1, frequency_2, frequency_3, frequency_4, frequency_5]
 
-REPEAT_CNT = 300000
+REPEAT_CNT = 1000000
+FILES = ['Games\Space Odyssey.txt', 'Games\Sparta.txt', 'Games\Romantic Night.txt']
 
-matrix = np.zeros((obj.window[1], obj.window[0]))
+for sees in FILES:
+    for i in range(10):
+        file = open(sees, 'r')
+        j = file.read()
 
-obj.base.reel_generator(frequency, obj.window[0], obj.distance)
-obj.free.reel_generator(frequency, obj.window[0], obj.distance)
-obj.base.fill_frequency(frequency)
-obj.free.fill_frequency(frequency)
+        interim = json.loads(j)
 
-#все выплаты в тотал бетах
-payments_sum = 0
-payments_square_sum = 0
-for cnt in range(REPEAT_CNT):
-    spin_result = make_spin('base')
-    payments_sum += spin_result / len(obj.line)
-    payments_square_sum += (spin_result / len(obj.line))**2
-    if (cnt + 1) % int(REPEAT_CNT/100) == 0:
-        print(str(round((cnt + 1) / REPEAT_CNT * 100)) + '%')
+        obj = Q.Game(interim)
+        obj.deleteline(i)
+        matrix = np.zeros((obj.window[1], obj.window[0]))
 
-rtp = payments_sum / REPEAT_CNT
-sd = (1/(REPEAT_CNT - 1) * (payments_square_sum - 1/REPEAT_CNT * payments_sum**2))**0.5
-print('simulation rtp = ', rtp)
-print('simulation sd = ', sd)
+        obj.base.reel_generator(frequency, obj.window[0], obj.distance)
+        obj.free.reel_generator(frequency, obj.window[0], obj.distance)
+        obj.base.fill_frequency(frequency)
+        obj.free.fill_frequency(frequency)
+
+        payments_sum = 0
+        payments_square_sum = 0
+        for cnt in range(REPEAT_CNT):
+            spin_result = make_spin('base')
+            payments_sum += spin_result / len(obj.line)
+            payments_square_sum += (spin_result / len(obj.line))**2
+            #if (cnt + 1) % int(REPEAT_CNT/100) == 0:
+                #print(str(round((cnt + 1) / REPEAT_CNT * 100)) + '%')
+
+        rtp = payments_sum / REPEAT_CNT
+        sd = (1/(REPEAT_CNT - 1) * (payments_square_sum - 1/REPEAT_CNT * payments_sum**2))**0.5
+        print('FILE: ', sees, 10 - i, 'lines')
+        print('simulation rtp = ', rtp)
+        print('simulation sd = ', sd)
+        file.close()
+

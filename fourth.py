@@ -1,9 +1,9 @@
-import archive.test_file as tf
+#import archive.test_file as tf
 import json
 import FrontEnd.structure_alpha as Q
 import time
 
-tf.func1()
+#tf.func1()
 
 file = open('Games\HappyBrauer.txt', 'r')
 j = file.read()
@@ -50,18 +50,13 @@ obj.free.fill_scatter_num_comb(obj.window)
 time2 = time.time()
 
 print('All combinations =', obj.base.all_combinations())
-base_rtp = obj.count_base_RTP2('base')
-print('Base RTP = ', base_rtp)
-freemean = obj.freemean2()
-print('FreeMean = ', freemean)
-rtp = obj.count_RTP2(freemean, base_rtp)
-print('RTP = ', rtp)
-sd = obj.count_volatility2(freemean, rtp)
-print('RTP SD = ', sd)
-sdnew = obj.count_volatility2new(freemean, rtp)
-print('RTP SD new = ', sdnew)
-hitrate = obj.count_hitrate2()
-print('Hitrate = ', hitrate)
+param = obj.count_parameters()
+print('Base RTP = ', param['base_rtp'])
+print('FreeMean = ', param['freemean'])
+print('RTP = ', param['rtp'])
+print('RTP SD = ', param['sd'])
+print('RTP SD new = ', param['sdnew'])
+print('Hitrate = ', param['hitrate'])
 
 print('filling: ', round(time2 - time1, 2), ' seconds')
 print('functions: ', round(time.time() - time2, 2), ' seconds')

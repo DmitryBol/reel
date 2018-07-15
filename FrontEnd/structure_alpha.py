@@ -84,6 +84,10 @@ class Gametype:
         else:
             raise Exception('Field "symbol" is not found in json file.')
 
+        self.multiplier = 1
+        if type == 'free' and sought(interim, 'free_multiplier'):
+            self.multiplier = sought(interim, 'free_multiplier')
+
         self.wildlist = []
         self.ewildlist = []
         self.scatterlist = []
@@ -118,8 +122,7 @@ class Gametype:
                 self.symbol[i].wild.substitute.append(i)
                 for j in range(len(sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute'))):
                     for k in range(len(sought(interim, 'symbol'))):
-                        if sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute')[
-                            j] == sought(sought(interim, 'symbol')[k], 'name'):
+                        if sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute')[j] == sought(sought(interim, 'symbol')[k], 'name'):
                             self.symbol[i].wild.substitute.append(k)
             else:
                 for j in range(len(self.symbol)):
@@ -246,6 +249,10 @@ class Game:
         # для каждого символа создание и заполнение массива индексов экспандящихся вайлдов, заменяющих данный символ
         self.free.substituted_by_e()
 
+    def deleteline(self, number):
+        for i in range(number):
+            self.line.pop()
+
     # noinspection PyPep8Naming,SpellCheckingInspection
     def count_base_RTP2(self, game):
         if game == 'base':
@@ -303,7 +310,7 @@ class Game:
     def count_volatility2new(self, FreeMean, RTP):
         # xi - random variable, equals payment for combination (base_rtp = Exi)
         # eta - random variable, equals the number of freespins given for combination
-        # zeta - random variable, equals payment for freespin (FreeMean = Ezeta) (ну потом я домножил на число линий, вдруг поможе)
+        # zeta - random variable, equals payment for freespin (FreeMean = Ezeta)
         Exi2 = self.base.Exi2(self.window[0], self.line)
         Exieta = self.base.Exieta(self.window[0], self.line)
         Eeta = self.base.Eeta(self.window[0])
@@ -313,11 +320,12 @@ class Game:
         Efree_xieta = self.free.Exieta(self.window[0], self.line)
         Efree_eta2 = self.free.Eeta2(self.window[0])
 
-        Ezeta = FreeMean * len(self.line)
+        Ezeta = FreeMean
         Ezeta2 = (Efree_xi2 + 2 * Ezeta * Efree_xieta) / (1 - Efree_eta2)
-
-        s = np.sqrt(Exi2 + 2 * Ezeta * Exieta + Eeta * (Ezeta2 - Ezeta ** 2) + Eeta2 * Ezeta ** 2 - RTP ** 2)
-        return s / len(self.line)
+        l = len(self.line)
+        epta = (Exi2 + 2 * Ezeta * Exieta + Eeta * (Ezeta2 - Ezeta ** 2) + Eeta2 * (Ezeta ** 2)) / l
+        s = np.sqrt((epta - (RTP ** 2)) * (l + 1) / (2*l))
+        return s
 
     # noinspection PyPep8Naming
     def count_volatility2(self, FreeMean, rtp):
@@ -332,8 +340,7 @@ class Game:
             counts = scatter_comb[1]
             for cnt in range(self.window[0] + 1):
                 s += (self.base.symbol[scat].payment[cnt] * len(self.line) + self.base.symbol[scat].scatter[
-                    cnt] * FreeMean) ** 2 \
-                     * counts[cnt] / self.base.all_combinations()
+                    cnt] * FreeMean) ** 2 * counts[cnt] / self.base.all_combinations()
         return np.sqrt(s - rtp ** 2) / len(self.line)
 
     def count_hitrate2(self):
@@ -348,3 +355,13 @@ class Game:
             return self.base.all_combinations2() / hits
         else:
             return 0
+
+    def count_parameters(self):
+        base_rtp = self.count_base_RTP2('base')
+        freemean = self.freemean2()
+        rtp = self.count_RTP2(freemean, base_rtp)
+        sd = self.count_volatility2(freemean, rtp)
+        sdnew = self.count_volatility2new(freemean, rtp)
+        hitrate = self.count_hitrate2()
+
+        return {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sd': sd, 'sdnew': sdnew, 'hitrate': hitrate}

@@ -528,8 +528,8 @@ def count_combinations(game, line_num, element_num, length, obj, frequency):
     return(first - sec - third)
 
 
-#f = open('Front-end/Atilla.txt', 'r')
-#f = open(Front-end +"/Atilla.txt", "r")
+#f = open('Front-end/Attila.txt', 'r')
+#f = open(Front-end +"/Attila.txt", "r")
 #text = f.read()
 #rules = json.loads(text)
 #object = structure_alpha.Game(rules)
