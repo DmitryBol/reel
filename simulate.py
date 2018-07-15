@@ -69,19 +69,19 @@ def make_spin(type):
     return res
 
 
-frequency_1 = [5, 6, 12, 12, 12, 12, 14, 16, 16, 4, 4, 4]
-frequency_2 = [5, 6, 12, 12, 12, 12, 14, 16, 16, 4, 4, 4]
-frequency_3 = [5, 6, 12, 12, 12, 12, 14, 16, 16, 4, 4, 4]
-frequency_4 = [5, 6, 12, 12, 12, 12, 14, 16, 16, 4, 4, 4]
-frequency_5 = [5, 6, 12, 12, 12, 12, 14, 16, 16, 4, 4, 4]
+frequency_1 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
+frequency_2 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
+frequency_3 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
+frequency_4 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
+frequency_5 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
 # [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
 frequency = [frequency_1, frequency_2, frequency_3, frequency_4, frequency_5]
 
-REPEAT_CNT = 1000000
-FILES = ['Games\Space Odyssey.txt', 'Games\Sparta.txt', 'Games\Romantic Night.txt']
+REPEAT_CNT = 100000
+FILES = ['Games\Garage.txt', 'Games\HappyBrauer.txt', 'Games\Katana.txt', 'Games\Attila.txt']
 
 for sees in FILES:
-    for i in range(10):
+    for i in range(1):
         file = open(sees, 'r')
         j = file.read()
 
