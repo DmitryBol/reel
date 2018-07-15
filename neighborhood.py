@@ -65,7 +65,7 @@ class neighbourhood(object):
         if base_rtp > root.base_rtp:
             for i in range(len(obj.base.symbol) - 1):
                 for j in range(i + 1, len(obj.base.symbol)):
-                    if obj.base.symbol[i].scatter == False and obj.base.symbol[j].scatter == False:
+                    if not obj.base.symbol[i].scatter and not obj.base.symbol[j].scatter:
                         if obj.base.symbol[i].payment[obj.window[0]] > obj.base.symbol[j].payment[obj.window[0]]:
                             tmp = copy.deepcopy(root.frequency[0])
                             tmp[i] += 1
@@ -83,7 +83,7 @@ class neighbourhood(object):
         elif base_rtp < root.base_rtp:
             for i in range(len(obj.base.symbol) - 1):
                 for j in range(i + 1, len(obj.base.symbol)):
-                    if obj.base.symbol[i].scatter == False and obj.base.symbol[j].scatter == False:
+                    if not obj.base.symbol[i].scatter and not obj.base.symbol[j].scatter:
                         if obj.base.symbol[i].payment[obj.window[0]] < obj.base.symbol[j].payment[obj.window[0]]:
                             #print('C')
                             tmp = copy.deepcopy(root.frequency[0])
