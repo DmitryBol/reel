@@ -76,7 +76,7 @@ def get_scatter_frequency(gameFileName, HR, ERROR):
 # получение частот по ключу "индекс скатера"
 # Пример кода ниже
 
-out = get_scatter_frequency('Games\HappyBrauer.txt', 160, 0.5)
-print(out.total_length)
-print(out.scatter_index_with_frequency)
-print(out.scatter_index_with_frequency[11]) #количество скатеров с индексом 11 на одной ленте
+#out = get_scatter_frequency('Games\HappyBrauer.txt', 160, 0.5)
+#print(out.total_length)
+#print(out.scatter_index_with_frequency)
+#print(out.scatter_index_with_frequency[11]) #количество скатеров с индексом 11 на одной ленте
