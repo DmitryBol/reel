@@ -43,7 +43,7 @@ for sees in FILES:
 
         param = obj.count_parameters()
         print('FILE: ', sees, 10 - i, 'lines')
-        print(round(param['rtp'], 4), ' / ', round(param['sd'], 4), ' / ', round(param['sdnew'], 4))
+        print(round(param['rtp'], 4), ' / ', round(param['sd'], 4), ' / ', round(param['sdnew'], 4), ' / ', round(param['sdalpha'], 4))
         print('time: ', round(time.time() - start_time, 4))
         print('')
         file.close()

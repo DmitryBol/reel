@@ -360,12 +360,80 @@ class Game:
         else:
             return 0
 
+
+    #paymnt = base_payment + xi + eta * zeta
+    #zeta = bonus_payment + xi_free + eta_free * zeta
+    def count_volatility_alpha(self, FreeMean):
+        res = 0
+        s2 = 0
+        s = 0
+        for str_with_count in self.base.simple_num_comb:
+            payment = str_with_count[2]
+            s2 += str_with_count[1] / self.base.all_combinations() * payment**2
+            s += str_with_count[1] / self.base.all_combinations() * payment
+        res += s2 - s**2
+
+        xi = 0
+        xi2 = 0
+        for scatter_comb in self.base.scatter_num_comb:
+            scat = scatter_comb[0]
+            counts = scatter_comb[1]
+            for cnt in range(self.window[0] + 1):
+                payment = self.base.symbol[scat].payment[cnt] * len(self.line)
+                xi += payment / self.base.all_combinations() * counts[cnt]
+                xi2 += payment**2 / self.base.all_combinations() * counts[cnt]
+        res += xi2 - xi**2
+
+        xi_eta = 0
+        eta = 0
+        eta2 = 0
+        for scatter_comb in self.base.scatter_num_comb:
+            scat = scatter_comb[0]
+            counts = scatter_comb[1]
+            for cnt in range(self.window[0] + 1):
+                eta += self.base.symbol[scat].scatter[cnt] * counts[cnt] / self.base.all_combinations()
+                eta2 += self.base.symbol[scat].scatter[cnt]**2 * counts[cnt] / self.base.all_combinations()
+                xi_eta += self.base.symbol[scat].payment[cnt] * len(self.line) * self.base.symbol[scat].scatter[cnt] \
+                          * counts[cnt] / self.base.all_combinations()
+        res += 2 * FreeMean * (xi_eta - xi * eta)
+
+        res -= eta**2 * FreeMean**2
+
+
+        eta_free2 = 0
+        xi_free2 = 0
+        xi_free = 0
+        eta_free = 0
+        for scatter_comb in self.free.scatter_num_comb:
+            scat = scatter_comb[0]
+            counts = scatter_comb[1]
+            for cnt in range(self.window[0] + 1):
+                payment = self.free.symbol[scat].payment[cnt] * len(self.line)
+                eta_free2 += self.free.symbol[scat].scatter[cnt]**2 * counts[cnt] / self.free.all_combinations()
+                xi_free2 += payment**2 / self.free.all_combinations() * counts[cnt]
+                xi_free += payment / self.free.all_combinations() * counts[cnt]
+                eta_free += self.free.symbol[scat].scatter[cnt] * counts[cnt] / self.free.all_combinations()
+        s_free = 0
+        s_free2 = 0
+        for str_with_count in self.free.simple_num_comb:
+            payment = str_with_count[2]
+            s_free2 += str_with_count[1] / self.free.all_combinations() * payment**2
+            s_free += str_with_count[1] / self.free.all_combinations() * payment
+        if eta_free >= 1:
+            print('Many than 1 retrigger free spin per free spin in average')
+            return 0
+        zeta2 = 1 / (1 - 2*eta_free + eta_free2) * (s_free2 + 2*s_free*xi_free + xi_free2)
+
+        res += eta2 * zeta2
+        return res**0.5 / len(self.line)
+
     def count_parameters(self):
         base_rtp = self.count_base_RTP2('base')
         freemean = self.freemean2()
         rtp = self.count_RTP2(freemean, base_rtp)
         sd = self.count_volatility2(freemean, rtp)
         sdnew = self.count_volatility2new(freemean, rtp)
+        sdalpha = self.count_volatility_alpha(freemean)
         hitrate = self.count_hitrate2()
 
-        return {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sd': sd, 'sdnew': sdnew, 'hitrate': hitrate}
+        return {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sd': sd, 'sdnew': sdnew, 'sdalpha': sdalpha, 'hitrate': hitrate}
