@@ -5,6 +5,9 @@ import simple_functions_for_fit as sm
 import copy
 import numpy as np
 
+scaleLimit = 2
+Inf = 0.05
+wildInf = 0.025
 
 #rg = __import__("reel generator")
 
@@ -37,18 +40,17 @@ class point(object):
         self.freeReel = '-1'
         self.base_rtp = '-1'
         self.rtp = '-1'
-        self.freemean = '-1'
         self.sdnew = '-1'
         self.hitrate = '-1'
         self.value = '-1'
-    def fillVal(self, base_rtp, freemean, rtp, sdnew, err_base_rtp, err_freemean, err_rtp, err_sdnew):
-        self.value = F(base_rtp, freemean, rtp, sdnew, self.base_rtp, self.freemean, self.rtp, self.sdnew, err_base_rtp, err_freemean, err_rtp, err_sdnew)
+    def fillVal(self, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew):
+        self.value = F(base_rtp, rtp, sdnew, self.base_rtp, self.rtp, self.sdnew, err_base_rtp, err_rtp, err_sdnew)
     def scaling(self, scale=2):
         for i in range(len(self.frequency)):
             for j in range(len(self.frequency[i])):
                 self.frequency[i][j] = scale*self.frequency[i][j]
         return self
-    def fillPoint(self, obj, base_rtp, freemean, rtp, sdnew, err_base_rtp, err_freemean, err_rtp, err_sdnew):
+    def fillPoint(self, obj, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew):
         obj.base.reel_generator(self.frequency, obj.window[0], obj.window[1])
         obj.free.reel_generator(self.frequency, obj.window[0], obj.window[1])
         obj.base.fill_frequency(self.frequency)
@@ -67,12 +69,11 @@ class point(object):
         self.baseReel = obj.base.reels
         self.freeReel = obj.free.reels
 
-
         params = obj.count_parameters()
 
-        self.base_rtp, self.freemean, self.rtp, self.sdnew, self.hitrate = params['base_rtp'], params['freemean'], params['rtp'], params['sdnew'], params['hitrate']
+        self.base_rtp, self.rtp, self.sdnew, self.hitrate = params['base_rtp'], params['rtp'], params['sdnew'], params['hitrate']
 
-        self.fillVal(base_rtp, freemean, rtp, sdnew, err_base_rtp, err_freemean, err_rtp, err_sdnew)
+        self.fillVal(base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
 
 
 
@@ -192,14 +193,11 @@ def parametrs(file_name, out):
 
     distr = freq(obj, out)
 
-
     print(out.total_length)
     print(out.scatter_index_with_frequency)
     print(out.scatter_index_with_frequency[11]/out.total_length) #количество скатеров с индексом 11 на одной ленте
 
-
     start_time = time.time()
-
 
     obj.base.reel_generator(distr, obj.window[0], obj.window[1])
     obj.free.reel_generator(distr, obj.window[0], obj.window[1])
@@ -216,34 +214,86 @@ def parametrs(file_name, out):
     obj.free.fill_simple_num_comb(obj.window, obj.line)
     obj.free.fill_scatter_num_comb(obj.window)
 
-
     root = point(distr)
     root.baseReel = obj.base.reels
     root.freeReel = obj.free.reels
 
     params = obj.count_parameters()
-    base_rtp, freemean, rtp, sdnew, hitrate = params['base_rtp'], params['freemean'], params['rtp'], params['sdnew'], params['hitrate']
 
-    print('All combinations =', obj.base.all_combinations())
-    print('Base RTP = ', base_rtp)
-    print('FreeMean = ', freemean)
-    print('RTP = ', rtp)
-    print('SD new = ', sdnew)
-    print('Hitrate = ', hitrate)
+    root.base_rtp, root.rtp, root.sdnew, root.hitrate = params['base_rtp'], params['rtp'], params['sdnew'], params['hitrate']
 
-    root.base_rtp, root.freemean, root.rtp, root.sdnew, root.hitrate = base_rtp, freemean, rtp, sdnew, hitrate
+    roots = [root]
+
+    roots = roots + initialDistributions(obj, out)
 
     print(time.time() - start_time)
 
-    return distr, base_rtp, freemean, rtp,sdnew, hitrate, obj, root
+    return distr, params['base_rtp'], params['rtp'], params['sdnew'], params['hitrate'], obj, roots
+
+def initialDistributions(obj, out):
+    t = [0 for j in range(len(obj.base.symbol))]
+    numb_of_scatters = 0
+    for j in range(len(obj.base.scatterlist)):
+        t[obj.base.scatterlist[j]] = out.scatter_index_with_frequency[obj.base.scatterlist[j]]
+        numb_of_scatters += t[obj.base.scatterlist[j]]
+    num = (len(obj.base.symbol) - len(obj.base.scatterlist) - 1)#число доступных символов
+
+    Sup = 1/obj.window[1]
+    wildSup = 1/obj.window[1]
 
 
-def F(base_rtp, freemean, rtp, sdnew, r_base_rtp, r_freemean, r_rtp, r_sdnew, err_base_rtp, err_freemean, err_rtp, err_sdnew):
+    initial = []
+    for i in range(len(obj.base.symbol)):
+        temp = copy.deepcopy(t)
+        temp_ = copy.deepcopy(t)
+        if not obj.base.symbol[i].scatter:
+            if not obj.base.symbol[i].wild:
+                temp[i] = int(Inf*out.total_length) + 1
+                temp_[i] = int(Sup*out.total_length) - 1
+            else:
+                temp[i] = int(wildInf*out.total_length) + 1
+                temp_[i] = int(wildSup*out.total_length) - 1
+            total = out.total_length - sum(temp)
+            total_ = out.total_length - sum(temp_)
+            avg = total // num
+            avg_ = total_ // num
+            for j in range(len(obj.base.symbol)):
+                if j not in obj.base.scatterlist and j != i:
+                    temp[j] = avg
+                    temp_[j] = avg_
+            counter = 0
+            for j in range(len(obj.base.symbol)):
+                if j not in obj.base.scatterlist and j != i:
+                    temp[j] += 1
+                    counter += 1
+                if counter >= total % num:
+                    break
+            counter = 0
+            for j in range(len(obj.base.symbol)):
+                if j not in obj.base.scatterlist and j != i:
+                    temp_[j] += 1
+                    counter += 1
+                if counter >= total_ % num:
+                    break
+            temp2 = [temp for j in range(obj.window[0])]
+            temp_2 = [temp_ for j in range(obj.window[0])]
+            initial = initial + [point(temp2),point(temp_2)]
+
+    for i in initial :
+        i.baseReel = obj.base.reels
+        i.freeReel = obj.free.reels
+
+        params = obj.count_parameters()
+
+        i.base_rtp, i.rtp, i.sdnew, i.hitrate = params['base_rtp'], params['rtp'], params['sdnew'], params['hitrate']
+        #print(i.frequency[0], sum(i.frequency[0]))
+    return initial
+
+def F(base_rtp, rtp, sdnew, r_base_rtp, r_rtp, r_sdnew, err_base_rtp, err_rtp, err_sdnew):
     t1 = np.fabs(base_rtp - r_base_rtp)/err_base_rtp
-    t2 = np.fabs(freemean - r_freemean)/err_freemean
+    t2 = np.fabs(rtp - r_rtp)/err_rtp
     t3 = np.fabs(sdnew - r_sdnew)/err_sdnew
-    t4 = np.fabs(rtp - r_rtp)/err_rtp
-    return max([t1, t2, t4])
+    return max([t1, t2])
 
 
 
@@ -351,59 +401,113 @@ def FirstMethod(hitrate, err_hitrate, file_name):
 class group:
     def __init__(self, root, num, sortedSymbols, obj):
         self.root = root
-        self.number = num
-        k = len(sortedSymbols)//num
+
+        self.total = [sum(i) for i in root.frequency]
+
         self.groups = []
-        for i in range(num):
+        for i in range(len(obj.base.symbol)):
+            if obj.base.symbol[i].wild != False:
+                self.groups.append([i])
+        c = 0
+        t_num = num - len(self.groups)
+        k = len(sortedSymbols)//t_num
+        for i in range(t_num):
             g = []
-            for j in range(k):
-                g.append(sortedSymbols[i*k + j])
-            if i == num - 1:
-                for j in range(1, len(sortedSymbols)%num + 1):
-                    g.append(sortedSymbols[i*k + k - 1 + j])
+            if c < len(sortedSymbols)%t_num:
+                for j in range(c, k + c + 1):
+                    g.append(sortedSymbols[i*k + j])
+                c += 1
+            else:
+                for j in range(c, k + c):
+                    g.append(sortedSymbols[i*k + j])
+
             self.groups.append(g)
+
+
+
         distributions = []
         for i in range(num - 1):
             for j in range(i + 1, num):
-                tmp1 = copy.deepcopy(root.frequency)
-                tmp2 = copy.deepcopy(root.frequency)
-                for l in range(len(tmp1)):
-                    code = 0
-                    for k in range(len(self.groups[i])):
+                tmp1 = [copy.deepcopy(f) for f in root.frequency]
+                tmp2 = [copy.deepcopy(f) for f in root.frequency]
+                for l in range(obj.window[0]):
+                    for k in  range(min(len(self.groups[i]), len(self.groups[j]))):
                         tmp1[l][self.groups[i][k]] += 1
-                        tmp2[l][self.groups[i][k]] -= 1
-                        if  tmp1[l][self.groups[i][k]] > (1/obj.window[1])*sum(tmp1[l]) or tmp2[l][self.groups[i][k]] < 0.02*sum(tmp1[l]):
-                            #print('ABSOLUTELY DEGENERATE')
-                            code = -1
-                            break
-                    for k in range(len(self.groups[j])):
-                        tmp1[l][self.groups[j][k]] -= 1
                         tmp2[l][self.groups[j][k]] += 1
-                        if  tmp2[l][self.groups[j][k]] > (1/obj.window[1])*sum(tmp1[l]) or tmp1[l][self.groups[j][k]] < 0.02*sum(tmp1[l]):
-                            #print('ABSOLUTELY DEGENERATE')
-                            code = -1
-                            break
-                if code == 0:
-                    distributions = distributions + [tmp1, tmp2]
-        for p in distributions:
-            for l in range(len(p)):
-                for g in self.groups:
-                    total = 0
-                    for j in g:
-                        total += p[l][j]
-                    for j in g:
-                        p[l][j] = total//len(g)
-                    for j in range(total%len(g)):
-                        p[l][g[j]] += 1
+                        tmp1[l][self.groups[j][k]] -= 1
+                        tmp2[l][self.groups[i][k]] -= 1
+
+                for l in range(obj.window[0]):
+                    total_i_1 = 0
+                    total_i_2 = 0
+                    total_j_1 = 0
+                    total_j_2 = 0
+                    for k in self.groups[i]:
+                        total_i_1 += tmp1[l][k]
+                        total_i_2 += tmp2[l][k]
+                    for k in self.groups[j]:
+                        total_j_1 += tmp1[l][k]
+                        total_j_2 += tmp2[l][k]
+
+
+                    for k in self.groups[i]:
+                        tmp1[l][k] = total_i_1 // len(self.groups[i])
+                        tmp2[l][k] = total_i_2 // len(self.groups[i])
+                    for k in self.groups[j]:
+                        tmp1[l][k] = total_j_1 // len(self.groups[j])
+                        tmp2[l][k] = total_j_2 // len(self.groups[j])
+
+
+                    for k in range(total_i_1 % len(self.groups[i])):
+                        tmp1[l][self.groups[i][k]] += 1
+                    for k in range(total_i_2 % len(self.groups[i])):
+                        tmp2[l][self.groups[i][k]] += 1
+
+                    for k in range(total_j_1 % len(self.groups[j])):
+                        tmp1[l][self.groups[j][k]] += 1
+                    for k in range(total_j_2 % len(self.groups[j])):
+                        tmp2[l][self.groups[j][k]] += 1
+                tmp1_ok = True
+                tmp2_ok = True
+                '''if flag:
+                    print('tmp1: ', tmp1)
+                    print('tmp2: ', tmp2)'''
+                for l in range(obj.window[0]):
+                    for s in range(len(tmp1[l])):
+                        if s not in obj.base.scatterlist:
+                            if s not in obj.base.wildlist and s not in obj.base.ewildlist:
+                                if tmp1[l][s] > (1/obj.window[1])*self.total[l] or tmp1[l][s] < Inf*self.total[l]:
+                                    tmp1_ok = False
+                                    break
+                            else:
+                                if tmp1[l][s] > (1/obj.window[1])*self.total[l] or tmp1[l][s] < wildInf*self.total[l]:
+                                    tmp1_ok = False
+                                    break
+                    for s in range(len(tmp2[l])):
+                        if s not in obj.base.scatterlist:
+                            if s not in obj.base.wildlist and s not in obj.base.ewildlist:
+                                if tmp2[l][s] > (1/obj.window[0])*self.total[l] or tmp2[l][s] < Inf*self.total[l]:
+                                    tmp2_ok = False
+                                    break
+                            else:
+                                if tmp2[l][s] > (1/obj.window[1])*self.total[l] or tmp2[l][s] < wildInf*self.total[l]:
+                                    tmp2_ok = False
+                                    break
+                if tmp1_ok:
+                    distributions = distributions + [tmp1]
+                if tmp2_ok:
+                    distributions = distributions + [tmp2]
+
+        #print('AAAA')
         self.points = [point(d) for d in distributions]
 
-    def fillGroup(self, obj, base_rtp, freemean, rtp, sdnew, err_base_rtp, err_freemean, err_rtp, err_sdnew):
+    def fillGroup(self, obj, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew):
         for p in self.points:
-            p.fillPoint(obj, base_rtp, freemean, rtp, sdnew, err_base_rtp, err_freemean, err_rtp, err_sdnew)
+            p.fillPoint(obj, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
     def printGroup(self):
-        print('root ', self.root.frequency[0], ' root value ', self.root.value, ' root base rtp = ', self.root.base_rtp, ' freemean = ', self.root.freemean, ' rtp = ', self.root.rtp , ' sdnew = ', self.root.sdnew, ' hitrate = ', self.root.hitrate)
+        print('root ', self.root.frequency[0], ' root value ', self.root.value, ' root base rtp = ', self.root.base_rtp, ' rtp = ', self.root.rtp , ' sdnew = ', self.root.sdnew, ' hitrate = ', self.root.hitrate)
         for i in range(len(self.points)):
-            print(self.points[i].frequency[0], ' value ', self.points[i].value)
+            print(self.points[i].frequency[0], 'total = ', sum(self.points[i].frequency[0]),' value ', self.points[i].value)
     def findMin(self):
         index = -1
         current = copy.deepcopy(self.root.value)
@@ -420,7 +524,7 @@ class group:
 def sortSymbols(obj):
     sortedSymbols = []
     for i in range(len(obj.base.symbol)):
-        if not obj.base.symbol[i].scatter:
+        if not obj.base.symbol[i].scatter and not obj.base.symbol[i].wild:
             sortedSymbols.append(i)
     #пузырьковая сортировка, не думаю, что стоит мудрить с другой
     for i in range(len(sortedSymbols) - 1):
@@ -430,59 +534,87 @@ def sortSymbols(obj):
     return sortedSymbols
 
 
+def double_bouble(a, b):
+    for i in range(len(a) - 1):
+        for j in range(i + 1, len(a)):
+            if a[i] > a[j]:
+                a[i], a[j] = a[j], a[i]
+                b[i], b[j] = b[j], b[i]
+
 #Здесь происходит некоторая херня с hitrate.
 
 def SecondMethod(hitrate, err_hitrate, file_name):
 
     out = sm.get_scatter_frequency(file_name, hitrate, err_hitrate)
-    t_distr, r_base_rtp, r_freemean, r_rtp, r_sdnew, r_hitrate, obj, root = parametrs(file_name, out)
 
-    print(root.frequency)
-
-    base_rtp, freemean, rtp, sdnew, err_base_rtp, err_freemean, err_rtp, err_sdnew = 2.5, 2.5, 2, 14, 0.5, 0.5, 0.5, 0.5
+    t_distr, r_base_rtp, r_rtp, r_sdnew, r_hitrate, obj, roots = parametrs(file_name, out)
 
 
-    root.fillVal(base_rtp, freemean, rtp, sdnew, err_base_rtp, err_freemean, err_rtp, err_sdnew)
 
-    print('assuming base rtp, freemean, rtp, sd ', base_rtp, freemean, rtp, sdnew)
-    print('assuming errors for base rtp, freemean, rtp,  sd ', err_base_rtp, err_freemean, err_rtp, err_sdnew)
+    base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew = 0.85, 0.9, 14, 0.01, 0.01, 0.01
 
-    print('root value ', root.value)
+    print('INITIAL POINTS, THEIR DISTRIBUTIONS, VALUES AND PARAMETRES:')
+    a = []
+    for root in roots:
+        root.fillPoint(obj, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
+        root.fillVal(base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
+        print(root.frequency[0], ' value is ', root.value,'base_rtp, rtp, sdnew, hitrate :', root.base_rtp, root.rtp, root.sdnew, root.hitrate)
+        a = a + [root.value]
+    b = [i for i in range(len(a))]
+    double_bouble(a, b) # здесь массив b - массив индексов начальных точек, упорядоченных по значению F
 
-    obj.base.create_simple_num_comb(obj.window, obj.line)
-    obj.free.create_simple_num_comb(obj.window, obj.line)
-    sortedSymbols = sortSymbols(obj)
 
-    min_is_found = False
-    while not min_is_found:
-        print('ITERATION \n')
-        number_of_groups = 2
-        while number_of_groups <= int(len(sortedSymbols)/2):
-            print('is zis e los?')
-            temp_group = group(root, number_of_groups, sortedSymbols, obj)
-            print('группы ', temp_group.groups)
-            temp_group.fillGroup(obj, base_rtp, freemean, rtp, sdnew, err_base_rtp, err_freemean, err_rtp, err_sdnew )
-            temp_group.printGroup()
-            if temp_group.findMin() != -1:
-                if temp_group.findMin().value < 1:
-                    min_is_found = True
-                    print('ending with ', temp_group.findMin().value)
-                    print('base ', temp_group.findMin().base_rtp)
-                    print('freemean ', temp_group.findMin().freemean)
-                    print('rtp ', temp_group.findMin().rtp)
-                    print('sdnew ', temp_group.findMin().sdnew)
-                    print('hitrate ', temp_group.findMin().hitrate)
-                    root = copy.deepcopy(temp_group.findMin())
-                    print(root.frequency[0])
-                    break
+    print('assuming base rtp, rtp, sd ', base_rtp, rtp, sdnew)
+    print('assuming errors for base rtp, rtp,  sd ', err_base_rtp, err_rtp, err_sdnew)
+
+    for i in b:
+        print('TRYING POINT', roots[i].frequency[0], ' value is ', roots[i].value,'base_rtp, rtp, sdnew, hitrate :', roots[i].base_rtp, roots[i].rtp, roots[i].sdnew, roots[i].hitrate)
+
+        root = roots[i]
+
+        obj.base.create_simple_num_comb(obj.window, obj.line)
+        obj.free.create_simple_num_comb(obj.window, obj.line)
+        sortedSymbols = sortSymbols(obj)
+
+        min_is_found = False
+        currentScale = 0
+        while not min_is_found and currentScale < scaleLimit:
+            number_of_groups = len(obj.base.wildlist) + len(obj.base.ewildlist)
+            while number_of_groups < len(sortedSymbols) + 1:
+                #print('is zis e los?')
+                temp_group = group(root, number_of_groups, sortedSymbols, obj)
+                print('группы ', temp_group.groups)
+                temp_group.fillGroup(obj, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew )
+                print('точки групп и значения в них')
+                temp_group.printGroup()
+                if temp_group.findMin() != -1:
+                    if temp_group.findMin().value < 1:
+                        min_is_found = True
+                        print('ending with ', temp_group.findMin().value)
+                        print('base ', temp_group.findMin().base_rtp)
+                        print('rtp ', temp_group.findMin().rtp)
+                        print('sdnew ', temp_group.findMin().sdnew)
+                        print('hitrate ', temp_group.findMin().hitrate)
+                        root = copy.deepcopy(temp_group.findMin())
+                        print(root.frequency[0])
+                        break
+                    else:
+                        print('path ', temp_group.findMin().value)
+                        root = copy.deepcopy(temp_group.findMin())
                 else:
-                    print('path ', temp_group.findMin().value)
-                    root = copy.deepcopy(temp_group.findMin())
-            else:
-                print(number_of_groups)
-                number_of_groups += 1
-        if not min_is_found:
-            root = root.scaling()
+                    print(number_of_groups)
+                    number_of_groups += 1
+                    if number_of_groups > len(sortedSymbols)/2 and number_of_groups < len(sortedSymbols):
+                        number_of_groups = len(sortedSymbols) + 1
+
+            if not min_is_found:
+
+                root = root.scaling()
+                currentScale += 1
+                print('SCALING ', currentScale)
+        if min_is_found:
+            'Блеск'
+            break
 
 
 
