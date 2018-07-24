@@ -579,7 +579,7 @@ def SecondMethod(hitrate, err_hitrate, file_name):
         min_is_found = False
         currentScale = 0
         while not min_is_found and currentScale < scaleLimit:
-            number_of_groups = len(obj.base.wildlist) + len(obj.base.ewildlist)
+            number_of_groups = len(obj.base.wildlist) + len(obj.base.ewildlist) + 1
             while number_of_groups < len(sortedSymbols) + 1:
                 #print('is zis e los?')
                 temp_group = group(root, number_of_groups, sortedSymbols, obj)
