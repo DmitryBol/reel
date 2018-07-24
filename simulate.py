@@ -69,16 +69,16 @@ def make_spin(type):
     return res
 
 
-frequency_1 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
-frequency_2 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
-frequency_3 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
-frequency_4 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
-frequency_5 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
+frequency_1 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
+frequency_2 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
+frequency_3 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
+frequency_4 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
+frequency_5 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
 # [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
 frequency = [frequency_1, frequency_2, frequency_3, frequency_4, frequency_5]
 
 REPEAT_CNT = 100000
-FILES = ['Games\Garage.txt', 'Games\HappyBrauer.txt', 'Games\Katana.txt', 'Games\Attila.txt']
+FILES = ['Games\HappyBrauer.txt']
 
 for sees in FILES:
     for i in range(1):

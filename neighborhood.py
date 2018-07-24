@@ -193,10 +193,6 @@ def parametrs(file_name, out):
 
     distr = freq(obj, out)
 
-    print(out.total_length)
-    print(out.scatter_index_with_frequency)
-    print(out.scatter_index_with_frequency[11]/out.total_length) #количество скатеров с индексом 11 на одной ленте
-
     start_time = time.time()
 
     obj.base.reel_generator(distr, obj.window[0], obj.window[1])
@@ -293,7 +289,7 @@ def F(base_rtp, rtp, sdnew, r_base_rtp, r_rtp, r_sdnew, err_base_rtp, err_rtp, e
     t1 = np.fabs(base_rtp - r_base_rtp)/err_base_rtp
     t2 = np.fabs(rtp - r_rtp)/err_rtp
     t3 = np.fabs(sdnew - r_sdnew)/err_sdnew
-    return max([t1, t2])
+    return max([t1])
 
 
 
@@ -551,7 +547,7 @@ def SecondMethod(hitrate, err_hitrate, file_name):
 
 
 
-    base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew = 0.85, 0.9, 14, 0.01, 0.01, 0.01
+    base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew = 0.65, 0.9, 14, 0.001, 0.01, 0.01
 
     print('INITIAL POINTS, THEIR DISTRIBUTIONS, VALUES AND PARAMETRES:')
     a = []
@@ -567,6 +563,8 @@ def SecondMethod(hitrate, err_hitrate, file_name):
     print('assuming base rtp, rtp, sd ', base_rtp, rtp, sdnew)
     print('assuming errors for base rtp, rtp,  sd ', err_base_rtp, err_rtp, err_sdnew)
 
+    b = [0] + b
+
     for i in b:
         print('TRYING POINT', roots[i].frequency[0], ' value is ', roots[i].value,'base_rtp, rtp, sdnew, hitrate :', roots[i].base_rtp, roots[i].rtp, roots[i].sdnew, roots[i].hitrate)
 
@@ -579,8 +577,8 @@ def SecondMethod(hitrate, err_hitrate, file_name):
         min_is_found = False
         currentScale = 0
         while not min_is_found and currentScale < scaleLimit:
-            number_of_groups = len(obj.base.wildlist) + len(obj.base.ewildlist)
-            while number_of_groups < len(sortedSymbols) + 1:
+            number_of_groups = len(obj.base.wildlist) + len(obj.base.ewildlist) + 1
+            while number_of_groups < len(sortedSymbols) + len(obj.base.wildlist) + len(obj.base.ewildlist) + 1:
                 #print('is zis e los?')
                 temp_group = group(root, number_of_groups, sortedSymbols, obj)
                 print('группы ', temp_group.groups)
@@ -604,8 +602,8 @@ def SecondMethod(hitrate, err_hitrate, file_name):
                 else:
                     print(number_of_groups)
                     number_of_groups += 1
-                    if number_of_groups > len(sortedSymbols)/2 and number_of_groups < len(sortedSymbols):
-                        number_of_groups = len(sortedSymbols) + 1
+                    if number_of_groups >  (len(obj.base.wildlist) + len(obj.base.ewildlist) + len(sortedSymbols))/2:# and number_of_groups < len(sortedSymbols):
+                        number_of_groups = len(sortedSymbols) + len(obj.base.wildlist) + len(obj.base.ewildlist)
 
             if not min_is_found:
 
@@ -618,7 +616,7 @@ def SecondMethod(hitrate, err_hitrate, file_name):
 
 
 
-SecondMethod(100, 1,'Games\HappyBrauer.txt')
+SecondMethod(100, 1,'Games\Space Odyssey.txt')
 
 
 
