@@ -542,6 +542,8 @@ def double_bouble(a, b):
 def SecondMethod(hitrate, err_hitrate, file_name):
 
     out = sm.get_scatter_frequency(file_name, hitrate, err_hitrate)
+    if out == -1:
+        exit('no free spins')
 
     t_distr, r_base_rtp, r_rtp, r_sdnew, r_hitrate, obj, roots = parametrs(file_name, out)
 
@@ -616,7 +618,7 @@ def SecondMethod(hitrate, err_hitrate, file_name):
 
 
 
-SecondMethod(100, 1,'Games\Space Odyssey.txt')
+SecondMethod(100, 1,'Games\HappyBrauer.txt')
 
 
 
