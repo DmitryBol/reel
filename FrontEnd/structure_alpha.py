@@ -4,7 +4,7 @@ import itertools
 import re
 import copy
 
-from . import moments
+import moments
 import FrontEnd.reelWork.reel_generator_alpha as rg
 
 
@@ -113,11 +113,11 @@ class Gametype:
 
     def scatterlists(self):
         for i in range(len(self.symbol)):
-            if self.symbol[i].scatter:
+            if self.symbol[i].scatter is not False and self.symbol[i].scatter is not None:
                 self.scatterlist.append(i)
 
     def transsubst(self, interim, type, i):
-        if str(sought(sought(sought(interim, 'symbol')[i], type), 'wild')) != None:
+        if sought(sought(sought(interim, 'symbol')[i], type), 'wild') is not None:
             if sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute'):
                 self.symbol[i].wild.substitute.append(i)
                 for j in range(len(sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute'))):

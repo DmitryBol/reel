@@ -5,6 +5,7 @@ import json
 from PyQt5 import QtWidgets, QtGui, QtCore
 
 count = 0
+count_lines = 0
 
 
 def isint(value):
@@ -34,21 +35,24 @@ class Aesthetic(QtWidgets.QWidget):
 
 
 class LineEdits(QtWidgets.QWidget):
-    def __init__(self, width, size):
+    def __init__(self, width, size, height=None, space=None):
         super(LineEdits, self).__init__()
 
         self.fon = QtWidgets.QHBoxLayout()
         self.lines = []
 
-        self.init_ui(width, size)
+        self.init_ui(width, size, height, space)
 
-    def init_ui(self, width, size):
+    def init_ui(self, width, size, height, space):
         for i in range(width):
-            line = QtWidgets.QLineEdit('0')
+            line = QtWidgets.QLineEdit()
             self.lines.append(line)
-            self.lines[i].setMinimumWidth(size)
-            self.lines[i].setMaximumWidth(size)
+            self.lines[i].setFixedWidth(size)
+            if height is not None:
+                self.lines[i].setFixedHeight(height)
             self.fon.addWidget(self.lines[i])
+            if space is not None:
+                self.fon.setSpacing(space)
         self.fon.addStretch(40)
 
         self.setLayout(self.fon)
@@ -58,6 +62,15 @@ class LineEdits(QtWidgets.QWidget):
         for i in range(len(self.lines)):
             if isint(str(self.lines[i].text())) > 0:
                 info.append([i + 1, int(str(self.lines[i].text()))])
+        return info
+
+    def arrange_info(self):
+        info = []
+        for i in range(len(self.lines)):
+            if isint(str(self.lines[i].text())) > 0:
+                info.append(int(str(self.lines[i].text())))
+            else:
+                return None
         return info
 
 
@@ -72,13 +85,19 @@ class SwitchButtons(QtWidgets.QWidget):
 
     def init_ui(self, width, size):
         for i in range(width):
-            button = QtWidgets.QPushButton('✓')
+            button = QtWidgets.QPushButton()
             button.setCheckable(True)
-            button.setStyleSheet("background-color: green")
+
+            button.setStyleSheet("QPushButton {background-color: #4CCD59; border: none;}"
+                                 "QPushButton:pressed { background-color: #00A505 }"
+                                 "QPushButton:focus { background-color: #4CCD59 }"
+                                 "QPushButton:focus:pressed { background-color: #00A505 }"
+                                 "QPushButton:hover { background-color: #27E83A }")
+            button.setIcon(QtGui.QIcon('icons/allowed.png'))
             button.clicked[bool].connect(self.toggle)
             self.buttons.append(button)
-            self.buttons[i].setMinimumWidth(size)
-            self.buttons[i].setMaximumWidth(size)
+            self.buttons[i].setFixedWidth(size)
+            self.buttons[i].setFixedHeight(24)
             self.fon.addWidget(self.buttons[i])
         self.fon.addStretch(40)
 
@@ -87,11 +106,21 @@ class SwitchButtons(QtWidgets.QWidget):
     def toggle(self, pressed):
         sender = self.sender()
         if pressed:
-            sender.setText('✕')
-            sender.setStyleSheet("background-color: red")
+
+            sender.setStyleSheet("QPushButton {background-color: #EB6C6C; border: none;}"
+                                 "QPushButton:pressed { background-color: #EB4848 }"
+                                 "QPushButton:focus { background-color: #EB6C6C }"
+                                 "QPushButton:focus:pressed { background-color: #EB4848 }"
+                                 "QPushButton:hover { background-color: #F97373 }")
+            sender.setIcon(QtGui.QIcon('icons/prohibited.png'))
         else:
-            sender.setText('✓')
-            sender.setStyleSheet("background-color: green")
+            sender.setAutoFillBackground(True)
+            sender.setStyleSheet("QPushButton {background-color: #4CCD59; border: none;}"
+                                 "QPushButton:pressed { background-color: #00A505 }"
+                                 "QPushButton:focus { background-color: #4CCD59 }"
+                                 "QPushButton:focus:pressed { background-color: #00A505 }"
+                                 "QPushButton:hover { background-color: #27E83A }")
+            sender.setIcon(QtGui.QIcon('icons/allowed.png'))
 
     def collect_info(self):
         info = []
@@ -110,25 +139,35 @@ class Wild(QtWidgets.QWidget):
         self.label_multiplier = QtWidgets.QLabel('multiplier')
         self.line_multiplier = QtWidgets.QLineEdit()
 
-        self.label_expand = QtWidgets.QLabel('expand')
-        self.checkbox_expand = QtWidgets.QCheckBox()
-
         self.label_substitute = QtWidgets.QLabel('substitute')
         self.line_substitute = QtWidgets.QLineEdit()
+
+        self.label_expand = QtWidgets.QLabel('expand')
+        self.checkbox_expand = QtWidgets.QCheckBox()
 
         self.init_ui()
 
     def init_ui(self):
+        self.fon.setColumnStretch(2, 40)
+
         self.fon.addWidget(self.label_multiplier, 0, 0)
         self.fon.addWidget(self.line_multiplier, 0, 1)
+        self.line_multiplier.setFixedWidth(40)
 
-        self.fon.addWidget(self.label_expand, 1, 0)
-        self.fon.addWidget(self.checkbox_expand, 1, 1)
+        self.fon.addWidget(self.label_substitute, 1, 0)
+        self.fon.addWidget(self.line_substitute, 1, 1)
+        self.line_substitute.setFixedWidth(40)
+        self.line_substitute.textChanged.connect(self.adjust)
 
-        self.fon.addWidget(self.label_substitute, 2, 0)
-        self.fon.addWidget(self.line_substitute, 2, 1)
-
+        self.fon.addWidget(self.label_expand, 2, 0)
+        self.fon.addWidget(self.checkbox_expand, 2, 1)
         self.setLayout(self.fon)
+
+    def adjust(self):
+        text = self.line_substitute.text()
+        fm = self.line_substitute.fontMetrics()
+        w = fm.boundingRect(text).width()
+        self.line_substitute.setFixedWidth(max(w + 12, 40))
 
     def collect_info(self):
         d = {}
@@ -136,6 +175,9 @@ class Wild(QtWidgets.QWidget):
             d.update({'multiplier': int(str(self.line_multiplier.text()))})
         if self.checkbox_expand.checkState() == QtCore.Qt.Checked:
             d.update({'expand': True})
+        words = str(self.line_substitute.text()).split('; ')
+        if words is not None:
+            d.update({'substitute': words})
         return d
 
 
@@ -158,12 +200,11 @@ class Gametype(QtWidgets.QWidget):
         self.label = QtWidgets.QLabel(type)
         self.label_direction = QtWidgets.QLabel('direction')
         self.line_direction = QtWidgets.QComboBox()
-        self.line_direction.setMinimumWidth(100)
-        self.line_direction.setMaximumWidth(100)
+        self.line_direction.setFixedWidth(100)
         self.line_direction.addItems(['left', 'right', 'both', 'any'])
 
         self.label_position = QtWidgets.QLabel('position')
-        self.buttons_position = SwitchButtons(self.width, 28)
+        self.buttons_position = SwitchButtons(self.width, 40)
 
         self.label_scatter = QtWidgets.QLabel('scatter')
         self.checkbox_scatter = QtWidgets.QCheckBox()
@@ -178,9 +219,9 @@ class Gametype(QtWidgets.QWidget):
 
         self.frame = QtWidgets.QFrame()
 
-        self.init_ui(width)
+        self.init_ui()
 
-    def init_ui(self, width):
+    def init_ui(self):
         self.fon.addWidget(self.label_direction, 1, 0)
         self.fon.addWidget(Aesthetic(self.line_direction), 1, 1)
 
@@ -195,7 +236,8 @@ class Gametype(QtWidgets.QWidget):
         self.fon.addWidget(Aesthetic(self.checkbox_wild), 5, 1)
         self.checkbox_wild.stateChanged.connect(self.wild_check)
 
-        self.frame.setFrameShape(QtWidgets.QFrame.WinPanel)
+        self.frame.setLineWidth(2)
+        self.frame.setFrameShape(QtWidgets.QFrame.Panel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.frame.setLayout(self.fon)
 
@@ -212,7 +254,7 @@ class Gametype(QtWidgets.QWidget):
     def scatter_check(self, state):
         if state == QtCore.Qt.Checked:
             self.fon.addWidget(self.label_freespins, 4, 0)
-            self.line_freespins = LineEdits(self.width, 28)
+            self.line_freespins = LineEdits(self.width, 40)
             self.fon.addWidget(self.line_freespins, 4, 1)
         else:
             self.fon.removeWidget(self.label_freespins)
@@ -242,19 +284,19 @@ class Gametype(QtWidgets.QWidget):
         elif self.checkbox_wild.checkState() == QtCore.Qt.Checked:
             self.frame.setAutoFillBackground(True)
             p = self.frame.palette()
-            p.setColor(self.frame.backgroundRole(), QtGui.QColor(242, 224, 63))
+            p.setColor(self.frame.backgroundRole(), QtGui.QColor(255, 229, 100))
             self.frame.setPalette(p)
 
         elif self.checkbox_scatter.checkState() == QtCore.Qt.Checked:
             self.frame.setAutoFillBackground(True)
             p = self.frame.palette()
-            p.setColor(self.frame.backgroundRole(), QtGui.QColor(58, 209, 204))
+            p.setColor(self.frame.backgroundRole(), QtGui.QColor(120, 237, 255))
             self.frame.setPalette(p)
 
         else:
             self.frame.setAutoFillBackground(True)
             p = self.frame.palette()
-            p.setColor(self.frame.backgroundRole(), QtGui.QColor(200, 200, 200))
+            p.setColor(self.frame.backgroundRole(), QtGui.QColor(255, 240, 196))
             self.frame.setPalette(p)
 
     def collect_info(self):
@@ -272,13 +314,13 @@ class Symbol(QtWidgets.QWidget):
     def __init__(self, count, width):
         super(Symbol, self).__init__()
 
+        self.frame_symbol = QtWidgets.QFrame()
+        self.fon_back = QtWidgets.QVBoxLayout()
         self.fon_symbol = QtWidgets.QVBoxLayout()
         self.fon_type = QtWidgets.QGridLayout()
-        self.fon_type.setRowStretch(0, 1)
-        self.fon_type.setRowStretch(1, 40)
         self.border = QtWidgets.QLabel(' ')
-        self.label_base = QtWidgets.QLabel('base')
-        self.label_free = QtWidgets.QLabel('free')
+        self.label_base = QtWidgets.QLabel('base game')
+        self.label_free = QtWidgets.QLabel('free game')
 
         self.fon_name = QtWidgets.QHBoxLayout()
         self.label_name = QtWidgets.QLabel('name     ')
@@ -289,16 +331,20 @@ class Symbol(QtWidgets.QWidget):
         self.line_payment = None
 
         self.width = width
-        self.base = Gametype('base', self.width)
+        self.base = Gametype('base game', self.width)
         self.free = None
 
-        self.button_free = QtWidgets.QPushButton('Specify \n free game \n properties')
+        self.fon_button = QtWidgets.QVBoxLayout()
+        self.frame_button = QtWidgets.QFrame()
+        self.button_free = QtWidgets.QPushButton()
+        self.button_free.setIcon(QtGui.QIcon('icons/edit.png'))
         self.button_state = True
 
         self.init_ui()
 
     def init_ui(self):
         self.fon_name.addWidget(self.label_name)
+        self.line_name.setFixedWidth(225)
         self.fon_name.addWidget(Aesthetic(self.line_name))
 
         self.fon_payment.addWidget(self.label_payment)
@@ -309,42 +355,67 @@ class Symbol(QtWidgets.QWidget):
         self.fon_symbol.addLayout(self.fon_payment)
         self.fon_symbol.addLayout(self.fon_type)
 
-        self.fon_type.addWidget(self.base, 0, 0, 2, 1)
+        self.fon_type.addWidget(self.base, 0, 0, 1, 1)
 
-        self.fon_type.addWidget(self.button_free, 0, 2)
+        self.fon_type.addWidget(self.frame_button, 0, 2)
+        self.frame_button.setLayout(self.fon_button)
+        self.frame_button.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.frame_button.setContentsMargins(0, 0, 0, 0)
+        self.fon_button.addWidget(self.button_free)
         self.button_free.clicked.connect(self.button_free_clicked)
+        self.button_free.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        self.button_free.setToolTip('Edit free game properties')
+
+        self.fon_type.setColumnStretch(0, 40)
+
+        self.fon_type.setHorizontalSpacing(0)
 
         self.fon_symbol.addWidget(self.border)
 
-        self.fon_symbol.setSpacing(0)
-        self.setLayout(self.fon_symbol)
+        self.frame_symbol.setLineWidth(3)
+        self.frame_symbol.setFrameShape(QtWidgets.QFrame.Panel)
+        self.frame_symbol.setObjectName('Hoering')
+        self.frame_symbol.setStyleSheet('#Hoering {color: #F5DEB3}')
+        self.frame_symbol.setAutoFillBackground(True)
+        p = self.frame_symbol.palette()
+        p.setColor(self.frame_symbol.backgroundRole(), QtGui.QColor(255, 240, 196))
+        self.frame_symbol.setPalette(p)
+
+        self.frame_symbol.setLayout(self.fon_symbol)
+        self.fon_back.addWidget(self.frame_symbol)
+        self.setLayout(self.fon_back)
 
     def button_free_clicked(self):
         if self.button_state:
-            self.free = Gametype('free', self.width)
+            self.fon_type.setColumnStretch(1, 40)
+            self.free = Gametype('free game', self.width)
             self.base.fon.addWidget(self.base.label, 0, 0, 1, 2)
+            self.base.label.setAlignment(QtCore.Qt.AlignCenter)
             self.free.fon.addWidget(self.free.label, 0, 0, 1, 2)
-            self.fon_type.addWidget(self.free, 0, 1, 2, 1)
-            self.button_free.setText('Cancel')
+            self.free.label.setAlignment(QtCore.Qt.AlignCenter)
+            self.fon_type.addWidget(self.free, 0, 1, 1, 1)
+            self.button_free.setIcon(QtGui.QIcon('icons/noedit.png'))
+            self.button_free.setToolTip('Cancel editing')
             self.free.fon_cancel.addWidget(self.button_free)
             self.button_state = False
 
         else:
-            self.fon_type.addWidget(self.button_free, 0, 2)
+            self.fon_type.setColumnStretch(1, 1)
+            self.fon_button.addWidget(self.button_free)
 
             self.base.fon.removeWidget(self.base.label)
             sip.delete(self.base.label)
-            self.base.label = QtWidgets.QLabel('base')
+            self.base.label = QtWidgets.QLabel('base game')
 
             self.free.fon.removeWidget(self.free.label)
             sip.delete(self.free.label)
-            self.free.label = QtWidgets.QLabel('free')
+            self.free.label = QtWidgets.QLabel('free game')
 
             self.fon_type.removeWidget(self.free)
             sip.delete(self.free)
             self.free = None
-            self.button_free.setText('Specify \n free game \n properties')
-            self.fon_type.addWidget(self.button_free, 0, 2)
+            self.button_free.setIcon(QtGui.QIcon('icons/edit.png'))
+            self.button_free.setToolTip('Edit free game properties')
             self.button_state = True
 
     def collect_info(self):
@@ -363,26 +434,33 @@ class Window(QtWidgets.QWidget):
 
         self.fon = QtWidgets.QGridLayout()
 
-        self.frame_symbols = QtWidgets.QFrame()
-        self.fon_symbols = QtWidgets.QVBoxLayout()
-        self.grid_symbols = QtWidgets.QGridLayout()
-
-        self.add = QtWidgets.QPushButton('Add symbol')
-
         self.label_window = QtWidgets.QLabel('window')
         self.line_width = QtWidgets.QLineEdit('5')
         self.line_height = QtWidgets.QLineEdit('3')
         self.width = 5
         self.height = 3
 
-        self.label_symbol = QtWidgets.QLabel('symbols')
-
         self.fon_window = QtWidgets.QHBoxLayout()
+
+        self.label_symbol = QtWidgets.QLabel('symbols')
+        self.frame_symbols = QtWidgets.QFrame()
+        self.fon_symbols = QtWidgets.QVBoxLayout()
+        self.grid_symbols = QtWidgets.QGridLayout()
+
+        self.add_symbol = QtWidgets.QPushButton('Add symbol')
 
         self.symbols = []
         self.deleteButtons = []
 
         self.label_lines = QtWidgets.QLabel('lines')
+        self.frame_lines = QtWidgets.QFrame()
+        self.fon_lines = QtWidgets.QVBoxLayout()
+        self.grid_lines = QtWidgets.QGridLayout()
+
+        self.add_line = QtWidgets.QPushButton('Add line')
+
+        self.lines = []
+        self.deleteLines = []
 
         self.label_freemultiplier = QtWidgets.QLabel('free multiplier')
         self.line_freemultiplier = QtWidgets.QLineEdit()
@@ -392,99 +470,128 @@ class Window(QtWidgets.QWidget):
 
         self.label_rtp = QtWidgets.QLabel('RTP')
         self.line_rtp = QtWidgets.QLineEdit()
+        self.line_rtp_error = QtWidgets.QLineEdit()
 
         self.label_volatility = QtWidgets.QLabel('volatility')
         self.line_volatility = QtWidgets.QLineEdit()
+        self.line_volatility_error = QtWidgets.QLineEdit()
 
         self.label_hitrate = QtWidgets.QLabel('hitrate')
         self.line_hitrate = QtWidgets.QLineEdit()
+        self.line_hitrate_error = QtWidgets.QLineEdit()
 
         self.label_baseRTP = QtWidgets.QLabel('base RTP')
         self.line_baseRTP = QtWidgets.QLineEdit()
+        self.line_baseRTP_error = QtWidgets.QLineEdit()
 
         self.init_ui()
 
     def init_ui(self):
-        self.fon.setRowStretch(0, 1)
-        self.fon.setRowStretch(1, 1)
         self.fon.setRowStretch(2, 40)
+        self.fon.setRowStretch(4, 40)
 
-        self.fon.setColumnStretch(0, 1)
-        self.fon.setColumnStretch(1, 1)
-        self.fon.setColumnStretch(3, 40)
+        self.fon.setColumnStretch(4, 4)
+        self.fon.setColumnStretch(5, 4)
+        # bylo 400
 
         self.fon.addWidget(self.label_window, 0, 0)
 
         self.fon.addWidget(self.line_width, 0, 1)
-        self.line_width.setMinimumWidth(40)
-        self.line_width.setMaximumWidth(40)
+        self.line_width.setFixedWidth(80)
         self.fon.addWidget(self.line_height, 0, 2)
-        self.line_height.setMinimumWidth(40)
-        self.line_height.setMaximumWidth(40)
-
-        self.grid_symbols.setHorizontalSpacing(0)
-
-        self.fon.addWidget(self.label_symbol, 1, 0)
-        self.fon.addWidget(self.frame_symbols, 1, 1, 2, 3)
-        self.frame_symbols.setLayout(self.fon_symbols)
-        self.frame_symbols.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.frame_symbols.setFrameShadow(QtWidgets.QFrame.Sunken)
-
-        self.fon_symbols.addLayout(self.grid_symbols)
-        self.fon_symbols.setStretchFactor(self.grid_symbols, 40)
-        self.fon_symbols.addWidget(self.add)
-
-        self.add.clicked.connect(self.add_click)
+        self.line_height.setFixedWidth(80)
 
         self.line_width.textChanged.connect(self.width_changed)
         self.line_height.textChanged.connect(self.height_changed)
 
+        # symbols
+        self.grid_symbols.setHorizontalSpacing(0)
+
+        self.fon.addWidget(self.label_symbol, 1, 0)
+        self.fon.addWidget(self.frame_symbols, 1, 1, 2, 4)
+        self.frame_symbols.setLayout(self.fon_symbols)
+        self.frame_symbols.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_symbols.setFrameShadow(QtWidgets.QFrame.Plain)
+        self.grid_lines.setVerticalSpacing(0)
+
+        self.fon_symbols.addLayout(self.grid_symbols)
+        self.fon_symbols.setStretchFactor(self.grid_symbols, 40)
+        self.fon_symbols.addWidget(self.add_symbol)
+
+        self.add_symbol.clicked.connect(self.click_add_symbol)
+
+        # lines
+        self.grid_lines.setHorizontalSpacing(0)
+
         self.fon.addWidget(self.label_lines, 3, 0)
+        self.fon.addWidget(self.frame_lines, 3, 1, 2, 3)
+        self.frame_lines.setLayout(self.fon_lines)
+        self.frame_lines.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_lines.setFrameShadow(QtWidgets.QFrame.Plain)
 
-        self.fon.addWidget(self.label_freemultiplier, 4, 0)
-        self.fon.addWidget(self.line_freemultiplier, 4, 1)
+        self.fon_lines.addLayout(self.grid_lines)
+        self.fon_lines.setStretchFactor(self.grid_lines, 40)
+        self.fon_lines.addWidget(self.add_line)
 
-        self.fon.addWidget(self.label_distance, 5, 0)
-        self.fon.addWidget(self.line_distance, 5, 1)
+        self.add_line.clicked.connect(self.click_add_line)
 
-        self.fon.addWidget(self.label_rtp, 6, 0)
-        self.fon.addWidget(self.line_rtp, 6, 1)
+        self.fon.addWidget(self.label_freemultiplier, 5, 0)
+        self.fon.addWidget(self.line_freemultiplier, 5, 1, 1, 2)
 
-        self.fon.addWidget(self.label_volatility, 7, 0)
-        self.fon.addWidget(self.line_volatility, 7, 1)
+        self.fon.addWidget(self.label_distance, 6, 0)
+        self.fon.addWidget(self.line_distance, 6, 1, 1, 2)
 
-        self.fon.addWidget(self.label_hitrate, 8, 0)
-        self.fon.addWidget(self.line_hitrate, 8, 1)
+        self.fon.addWidget(self.label_rtp, 7, 0)
+        self.fon.addWidget(self.line_rtp, 7, 1)
+        self.line_rtp.setFixedWidth(80)
+        self.fon.addWidget(self.line_rtp_error, 7, 2)
+        self.line_rtp_error.setFixedWidth(80)
 
-        self.fon.addWidget(self.label_baseRTP, 9, 0)
-        self.fon.addWidget(self.line_baseRTP, 9, 1)
+        self.fon.addWidget(self.label_volatility, 8, 0)
+        self.fon.addWidget(self.line_volatility, 8, 1)
+        self.line_volatility.setFixedWidth(80)
+        self.fon.addWidget(self.line_volatility_error, 8, 2)
+        self.line_volatility_error.setFixedWidth(80)
+
+        self.fon.addWidget(self.label_hitrate, 9, 0)
+        self.fon.addWidget(self.line_hitrate, 9, 1)
+        self.line_hitrate.setFixedWidth(80)
+        self.fon.addWidget(self.line_hitrate_error, 9, 2)
+        self.line_hitrate_error.setFixedWidth(80)
+
+        self.fon.addWidget(self.label_baseRTP, 10, 0)
+        self.fon.addWidget(self.line_baseRTP, 10, 1)
+        self.line_baseRTP.setFixedWidth(80)
+        self.fon.addWidget(self.line_baseRTP_error, 10, 2)
+        self.line_baseRTP_error.setFixedWidth(80)
 
         self.setLayout(self.fon)
 
-    def add_click(self):
+    def click_add_symbol(self):
         global count
 
         symbol = Symbol(count, self.width)
         self.symbols.append(symbol)
 
-        button_delete = QtWidgets.QPushButton('✕')
-        button_delete.setMinimumSize(28, 28)
-        button_delete.setMaximumSize(28, 28)
+        button_delete = QtWidgets.QPushButton()
+        button_delete.setIcon(QtGui.QIcon('icons/close.png'))
+        button_delete.setToolTip('Delete symbol')
+        button_delete.setFixedSize(28, 28)
         self.deleteButtons.append(button_delete)
-        self.deleteButtons[-1].clicked.connect(self.delete_click)
+        self.deleteButtons[-1].clicked.connect(self.click_delete_symbol)
 
-        self.grid_symbols.addWidget(self.symbols[-1], 2 * count, 0, 2, 1)
+        self.grid_symbols.addWidget(self.symbols[-1], count, 0)
 
-        self.symbols[-1].setAutoFillBackground(True)
-        p = self.symbols[-1].palette()
-        p.setColor(self.symbols[-1].backgroundRole(), QtGui.QColor(200, 200, 200))
-        self.symbols[-1].setPalette(p)
+        #self.symbols[-1].frame_symbol.setAutoFillBackground(True)
+        #p = self.symbols[-1].frame_symbol.palette()
+        #p.setColor(self.symbols[-1].frame_symbol.backgroundRole(), QtGui.QColor(255, 240, 196))
+        #self.symbols[-1].frame_symbol.setPalette(p)
 
-        self.grid_symbols.addWidget(self.deleteButtons[-1], 2 * count, 1, 1, 1)
+        self.symbols[-1].fon_name.addWidget(self.deleteButtons[-1])
 
         count += 1
 
-    def delete_click(self):
+    def click_delete_symbol(self):
         sender = self.sender()
         num = self.deleteButtons.index(sender)
 
@@ -492,9 +599,37 @@ class Window(QtWidgets.QWidget):
         sip.delete(self.symbols[num])
         del self.symbols[num]
 
-        self.grid_symbols.removeWidget(self.deleteButtons[num])
-        sip.delete(self.deleteButtons[num])
         del self.deleteButtons[num]
+
+    def click_add_line(self):
+        global count_lines
+
+        line = LineEdits(self.width, 28, 24, 0)
+        self.lines.append(line)
+
+        button_delete = QtWidgets.QPushButton()
+        button_delete.setIcon(QtGui.QIcon('icons/close.png'))
+        button_delete.setFixedSize(26, 26)
+        self.deleteLines.append(button_delete)
+        self.deleteLines[-1].clicked.connect(self.click_delete_line)
+
+        self.grid_lines.addWidget(self.lines[-1], count_lines, 0)
+
+        self.grid_lines.addWidget(self.deleteLines[-1], count_lines, 1)
+
+        count_lines += 1
+
+    def click_delete_line(self):
+        sender = self.sender()
+        num = self.deleteLines.index(sender)
+
+        self.grid_lines.removeWidget(self.lines[num])
+        sip.delete(self.lines[num])
+        del self.lines[num]
+
+        self.grid_lines.removeWidget(self.deleteLines[num])
+        sip.delete(self.deleteLines[num])
+        del self.deleteLines[num]
 
     def width_changed(self):
         if isint(str(self.line_width.text())) > 0:
@@ -535,6 +670,14 @@ class Window(QtWidgets.QWidget):
                         self.symbols[i].free.line_freespins = LineEdits(self.width, 28)
                         self.symbols[i].free.fon.addWidget(self.symbols[i].free.line_freespins, 4, 1)
 
+            for i in range(len(self.lines)):
+                pos = self.grid_lines.getItemPosition(self.grid_lines.indexOf(self.lines[i]))
+                self.grid_lines.removeWidget(self.lines[i])
+                sip.delete(self.lines[i])
+
+                self.lines[i] = LineEdits(self.width, 28, 24, 0)
+                self.grid_lines.addWidget(self.lines[i], pos[0], pos[1])
+
     def height_changed(self):
         if isint(str(self.line_height.text())) > 0:
             self.height = int(str(self.line_height.text()))
@@ -546,23 +689,30 @@ class Window(QtWidgets.QWidget):
         for i in range(len(self.symbols)):
             symbols.append(self.symbols[i].collect_info())
         d.update({'symbol': symbols})
+
+        lines = []
+        for i in range(len(self.lines)):
+            if self.lines[i].arrange_info() is not None:
+                lines.append(self.lines[i].arrange_info())
+        d.update({'line': lines})
+
         if isint(str(self.line_freemultiplier.text())) >= 0:
             d.update({'free_multiplier': int(str(self.line_freemultiplier.text()))})
 
         if isint(str(self.line_distance.text())) >= 0:
             d.update({'distance': int(str(self.line_distance.text()))})
 
-        if isfloat(str(self.line_rtp.text())):
-            d.update({'RTP': float(str(self.line_rtp.text()))})
+        if isfloat(str(self.line_rtp.text())) and isfloat(str(self.line_rtp_error.text())):
+            d.update({'RTP': [float(str(self.line_rtp.text())), float(str(self.line_rtp_error.text()))]})
 
-        if isfloat(str(self.line_volatility.text())):
-            d.update({'volatility': float(str(self.line_volatility.text()))})
+        if isfloat(str(self.line_volatility.text())) and isfloat(str(self.line_volatility_error.text())):
+            d.update({'volatility': [float(str(self.line_volatility.text())), float(str(self.line_volatility_error.text()))]})
 
-        if isfloat(str(self.line_hitrate.text())):
-            d.update({'hitrate': float(str(self.line_hitrate.text()))})
+        if isfloat(str(self.line_hitrate.text())) and isfloat(str(self.line_hitrate_error.text())):
+            d.update({'hitrate': [float(str(self.line_hitrate.text())), float(str(self.line_hitrate_error.text()))]})
 
-        if isfloat(str(self.line_baseRTP.text())):
-            d.update({'baseRTP': float(str(self.line_baseRTP.text()))})
+        if isfloat(str(self.line_baseRTP.text())) and isfloat(str(self.line_baseRTP_error.text())):
+            d.update({'baseRTP': [float(str(self.line_baseRTP.text())), float(str(self.line_baseRTP_error.text()))]})
         return d
 
 
@@ -615,10 +765,10 @@ class Main(QtWidgets.QMainWindow):
         self.action_submit = QtWidgets.QAction(QtGui.QIcon('icons/submit.png'), 'Submit', self)
         self.action_submit.triggered.connect(self.trigger_submit)
 
-        self.action_run = QtWidgets.QAction(QtGui.QIcon('icons/run.png'), 'Run', self)
+        self.action_run = QtWidgets.QAction(QtGui.QIcon('icons/run1.png'), 'Run', self)
         self.action_run.setEnabled(False)
 
-        self.action_submitnrun = QtWidgets.QAction(QtGui.QIcon('icons/submitnrun.png'), 'Submit and run', self)
+        self.action_submitnrun = QtWidgets.QAction(QtGui.QIcon('icons/submitnrun1.png'), 'Submit and run', self)
         self.action_submitnrun.triggered.connect(self.trigger_submit)
 
         self.info = None

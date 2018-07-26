@@ -1,10 +1,10 @@
 import json
-from . import structure as Q
-from . import structure_alpha as A
+import structure as Q
+import structure_alpha as A
 
-file = open('DiStORteD.txt', 'r')
+file = open('D:\\PyCharm\\PycharmProjects\\reel\\Games\\Garage.txt', 'r')
 j = file.read()
-file2 = open('Romantic Night.txt', 'r')
+file2 = open('D:\\PyCharm\\PycharmProjects\\reel\\Games\\Garage.txt', 'r')
 h = file2.read()
 
 interim = json.loads(j)
