@@ -60,7 +60,7 @@
         },
         {
             "name": "Garage",
-            "payment": [[5, 5000], [4, 500], [3, 100]],
+            "payment": [[5, 500], [4, 50], [3, 10]],
             "direction": "any",
             "base":
             {

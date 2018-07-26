@@ -18,6 +18,14 @@ def get_scatter_frequency(gameFileName, HR, ERROR):
     game = Q.Game(interim)
     file.close()
 
+    exit = True
+    for scat in game.base.scatterlist:
+        for cnt in range(game.window[0] + 1):
+            if game.base.symbol[scat].scatter[cnt] > 0:
+                exit = False
+    if exit:
+        return -1
+
     res = OutResult(game.base.scatterlist)
 
     reel = [0]*len(game.base.symbol)

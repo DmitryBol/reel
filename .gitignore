@@ -111,3 +111,4 @@ venv.bak/
 .idea/other.xml
 .idea/workspace.xml
 archive/test_file.py
+/.idea/kotlinc.xml

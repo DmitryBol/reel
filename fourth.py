@@ -5,15 +5,15 @@ import time
 
 start_time = time.time()
 
-frequency_1 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
-frequency_2 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
-frequency_3 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
-frequency_4 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
-frequency_5 = [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
+frequency_1 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
+frequency_2 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
+frequency_3 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
+frequency_4 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
+frequency_5 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
 
 frequency = [frequency_1, frequency_2, frequency_3, frequency_4, frequency_5]
 
-FILES = ['Games\Garage.txt', 'Games\HappyBrauer.txt', 'Games\Katana.txt', 'Games\Attila.txt']
+FILES = ['Games\HappyBrauer.txt']
 
 for sees in FILES:
     for i in range(10):
@@ -43,7 +43,8 @@ for sees in FILES:
 
         param = obj.count_parameters()
         print('FILE: ', sees, 10 - i, 'lines')
-        print(round(param['rtp'], 4), ' / ', round(param['sd'], 4), ' / ', round(param['sdnew'], 4))
+        print(round(param['rtp'], 4), ' / ', round(param['sd'], 4), ' / ', round(param['sdnew'], 4), ' / ', round(param['sdalpha'], 4))
+        print('base rtp is ', param['base_rtp'])
         print('time: ', round(time.time() - start_time, 4))
         print('')
         file.close()
