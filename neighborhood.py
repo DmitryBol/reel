@@ -575,7 +575,7 @@ def SecondMethod(hitrate, err_hitrate, file_name):
         obj.base.create_simple_num_comb(obj.window, obj.line)
         obj.free.create_simple_num_comb(obj.window, obj.line)
         sortedSymbols = sortSymbols(obj)
-
+        check = False
         min_is_found = False
         currentScale = 0
         while not min_is_found and currentScale < scaleLimit:
@@ -597,6 +597,7 @@ def SecondMethod(hitrate, err_hitrate, file_name):
                         print('hitrate ', temp_group.findMin().hitrate)
                         root = copy.deepcopy(temp_group.findMin())
                         print(root.frequency[0])
+                        check = True
                         break
                     else:
                         print('path ', temp_group.findMin().value)
@@ -612,13 +613,15 @@ def SecondMethod(hitrate, err_hitrate, file_name):
                 root = root.scaling()
                 currentScale += 1
                 print('SCALING ', currentScale)
-        if min_is_found:
-            'Блеск'
+            else:
+                break
+        if check:
+            print('Блеск')
             break
 
 
 
-SecondMethod(100, 1,'Games\HappyBrauer.txt')
+#SecondMethod(100, 1,'Games\HappyBrauer.txt')
 
 
 
