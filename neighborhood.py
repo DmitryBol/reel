@@ -75,6 +75,27 @@ class point(object):
 
         self.fillVal(base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
 
+    def printBaseReel(self, file):
+        max_length = 0
+        file = file[:file.find('\\') + 1] + "Base Reels\\" + file[file.find('\\') + 1:]
+        f = open(file, 'w')
+        for l in range(len(self.baseReel)):
+            if len(self.baseReel[l]) > max_length:
+                max_length = len(self.baseReel[l])
+        for i in range(max_length):
+            s = ''
+            for l in range(len(self.baseReel)):
+                if i < len(self.baseReel[l]):
+                    t = (15 - len(self.baseReel[l][i].name))*' '
+                    s = s + self.baseReel[l][i].name + t
+                else:
+                    s = 15*' '
+            f.write(s + '\n')
+            f.write('\n')
+            #print('\n')
+            #print(s)
+        f.close()
+
 
 
 #Класс окрестность. Аргументы: root - центр окрестности, obj - Юрина структура, base_rtp - параметр введенный пользователем, нужен для того, что бы
@@ -598,6 +619,7 @@ def SecondMethod(hitrate, err_hitrate, file_name):
                         root = copy.deepcopy(temp_group.findMin())
                         print(root.frequency[0])
                         check = True
+                        temp_group.findMin().printBaseReel(file_name)
                         break
                     else:
                         print('path ', temp_group.findMin().value)
@@ -621,7 +643,7 @@ def SecondMethod(hitrate, err_hitrate, file_name):
 
 
 
-#SecondMethod(100, 1,'Games\HappyBrauer.txt')
+SecondMethod(100, 1,'Games\HappyBrauer.txt')
 
 
 

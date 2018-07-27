@@ -4,7 +4,8 @@ import itertools
 import re
 import copy
 
-import moments
+from FrontEnd import moments
+#import moments
 import FrontEnd.reelWork.reel_generator_alpha as rg
 
 
