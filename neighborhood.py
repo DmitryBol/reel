@@ -563,8 +563,16 @@ def double_bouble(a, b):
 def SecondMethod(hitrate, err_hitrate, file_name):
 
     out = sm.get_scatter_frequency(file_name, hitrate, err_hitrate)
-    if out == -1:
+    if out == -1 and hitrate != -1:
         exit('no free spins')
+    elif out == -1:
+        file = open(file_name, 'r')
+        j = file.read()
+        interim = json.loads(j)
+        game = Q.Game(interim)
+        file.close()
+        out = sm.OutResult(game.base.scatterlist)
+        out.add_symbols(game.base.symbol)
 
     t_distr, r_base_rtp, r_rtp, r_sdnew, r_hitrate, obj, roots = parametrs(file_name, out)
 

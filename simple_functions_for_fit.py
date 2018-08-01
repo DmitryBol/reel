@@ -10,6 +10,9 @@ class OutResult:
         self.total_length = 3*len(scatterlist)
         self.total_scats = len(scatterlist)
 
+    def add_symbols(self, symbols):
+        self.total_length = 3 * len(symbols)
+
 
 def get_scatter_frequency(gameFileName, HR, ERROR):
     file = open(gameFileName, 'r')

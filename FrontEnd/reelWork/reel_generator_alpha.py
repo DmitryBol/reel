@@ -221,6 +221,13 @@ def get_all_flags(max_len):
 
 def fill_count_killed(self, window_width):
     n_lines = len(self.lines)
+    n_symbols = len(self.symbol)
+
+    for line_id in range(n_lines):
+        for symbol_id in range(n_symbols):
+            for reel_id in range(window_width):
+                self.count_killed[line_id][symbol_id][reel_id] = 0
+
     for reel_id in range(window_width):
         reel_len = len(self.reels[reel_id])
         for symbol_position in range(reel_len):
@@ -228,14 +235,21 @@ def fill_count_killed(self, window_width):
                 for line_id in range(n_lines):
 
                     if self.lines[line_id][reel_id] == 1:
-                        self.count_killed[line_id][self.symbol.index(self.reels[line_id][(symbol_position + 1) % reel_len])][reel_id] += 1
-                        self.count_killed[line_id][self.symbol.index(self.reels[line_id][(symbol_position + 2) % reel_len])][reel_id] += 1
+                        #print(line_id, reel_id)
+                        #print(self.count_killed[line_id])
+                        #print((symbol_position + 1) % reel_len)
+                        #print(self.reels[reel_id][(symbol_position + 1) % reel_len])
+                        self.count_killed[line_id][self.symbol.index(self.reels[reel_id][(symbol_position + 1) % reel_len])][reel_id] += 1
+                        self.count_killed[line_id][self.symbol.index(self.reels[reel_id][(symbol_position + 2) % reel_len])][reel_id] += 1
+
                     if self.lines[line_id][reel_id] == 2:
-                        self.count_killed[line_id][self.symbol.index(self.reels[line_id][symbol_position - 1])][reel_id] += 1
-                        self.count_killed[line_id][self.symbol.index(self.reels[line_id][(symbol_position + 1) % reel_len])][reel_id] += 1
+                        self.count_killed[line_id][self.symbol.index(self.reels[reel_id][symbol_position - 1])][reel_id] += 1
+                        self.count_killed[line_id][self.symbol.index(self.reels[reel_id][(symbol_position + 1) % reel_len])][reel_id] += 1
                     if self.lines[line_id][reel_id] == 3:
-                        self.count_killed[line_id][self.symbol.index(self.reels[line_id][symbol_position - 2])][reel_id] += 1
-                        self.count_killed[line_id][self.symbol.index(self.reels[line_id][symbol_position - 1])][reel_id] += 1
+                        self.count_killed[line_id][self.symbol.index(self.reels[reel_id][symbol_position - 2])][reel_id] += 1
+                        self.count_killed[line_id][self.symbol.index(self.reels[reel_id][symbol_position - 1])][reel_id] += 1
+    #print(self.count_killed)
+    #support.print_game(self)
 
 
 def fill_scatter_num_comb(self, window):
