@@ -643,7 +643,7 @@ def SecondMethod(hitrate, err_hitrate, file_name):
 
 
 
-SecondMethod(100, 1,'Games\HappyBrauer.txt')
+#SecondMethod(100, 1,'Games\HappyBrauer.txt')
 
 
 
