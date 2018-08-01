@@ -5,7 +5,7 @@ import simple_functions_for_fit as sm
 import copy
 import numpy as np
 
-scaleLimit = 2
+scaleLimit = 5
 Inf = 0.05
 wildInf = 0.025
 
@@ -309,7 +309,7 @@ def initialDistributions(obj, out):
 def F(base_rtp, rtp, sdnew, r_base_rtp, r_rtp, r_sdnew, err_base_rtp, err_rtp, err_sdnew):
     t1 = np.fabs(base_rtp - r_base_rtp)/err_base_rtp
     t2 = np.fabs(rtp - r_rtp)/err_rtp
-    t3 = np.fabs(sdnew - r_sdnew)/err_sdnew
+#    t3 = np.fabs(sdnew - r_sdnew)/err_sdnew
     return max([t1])
 
 

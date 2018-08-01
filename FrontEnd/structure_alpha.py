@@ -420,8 +420,11 @@ class Game:
         freemean = self.freemean2()
         rtp = self.count_RTP2(freemean, base_rtp)
         sd = self.count_volatility2(freemean, rtp)
-        sdnew = self.count_volatility2new(freemean, rtp)
+        #sdnew = self.count_volatility2new(freemean, rtp)
         sdalpha = self.count_volatility_alpha(freemean)
         hitrate = self.count_hitrate2()
 
-        return {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sd': sd, 'sdnew': sdnew, 'sdalpha': sdalpha, 'hitrate': hitrate}
+
+        return {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sd': sd,  'sdnew': sdalpha, 'hitrate': hitrate}
+
+        #return {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sd': sd, 'sdnew': sdnew, 'sdalpha': sdalpha, 'hitrate': hitrate}
