@@ -5,7 +5,7 @@ import simple_functions_for_fit as sm
 import copy
 import numpy as np
 
-scaleLimit = 2
+scaleLimit = 5
 Inf = 0.05
 wildInf = 0.025
 
@@ -51,6 +51,21 @@ class point(object):
                 self.frequency[i][j] = scale*self.frequency[i][j]
         return self
     def fillPoint(self, obj, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew):
+
+        n_symbols = len(obj.base.symbol)
+        for symbol_id in range(n_symbols):
+            for reel_id in range(obj.window[0]):
+                #print(obj.base.symbol[symbol_id].position)
+                if reel_id in obj.base.symbol[symbol_id].position:
+                    continue
+                else:
+                    self.frequency[reel_id][symbol_id] = 0
+
+        #print('frequency: ')
+        #for i in range(obj.window[0]):
+        #    print(self.frequency[i])
+        #print('\n\n\n')
+
         obj.base.reel_generator(self.frequency, obj.window[0], obj.window[1])
         obj.free.reel_generator(self.frequency, obj.window[0], obj.window[1])
         obj.base.fill_frequency(self.frequency)
@@ -309,7 +324,7 @@ def initialDistributions(obj, out):
 def F(base_rtp, rtp, sdnew, r_base_rtp, r_rtp, r_sdnew, err_base_rtp, err_rtp, err_sdnew):
     t1 = np.fabs(base_rtp - r_base_rtp)/err_base_rtp
     t2 = np.fabs(rtp - r_rtp)/err_rtp
-    t3 = np.fabs(sdnew - r_sdnew)/err_sdnew
+#    t3 = np.fabs(sdnew - r_sdnew)/err_sdnew
     return max([t1])
 
 
@@ -563,8 +578,16 @@ def double_bouble(a, b):
 def SecondMethod(hitrate, err_hitrate, file_name):
 
     out = sm.get_scatter_frequency(file_name, hitrate, err_hitrate)
-    if out == -1:
+    if out == -1 and hitrate != -1:
         exit('no free spins')
+    elif out == -1:
+        file = open(file_name, 'r')
+        j = file.read()
+        interim = json.loads(j)
+        game = Q.Game(interim)
+        file.close()
+        out = sm.OutResult(game.base.scatterlist)
+        out.add_symbols(game.base.symbol)
 
     t_distr, r_base_rtp, r_rtp, r_sdnew, r_hitrate, obj, roots = parametrs(file_name, out)
 
@@ -643,7 +666,7 @@ def SecondMethod(hitrate, err_hitrate, file_name):
 
 
 
-SecondMethod(100, 1,'Games\HappyBrauer.txt')
+#SecondMethod(100, 1,'Games\HappyBrauer.txt')
 
 
 

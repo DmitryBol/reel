@@ -59,3 +59,17 @@ def combinations2(gametype, width, numbers):
                 combs = np.concatenate((combs, possible_combs), axis=0)
     data_set = set(tuple(row) for row in combs)
     return np.array(list(data_set))
+
+def print_game(test):
+    c = []
+    for i in range(len(test.reels)):
+        c.append(len(test.reels[i]))
+    a = max(c)
+    for i in range(a):
+        for j in range(len(test.reels)):
+            if(i < len(test.reels[j])):
+                print(test.reels[j][i].name, end=(25 - len(test.reels[j][i].name))*' ')
+            else:
+                s = 24*' '
+                print(s, end=' ')
+        print('\n')

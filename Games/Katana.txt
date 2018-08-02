@@ -52,7 +52,7 @@
         },
         {
             "name": "Katany",
-            "payment": [[5, 2000], [4, 200], [3, 20]],
+            "payment": [[5, 200], [4, 20], [3, 2]],
             "direction": "any",
             "base":
             {

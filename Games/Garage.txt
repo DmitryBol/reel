@@ -36,31 +36,12 @@
         },
         {
             "name": "Shpritz",
-            "payment": [[5, 10], [4, 3], [3, 2]]
+            "payment": [[5, 10], [4, 3], [3, 2]],
+            "direction": "both"
         },
         {
-            "name": "Shpritz1",
-            "payment": [[5, 10], [4, 3], [3, 2]]
-        },
-        {
-            "name": "Shpritz2",
-            "payment": [[5, 10], [4, 3], [3, 2]]
-        },
-        {
-            "name": "Shpritz3",
-            "payment": [[5, 10], [4, 3], [3, 2]]
-        },
-        {
-            "name": "Shpritz4",
-            "payment": [[5, 10], [4, 3], [3, 2]]
-        },
-        {
-            "name": "Shpritz0",
-            "payment": [[5, 10], [4, 3], [3, 2]]
-        },
-        {
-            "name": "Garage",
-            "payment": [[5, 500], [4, 50], [3, 10]],
+            "name": "Box",
+            "payment": [],
             "direction": "any",
             "base":
             {
@@ -70,6 +51,11 @@
             {
                 "scatter": 0
             }
+        },
+        {
+            "name": "Garage",
+            "payment": [[5, 5000], [4, 500], [3, 100]],
+            "direction": "both"
         }
     ],
     "lines":

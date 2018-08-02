@@ -10,12 +10,12 @@ def Exi2(self, width, lines):
         string = str_with_count[0]
         #payment = self.get_simple_payment(string)
         payment = str_with_count[2]
-        s += str_with_count[1] / self.all_combinations() * (payment ** 2)
+        s += str_with_count[1] / self.all_combinations2() * (payment ** 2)
     for scatter_comb in self.scatter_num_comb:
         scat = scatter_comb[0]
         counts = scatter_comb[1]
         for cnt in range(width + 1):
-            s += ((self.symbol[scat].payment[cnt] * len(lines)) ** 2) * counts[cnt] / self.all_combinations()
+            s += ((self.symbol[scat].payment[cnt] * len(lines)) ** 2) * counts[cnt] / self.all_combinations2()
     return s
 
 
@@ -26,7 +26,7 @@ def Exieta(self, width, lines):
         counts = scatter_comb[1]
         for cnt in range(width + 1):
             s += (self.symbol[scat].payment[cnt] * len(lines)) * self.symbol[scat].scatter[cnt] * \
-                      counts[cnt] / self.all_combinations()
+                      counts[cnt] / self.all_combinations2()
     return s
 
 
@@ -36,7 +36,7 @@ def Eeta(self, width):
         scat = scatter_comb[0]
         counts = scatter_comb[1]
         for cnt in range(width + 1):
-            s += self.symbol[scat].scatter[cnt] * counts[cnt] / self.all_combinations()
+            s += self.symbol[scat].scatter[cnt] * counts[cnt] / self.all_combinations2()
     return s
 
 
@@ -46,5 +46,5 @@ def Eeta2(self, width):
         scat = scatter_comb[0]
         counts = scatter_comb[1]
         for cnt in range(width + 1):
-            s += (self.symbol[scat].scatter[cnt] ** 2) * counts[cnt] / self.all_combinations()
+            s += (self.symbol[scat].scatter[cnt] ** 2) * counts[cnt] / self.all_combinations2()
     return s
