@@ -8,6 +8,7 @@ all_games = ['Games\Shining_Crown.txt',
              'Games\Space Odyssey.txt',
              'Games\HappyBrauer.txt'
              ]
+
 hit_rates = [random.gauss(180, 20) for _ in all_games]
 all_base_rtp = [0.65 for _ in all_games]
 index = all_games.index('Games\Shining_Crown.txt')

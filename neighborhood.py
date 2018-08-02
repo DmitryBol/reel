@@ -695,7 +695,7 @@ def SecondMethod(hitrate, err_hitrate, file_name, base_rtp, err_base_rtp):
                                            + len(obj.base.scatterlist) - len(blocked_scatters))/2: # and number_of_groups < len(sortedSymbols):
                         number_of_groups = len(sortedSymbols) + len(obj.base.wildlist) + len(obj.base.ewildlist) + 1 \
                                            + len(obj.base.scatterlist) - len(blocked_scatters)
-            print(min_is_found)
+            #print(min_is_found)
             if not min_is_found:
 
                 root = root.scaling()
