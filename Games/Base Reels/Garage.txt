@@ -1,0 +1,1928 @@
+Pogruzchik     Kanistra       Accumulator    Shpritz        Shpritz        
+
+Garage         Accumulator    Kanistra       Pogruzchik     Box            
+
+Shpritz        Keys           Shpritz        Kanistra       Accumulator    
+
+Accumulator    Shpritz        Accumulator    Garage         Shpritz        
+
+Kanistra       Accumulator    Pogruzchik     FireextinguisherPogruzchik     
+
+Shpritz        Pogruzchik     Garage         Box            Accumulator    
+
+FireextinguisherKanistra       Kanistra       Shpritz        Kanistra       
+
+Pogruzchik     Garage         Accumulator    Pogruzchik     Pogruzchik     
+
+Kanistra       Pogruzchik     FireextinguisherGarage         Fireextinguisher
+
+FireextinguisherShpritz        Kanistra       Kanistra       Accumulator    
+
+Pogruzchik     Accumulator    Garage         Shpritz        Kanistra       
+
+Kanistra       Pogruzchik     FireextinguisherKeys           Pogruzchik     
+
+Shpritz        Kanistra       Kanistra       Kanistra       Keys           
+
+Accumulator    FireextinguisherShpritz        Accumulator    Kanistra       
+
+Kanistra       Pogruzchik     Box            Garage         Pogruzchik     
+
+Garage         Shpritz        Kanistra       Shpritz        Shpritz        
+
+FireextinguisherFireextinguisherPogruzchik     Kanistra       Accumulator    
+
+Kanistra       Pogruzchik     FireextinguisherAccumulator    Kanistra       
+
+Accumulator    Shpritz        Garage         Pogruzchik     Shpritz        
+
+Pogruzchik     Kanistra       Shpritz        Kanistra       Fireextinguisher
+
+Kanistra       Garage         Accumulator    Accumulator    Accumulator    
+
+Garage         Pogruzchik     Kanistra       Pogruzchik     Shpritz        
+
+Accumulator    Shpritz        Keys           Shpritz        Pogruzchik     
+
+Keys           Kanistra       Garage         Accumulator    Garage         
+
+Garage         Keys           Kanistra       Garage         Shpritz        
+
+FireextinguisherGarage         Shpritz        Shpritz        Fireextinguisher
+
+Kanistra       Shpritz        Box            Kanistra       Pogruzchik     
+
+Box            Box            Pogruzchik     Keys           Shpritz        
+
+Shpritz        Kanistra       Kanistra       Pogruzchik     Accumulator    
+
+Pogruzchik     Garage         Garage         Garage         Box            
+
+Garage         Shpritz        FireextinguisherAccumulator    Kanistra       
+
+Kanistra       Kanistra       Shpritz        Shpritz        Shpritz        
+
+Pogruzchik     Keys           Pogruzchik     Keys           Accumulator    
+
+Shpritz        Pogruzchik     FireextinguisherGarage         Box            
+
+Accumulator    Kanistra       Kanistra       Pogruzchik     Shpritz        
+
+Pogruzchik     Keys           Pogruzchik     Shpritz        Garage         
+
+Shpritz        Shpritz        FireextinguisherGarage         Kanistra       
+
+Kanistra       Garage         Kanistra       Accumulator    Accumulator    
+
+Garage         FireextinguisherAccumulator    FireextinguisherGarage         
+
+Shpritz        Kanistra       Box            Shpritz        Pogruzchik     
+
+Pogruzchik     Shpritz        Shpritz        Garage         Fireextinguisher
+
+FireextinguisherGarage         Accumulator    Pogruzchik     Garage         
+
+Kanistra       Kanistra       Keys           Keys           Kanistra       
+
+Garage         Shpritz        Kanistra       Accumulator    Accumulator    
+
+Shpritz        Accumulator    FireextinguisherShpritz        Pogruzchik     
+
+Kanistra       Pogruzchik     Box            Kanistra       Garage         
+
+Garage         Kanistra       Garage         Pogruzchik     Kanistra       
+
+Shpritz        Accumulator    Pogruzchik     FireextinguisherFireextinguisher
+
+Pogruzchik     Pogruzchik     Kanistra       Shpritz        Shpritz        
+
+Kanistra       Box            Accumulator    Kanistra       Pogruzchik     
+
+Garage         Keys           FireextinguisherGarage         Kanistra       
+
+Shpritz        Garage         Shpritz        Shpritz        Shpritz        
+
+Kanistra       Kanistra       Pogruzchik     Kanistra       Pogruzchik     
+
+Garage         Accumulator    Kanistra       Accumulator    Kanistra       
+
+Keys           FireextinguisherBox            Garage         Accumulator    
+
+Kanistra       Kanistra       Shpritz        Kanistra       Fireextinguisher
+
+Shpritz        Shpritz        Pogruzchik     Pogruzchik     Pogruzchik     
+
+Pogruzchik     Accumulator    Garage         FireextinguisherAccumulator    
+
+FireextinguisherPogruzchik     Shpritz        Accumulator    Kanistra       
+
+Shpritz        Shpritz        Box            Box            Shpritz        
+
+Box            Kanistra       Accumulator    Kanistra       Accumulator    
+
+Kanistra       Pogruzchik     FireextinguisherShpritz        Box            
+
+Accumulator    FireextinguisherShpritz        Pogruzchik     Fireextinguisher
+
+Pogruzchik     Garage         Kanistra       Accumulator    Accumulator    
+
+Kanistra       Pogruzchik     Accumulator    Box            Kanistra       
+
+FireextinguisherKanistra       Pogruzchik     Shpritz        Shpritz        
+
+Pogruzchik     Shpritz        Garage         Pogruzchik     Accumulator    
+
+Kanistra       Pogruzchik     Kanistra       Kanistra       Pogruzchik     
+
+Keys           FireextinguisherShpritz        Shpritz        Fireextinguisher
+
+Pogruzchik     Shpritz        Pogruzchik     Pogruzchik     Shpritz        
+
+Shpritz        Pogruzchik     Kanistra       Kanistra       Pogruzchik     
+
+Accumulator    Accumulator    Shpritz        Shpritz        Kanistra       
+
+Kanistra       Garage         Accumulator    FireextinguisherShpritz        
+
+Pogruzchik     Shpritz        Kanistra       Pogruzchik     Box            
+
+FireextinguisherKanistra       Pogruzchik     Keys           Kanistra       
+
+Kanistra       Box            Shpritz        Accumulator    Shpritz        
+
+Garage         Garage         Box            Garage         Pogruzchik     
+
+Accumulator    Shpritz        Kanistra       Pogruzchik     Accumulator    
+
+Kanistra       Kanistra       Shpritz        Keys           Fireextinguisher
+
+Garage         Pogruzchik     FireextinguisherBox            Keys           
+
+Box            Shpritz        Kanistra       FireextinguisherGarage         
+
+Accumulator    Garage         Shpritz        Accumulator    Kanistra       
+
+Pogruzchik     Kanistra       Pogruzchik     Shpritz        Shpritz        
+
+Kanistra       Shpritz        FireextinguisherGarage         Fireextinguisher
+
+Accumulator    Box            Kanistra       Kanistra       Pogruzchik     
+
+Shpritz        Kanistra       Shpritz        Shpritz        Shpritz        
+
+Garage         Pogruzchik     Pogruzchik     Pogruzchik     Kanistra       
+
+FireextinguisherBox            Accumulator    Kanistra       Box            
+
+Accumulator    Shpritz        Shpritz        Garage         Shpritz        
+
+Garage         FireextinguisherPogruzchik     Keys           Accumulator    
+
+Pogruzchik     Kanistra       Accumulator    Kanistra       Garage         
+
+Shpritz        Accumulator    Kanistra       Pogruzchik     Kanistra       
+
+Kanistra       Shpritz        Pogruzchik     Keys           Keys           
+
+FireextinguisherKeys           Shpritz        Shpritz        Garage         
+
+Box            Garage         Accumulator    FireextinguisherKanistra       
+
+Pogruzchik     Pogruzchik     Keys           Accumulator    Accumulator    
+
+Garage         Kanistra       Shpritz        Pogruzchik     Pogruzchik     
+
+Shpritz        Accumulator    Accumulator    Shpritz        Shpritz        
+
+Box            Box            FireextinguisherAccumulator    Fireextinguisher
+
+Kanistra       Keys           Shpritz        Pogruzchik     Pogruzchik     
+
+FireextinguisherAccumulator    Garage         Shpritz        Shpritz        
+
+Accumulator    Kanistra       Accumulator    Accumulator    Keys           
+
+Kanistra       FireextinguisherShpritz        Garage         Fireextinguisher
+
+Shpritz        Garage         Kanistra       Kanistra       Kanistra       
+
+Box            Kanistra       Pogruzchik     Pogruzchik     Pogruzchik     
+
+Kanistra       Shpritz        Keys           Shpritz        Box            
+
+Shpritz        Pogruzchik     Shpritz        Accumulator    Garage         
+
+Garage         FireextinguisherFireextinguisherFireextinguisherKanistra       
+
+Accumulator    Kanistra       Pogruzchik     Shpritz        Accumulator    
+
+Kanistra       Pogruzchik     Box            Pogruzchik     Box            
+
+Shpritz        Shpritz        Kanistra       Box            Pogruzchik     
+
+Garage         Garage         Shpritz        Kanistra       Accumulator    
+
+Accumulator    Accumulator    Keys           FireextinguisherShpritz        
+
+Shpritz        Kanistra       Garage         Garage         Garage         
+
+Box            Pogruzchik     Box            Pogruzchik     Kanistra       
+
+FireextinguisherAccumulator    Accumulator    Box            Shpritz        
+
+Garage         Kanistra       Keys           Accumulator    Accumulator    
+
+Pogruzchik     Pogruzchik     Shpritz        Pogruzchik     Pogruzchik     
+
+Accumulator    Accumulator    Kanistra       Kanistra       Kanistra       
+
+Shpritz        Garage         Pogruzchik     Shpritz        Garage         
+
+FireextinguisherShpritz        Accumulator    FireextinguisherShpritz        
+
+Pogruzchik     Pogruzchik     Shpritz        Kanistra       Pogruzchik     
+
+Kanistra       Kanistra       Kanistra       Pogruzchik     Accumulator    
+
+Garage         Garage         Pogruzchik     Accumulator    Shpritz        
+
+Accumulator    Accumulator    Shpritz        Kanistra       Pogruzchik     
+
+FireextinguisherShpritz        Kanistra       Box            Accumulator    
+
+Kanistra       Pogruzchik     Accumulator    Garage         Keys           
+
+Shpritz        Kanistra       Shpritz        Shpritz        Box            
+
+Pogruzchik     Box            Box            Kanistra       Shpritz        
+
+Garage         Shpritz        Garage         Accumulator    Pogruzchik     
+
+Shpritz        Pogruzchik     Keys           Garage         Accumulator    
+
+Kanistra       Kanistra       Pogruzchik     FireextinguisherKanistra       
+
+Accumulator    FireextinguisherShpritz        Kanistra       Pogruzchik     
+
+Pogruzchik     Shpritz        Accumulator    Shpritz        Garage         
+
+Keys           Garage         Garage         Pogruzchik     Keys           
+
+Kanistra       Kanistra       FireextinguisherFireextinguisherPogruzchik     
+
+Accumulator    Shpritz        Pogruzchik     Shpritz        Accumulator    
+
+Shpritz        Pogruzchik     Accumulator    Pogruzchik     Kanistra       
+
+Kanistra       Kanistra       Kanistra       Kanistra       Pogruzchik     
+
+Pogruzchik     Shpritz        Shpritz        Accumulator    Accumulator    
+
+Shpritz        Pogruzchik     Accumulator    Keys           Kanistra       
+
+Accumulator    Kanistra       FireextinguisherGarage         Shpritz        
+
+Keys           Keys           Pogruzchik     Pogruzchik     Garage         
+
+Shpritz        Shpritz        Garage         Accumulator    Kanistra       
+
+Accumulator    Pogruzchik     Shpritz        Kanistra       Fireextinguisher
+
+Kanistra       Accumulator    Pogruzchik     FireextinguisherAccumulator    
+
+FireextinguisherGarage         Kanistra       Accumulator    Shpritz        
+
+Pogruzchik     Shpritz        Shpritz        Kanistra       Garage         
+
+Kanistra       Kanistra       Pogruzchik     Box            Pogruzchik     
+
+Shpritz        Keys           Keys           FireextinguisherKanistra       
+
+Garage         Accumulator    Garage         Kanistra       Box            
+
+Accumulator    Box            Kanistra       Box            Shpritz        
+
+Kanistra       FireextinguisherShpritz        Garage         Kanistra       
+
+Shpritz        Shpritz        FireextinguisherShpritz        Pogruzchik     
+
+Box            Pogruzchik     Pogruzchik     Kanistra       Shpritz        
+
+Accumulator    Garage         Kanistra       FireextinguisherKanistra       
+
+Shpritz        Kanistra       Shpritz        Pogruzchik     Garage         
+
+Kanistra       Pogruzchik     Pogruzchik     Accumulator    Shpritz        
+
+Accumulator    FireextinguisherKeys           Kanistra       Keys           
+
+Shpritz        Shpritz        Shpritz        FireextinguisherFireextinguisher
+
+Pogruzchik     Pogruzchik     Kanistra       Shpritz        Garage         
+
+Accumulator    FireextinguisherPogruzchik     Pogruzchik     Accumulator    
+
+Kanistra       Kanistra       Accumulator    Kanistra       Keys           
+
+Keys           Accumulator    FireextinguisherAccumulator    Pogruzchik     
+
+Accumulator    Pogruzchik     Garage         Pogruzchik     Fireextinguisher
+
+Kanistra       Shpritz        Keys           FireextinguisherAccumulator    
+
+Shpritz        Kanistra       Kanistra       Kanistra       Pogruzchik     
+
+Accumulator    FireextinguisherAccumulator    Shpritz        Garage         
+
+Box            Shpritz        Shpritz        Pogruzchik     Kanistra       
+
+Kanistra       Accumulator    Kanistra       Kanistra       Pogruzchik     
+
+Pogruzchik     Kanistra       Accumulator    FireextinguisherKeys           
+
+Accumulator    FireextinguisherGarage         Garage         Shpritz        
+
+Kanistra       Shpritz        Box            Kanistra       Pogruzchik     
+
+Pogruzchik     Kanistra       Shpritz        Box            Fireextinguisher
+
+FireextinguisherKeys           Pogruzchik     FireextinguisherShpritz        
+
+Shpritz        Accumulator    Accumulator    Pogruzchik     Keys           
+
+Garage         Shpritz        Shpritz        Keys           Accumulator    
+
+Kanistra       Pogruzchik     Pogruzchik     Kanistra       Shpritz        
+
+Shpritz        Accumulator    Keys           Accumulator    Pogruzchik     
+
+Garage         Shpritz        Accumulator    Garage         Kanistra       
+
+Pogruzchik     FireextinguisherKanistra       FireextinguisherBox            
+
+Accumulator    Accumulator    Pogruzchik     Keys           Pogruzchik     
+
+Shpritz        Kanistra       FireextinguisherAccumulator    Garage         
+
+Pogruzchik     Box            Accumulator    Box            Shpritz        
+
+Garage         Shpritz        Pogruzchik     Kanistra       Kanistra       
+
+FireextinguisherAccumulator    Shpritz        Shpritz        Pogruzchik     
+
+Shpritz        Garage         Garage         Pogruzchik     Shpritz        
+
+Garage         Shpritz        Kanistra       Kanistra       Accumulator    
+
+Pogruzchik     Accumulator    Shpritz        Keys           Kanistra       
+
+Shpritz        Keys           FireextinguisherShpritz        Pogruzchik     
+
+Accumulator    FireextinguisherKanistra       Box            Shpritz        
+
+Pogruzchik     Kanistra       Shpritz        Kanistra       Kanistra       
+
+Garage         Pogruzchik     FireextinguisherGarage         Garage         
+
+Accumulator    Shpritz        Kanistra       Pogruzchik     Pogruzchik     
+
+Keys           Box            Shpritz        Accumulator    Fireextinguisher
+
+Shpritz        Accumulator    Pogruzchik     Kanistra       Accumulator    
+
+Kanistra       Kanistra       Accumulator    FireextinguisherBox            
+
+Pogruzchik     Shpritz        Shpritz        Accumulator    Garage         
+
+Shpritz        Accumulator    Kanistra       Kanistra       Pogruzchik     
+
+Garage         Pogruzchik     Accumulator    Shpritz        Keys           
+
+Pogruzchik     Kanistra       Pogruzchik     Pogruzchik     Kanistra       
+
+Kanistra       Shpritz        Keys           Kanistra       Shpritz        
+
+FireextinguisherFireextinguisherShpritz        FireextinguisherAccumulator    
+
+Accumulator    Accumulator    Kanistra       Keys           Kanistra       
+
+Pogruzchik     Shpritz        Box            Kanistra       Pogruzchik     
+
+Kanistra       FireextinguisherAccumulator    Accumulator    Garage         
+
+Shpritz        Kanistra       Pogruzchik     Shpritz        Shpritz        
+
+Garage         Accumulator    FireextinguisherPogruzchik     Kanistra       
+
+Pogruzchik     Pogruzchik     Kanistra       Keys           Pogruzchik     
+
+Shpritz        Kanistra       Accumulator    Kanistra       Box            
+
+Garage         Shpritz        Garage         Accumulator    Garage         
+
+FireextinguisherAccumulator    FireextinguisherShpritz        Fireextinguisher
+
+Shpritz        Pogruzchik     Accumulator    FireextinguisherAccumulator    
+
+Pogruzchik     Kanistra       Kanistra       Garage         Kanistra       
+
+FireextinguisherShpritz        FireextinguisherShpritz        Fireextinguisher
+
+Kanistra       Pogruzchik     Shpritz        Pogruzchik     Pogruzchik     
+
+Pogruzchik     Accumulator    Kanistra       Kanistra       Shpritz        
+
+Keys           Garage         Pogruzchik     Keys           Accumulator    
+
+Shpritz        Pogruzchik     Garage         Garage         Kanistra       
+
+Pogruzchik     FireextinguisherShpritz        Kanistra       Shpritz        
+
+Garage         Accumulator    Kanistra       Pogruzchik     Accumulator    
+
+Shpritz        Box            Keys           Accumulator    Keys           
+
+Kanistra       Kanistra       Accumulator    Shpritz        Kanistra       
+
+Accumulator    Pogruzchik     Kanistra       Pogruzchik     Pogruzchik     
+
+Shpritz        Garage         Shpritz        Kanistra       Shpritz        
+
+Kanistra       FireextinguisherFireextinguisherShpritz        Accumulator    
+
+Accumulator    Shpritz        Garage         Garage         Garage         
+
+Shpritz        Box            Pogruzchik     Pogruzchik     Fireextinguisher
+
+Pogruzchik     Pogruzchik     Kanistra       Accumulator    Kanistra       
+
+Kanistra       Shpritz        Accumulator    FireextinguisherBox            
+
+Shpritz        Accumulator    Shpritz        Kanistra       Garage         
+
+Accumulator    Pogruzchik     Pogruzchik     Pogruzchik     Shpritz        
+
+Kanistra       Shpritz        Kanistra       Keys           Pogruzchik     
+
+Pogruzchik     Accumulator    Accumulator    Shpritz        Kanistra       
+
+Shpritz        Kanistra       Keys           Accumulator    Accumulator    
+
+Garage         FireextinguisherKanistra       FireextinguisherPogruzchik     
+
+Accumulator    Pogruzchik     Shpritz        Shpritz        Fireextinguisher
+
+Pogruzchik     Garage         Pogruzchik     Pogruzchik     Garage         
+
+Shpritz        Shpritz        Accumulator    Box            Kanistra       
+
+Accumulator    Accumulator    FireextinguisherFireextinguisherFireextinguisher
+
+Pogruzchik     Kanistra       Pogruzchik     Kanistra       Pogruzchik     
+
+Kanistra       FireextinguisherBox            Garage         Accumulator    
+
+Accumulator    Pogruzchik     Shpritz        Keys           Shpritz        
+
+Garage         Accumulator    Kanistra       Pogruzchik     Kanistra       
+
+Shpritz        Shpritz        Accumulator    Kanistra       Pogruzchik     
+
+Accumulator    FireextinguisherShpritz        Accumulator    Shpritz        
+
+Pogruzchik     Kanistra       Garage         Pogruzchik     Kanistra       
+
+FireextinguisherAccumulator    Kanistra       Garage         Fireextinguisher
+
+Shpritz        FireextinguisherAccumulator    Accumulator    Pogruzchik     
+
+Pogruzchik     Keys           Garage         Pogruzchik     Garage         
+
+FireextinguisherAccumulator    Pogruzchik     Keys           Shpritz        
+
+Kanistra       FireextinguisherShpritz        Accumulator    Fireextinguisher
+
+Shpritz        Shpritz        Kanistra       Kanistra       Garage         
+
+Pogruzchik     Pogruzchik     FireextinguisherFireextinguisherAccumulator    
+
+FireextinguisherKanistra       Accumulator    Shpritz        Shpritz        
+
+Shpritz        Accumulator    Shpritz        Accumulator    Kanistra       
+
+Kanistra       Shpritz        Garage         Kanistra       Box            
+
+Keys           Kanistra       Box            Shpritz        Keys           
+
+Accumulator    Keys           Kanistra       Pogruzchik     Shpritz        
+
+Shpritz        Accumulator    FireextinguisherFireextinguisherAccumulator    
+
+FireextinguisherKanistra       Accumulator    Accumulator    Kanistra       
+
+Accumulator    Shpritz        Pogruzchik     Kanistra       Pogruzchik     
+
+Shpritz        Pogruzchik     Keys           Pogruzchik     Fireextinguisher
+
+Box            Kanistra       Shpritz        Shpritz        Shpritz        
+
+Keys           FireextinguisherKanistra       Kanistra       Accumulator    
+
+Pogruzchik     Keys           Accumulator    Pogruzchik     Kanistra       
+
+Garage         Kanistra       Garage         Shpritz        Fireextinguisher
+
+Shpritz        Accumulator    Keys           FireextinguisherPogruzchik     
+
+Accumulator    Keys           Shpritz        Pogruzchik     Kanistra       
+
+Kanistra       Shpritz        Kanistra       Kanistra       Fireextinguisher
+
+Shpritz        FireextinguisherFireextinguisherGarage         Shpritz        
+
+Pogruzchik     Pogruzchik     Shpritz        Pogruzchik     Kanistra       
+
+Kanistra       Accumulator    Accumulator    Shpritz        Garage         
+
+FireextinguisherShpritz        Pogruzchik     Kanistra       Accumulator    
+
+Accumulator    Kanistra       Kanistra       Accumulator    Keys           
+
+Box            Pogruzchik     FireextinguisherFireextinguisherKanistra       
+
+Shpritz        Garage         Keys           Garage         Pogruzchik     
+
+FireextinguisherAccumulator    Accumulator    Kanistra       Keys           
+
+Box            Pogruzchik     Kanistra       FireextinguisherShpritz        
+
+Kanistra       Kanistra       Pogruzchik     Pogruzchik     Garage         
+
+Shpritz        Shpritz        Garage         Shpritz        Fireextinguisher
+
+Accumulator    Pogruzchik     Shpritz        Garage         Accumulator    
+
+Pogruzchik     FireextinguisherAccumulator    FireextinguisherKanistra       
+
+FireextinguisherShpritz        Box            Shpritz        Shpritz        
+
+Accumulator    Pogruzchik     Shpritz        Accumulator    Accumulator    
+
+Pogruzchik     Accumulator    Pogruzchik     Pogruzchik     Box            
+
+Shpritz        FireextinguisherAccumulator    Garage         Shpritz        
+
+Keys           Pogruzchik     Box            Shpritz        Garage         
+
+Kanistra       Shpritz        Kanistra       Accumulator    Kanistra       
+
+Pogruzchik     FireextinguisherPogruzchik     Pogruzchik     Accumulator    
+
+Keys           Garage         Accumulator    Shpritz        Shpritz        
+
+Accumulator    Pogruzchik     Kanistra       Kanistra       Keys           
+
+FireextinguisherAccumulator    Shpritz        Keys           Kanistra       
+
+Keys           Shpritz        FireextinguisherShpritz        Shpritz        
+
+Accumulator    Garage         Pogruzchik     Accumulator    Garage         
+
+Pogruzchik     Accumulator    Kanistra       Pogruzchik     Fireextinguisher
+
+Shpritz        Shpritz        Accumulator    Shpritz        Shpritz        
+
+Kanistra       Box            Pogruzchik     Kanistra       Kanistra       
+
+Keys           Accumulator    Garage         Garage         Garage         
+
+Pogruzchik     Shpritz        Kanistra       FireextinguisherFireextinguisher
+
+Shpritz        Garage         Shpritz        Shpritz        Kanistra       
+
+Kanistra       Keys           Pogruzchik     Pogruzchik     Garage         
+
+Accumulator    Kanistra       Garage         Accumulator    Pogruzchik     
+
+Shpritz        FireextinguisherShpritz        Kanistra       Accumulator    
+
+FireextinguisherShpritz        Kanistra       Pogruzchik     Kanistra       
+
+Pogruzchik     Keys           Accumulator    Shpritz        Shpritz        
+
+Shpritz        Kanistra       FireextinguisherKanistra       Fireextinguisher
+
+Kanistra       Shpritz        Pogruzchik     FireextinguisherGarage         
+
+Garage         FireextinguisherGarage         Garage         Pogruzchik     
+
+Pogruzchik     Pogruzchik     Kanistra       Shpritz        Fireextinguisher
+
+Box            Shpritz        Box            Kanistra       Kanistra       
+
+FireextinguisherGarage         Shpritz        Pogruzchik     Accumulator    
+
+Pogruzchik     Kanistra       Pogruzchik     Accumulator    Pogruzchik     
+
+Kanistra       Keys           Kanistra       Kanistra       Kanistra       
+
+FireextinguisherPogruzchik     Accumulator    FireextinguisherFireextinguisher
+
+Garage         FireextinguisherShpritz        Pogruzchik     Accumulator    
+
+Box            Shpritz        Pogruzchik     Box            Pogruzchik     
+
+Accumulator    Accumulator    Garage         Shpritz        Kanistra       
+
+Garage         Pogruzchik     Kanistra       Garage         Fireextinguisher
+
+Pogruzchik     Garage         Shpritz        Pogruzchik     Shpritz        
+
+Accumulator    Shpritz        FireextinguisherShpritz        Pogruzchik     
+
+Shpritz        FireextinguisherAccumulator    FireextinguisherAccumulator    
+
+Kanistra       Accumulator    Box            Pogruzchik     Box            
+
+Pogruzchik     Kanistra       Pogruzchik     Shpritz        Fireextinguisher
+
+Shpritz        Garage         Shpritz        Accumulator    Shpritz        
+
+Kanistra       Shpritz        Kanistra       Keys           Pogruzchik     
+
+FireextinguisherKanistra       FireextinguisherPogruzchik     Kanistra       
+
+Shpritz        Box            Accumulator    Shpritz        Fireextinguisher
+
+Kanistra       Shpritz        Garage         Accumulator    Accumulator    
+
+Keys           Kanistra       Pogruzchik     Garage         Kanistra       
+
+Accumulator    Pogruzchik     Kanistra       Shpritz        Garage         
+
+Shpritz        Shpritz        Accumulator    FireextinguisherShpritz        
+
+Kanistra       Kanistra       Keys           Accumulator    Box            
+
+Pogruzchik     Pogruzchik     Shpritz        Kanistra       Kanistra       
+
+Shpritz        Garage         Kanistra       FireextinguisherShpritz        
+
+Keys           Box            Pogruzchik     Pogruzchik     Accumulator    
+
+Kanistra       Pogruzchik     Keys           Kanistra       Fireextinguisher
+
+Pogruzchik     Keys           Kanistra       FireextinguisherKanistra       
+
+FireextinguisherGarage         Shpritz        Pogruzchik     Pogruzchik     
+
+Keys           Shpritz        FireextinguisherBox            Accumulator    
+
+Shpritz        Accumulator    Kanistra       Kanistra       Box            
+
+Kanistra       Kanistra       Garage         Shpritz        Kanistra       
+
+Accumulator    Shpritz        Pogruzchik     Box            Shpritz        
+
+Shpritz        Keys           Box            Kanistra       Accumulator    
+
+Kanistra       Pogruzchik     Accumulator    Garage         Pogruzchik     
+
+Accumulator    Shpritz        Pogruzchik     FireextinguisherShpritz        
+
+Pogruzchik     Kanistra       FireextinguisherShpritz        Box            
+
+Keys           Garage         Shpritz        Box            Accumulator    
+
+FireextinguisherAccumulator    Pogruzchik     Kanistra       Kanistra       
+
+Garage         Pogruzchik     Box            Shpritz        Shpritz        
+
+Kanistra       Garage         Garage         Accumulator    Pogruzchik     
+
+Accumulator    Accumulator    Kanistra       Kanistra       Keys           
+
+Pogruzchik     Shpritz        Shpritz        Pogruzchik     Accumulator    
+
+Garage         Box            Garage         FireextinguisherKanistra       
+
+Accumulator    Kanistra       Accumulator    Kanistra       Pogruzchik     
+
+Shpritz        Keys           Pogruzchik     Shpritz        Fireextinguisher
+
+FireextinguisherShpritz        Shpritz        Keys           Shpritz        
+
+Garage         Kanistra       FireextinguisherKanistra       Pogruzchik     
+
+Kanistra       Pogruzchik     Keys           Garage         Accumulator    
+
+Keys           Accumulator    Accumulator    Shpritz        Kanistra       
+
+Garage         FireextinguisherGarage         Accumulator    Keys           
+
+Kanistra       Kanistra       Kanistra       FireextinguisherShpritz        
+
+Shpritz        Keys           Pogruzchik     Garage         Kanistra       
+
+Accumulator    Shpritz        Accumulator    Accumulator    Pogruzchik     
+
+Garage         Garage         FireextinguisherKanistra       Accumulator    
+
+Pogruzchik     Pogruzchik     Garage         FireextinguisherShpritz        
+
+Kanistra       Kanistra       Shpritz        Pogruzchik     Pogruzchik     
+
+Shpritz        Shpritz        Pogruzchik     Kanistra       Fireextinguisher
+
+FireextinguisherAccumulator    Keys           Accumulator    Kanistra       
+
+Kanistra       Pogruzchik     Kanistra       Shpritz        Box            
+
+Pogruzchik     Shpritz        Accumulator    FireextinguisherShpritz        
+
+Garage         Kanistra       Keys           Kanistra       Garage         
+
+Kanistra       Accumulator    Kanistra       Shpritz        Kanistra       
+
+Pogruzchik     Box            FireextinguisherAccumulator    Accumulator    
+
+Shpritz        Kanistra       Shpritz        Pogruzchik     Shpritz        
+
+FireextinguisherKeys           Kanistra       Shpritz        Kanistra       
+
+Accumulator    Shpritz        FireextinguisherGarage         Pogruzchik     
+
+Kanistra       Kanistra       Shpritz        Pogruzchik     Keys           
+
+FireextinguisherPogruzchik     Pogruzchik     Kanistra       Shpritz        
+
+Shpritz        FireextinguisherAccumulator    Shpritz        Pogruzchik     
+
+Pogruzchik     Kanistra       Shpritz        Pogruzchik     Accumulator    
+
+Box            Pogruzchik     Pogruzchik     Accumulator    Garage         
+
+Shpritz        Shpritz        Kanistra       Shpritz        Shpritz        
+
+Accumulator    FireextinguisherShpritz        Pogruzchik     Box            
+
+FireextinguisherKanistra       Box            FireextinguisherGarage         
+
+Pogruzchik     Shpritz        Kanistra       Shpritz        Pogruzchik     
+
+Shpritz        FireextinguisherGarage         Pogruzchik     Kanistra       
+
+FireextinguisherAccumulator    Shpritz        Kanistra       Shpritz        
+
+Keys           Kanistra       Accumulator    Keys           Pogruzchik     
+
+Pogruzchik     FireextinguisherKanistra       Pogruzchik     Kanistra       
+
+FireextinguisherAccumulator    Shpritz        Accumulator    Accumulator    
+
+Shpritz        Pogruzchik     Box            Shpritz        Pogruzchik     
+
+Pogruzchik     FireextinguisherFireextinguisherKeys           Shpritz        
+
+Keys           Kanistra       Accumulator    Kanistra       Kanistra       
+
+Accumulator    Shpritz        Shpritz        Shpritz        Garage         
+
+Pogruzchik     Accumulator    FireextinguisherAccumulator    Fireextinguisher
+
+Kanistra       Pogruzchik     Accumulator    Pogruzchik     Keys           
+
+Accumulator    Kanistra       Shpritz        Garage         Accumulator    
+
+FireextinguisherAccumulator    Kanistra       Shpritz        Shpritz        
+
+Kanistra       FireextinguisherFireextinguisherAccumulator    Pogruzchik     
+
+Pogruzchik     Keys           Garage         Kanistra       Fireextinguisher
+
+FireextinguisherKanistra       Kanistra       Shpritz        Garage         
+
+Kanistra       Shpritz        Accumulator    Pogruzchik     Accumulator    
+
+Accumulator    Accumulator    Box            Accumulator    Kanistra       
+
+FireextinguisherPogruzchik     Kanistra       Garage         Shpritz        
+
+Shpritz        Garage         Shpritz        Keys           Accumulator    
+
+Pogruzchik     FireextinguisherFireextinguisherShpritz        Pogruzchik     
+
+Accumulator    Shpritz        Pogruzchik     Accumulator    Garage         
+
+Garage         Kanistra       Accumulator    Garage         Shpritz        
+
+Kanistra       Keys           Kanistra       Kanistra       Accumulator    
+
+Shpritz        Accumulator    Shpritz        Shpritz        Kanistra       
+
+Accumulator    Shpritz        Pogruzchik     Box            Shpritz        
+
+Pogruzchik     Garage         Kanistra       Kanistra       Fireextinguisher
+
+Kanistra       Pogruzchik     Shpritz        Pogruzchik     Garage         
+
+Shpritz        Keys           Pogruzchik     Keys           Shpritz        
+
+Box            Shpritz        Garage         Shpritz        Accumulator    
+
+Accumulator    Kanistra       Box            Kanistra       Kanistra       
+
+Kanistra       Pogruzchik     Pogruzchik     Accumulator    Shpritz        
+
+Garage         Accumulator    Shpritz        Pogruzchik     Accumulator    
+
+FireextinguisherFireextinguisherKanistra       Shpritz        Pogruzchik     
+
+Kanistra       Shpritz        Accumulator    Kanistra       Garage         
+
+Keys           Pogruzchik     FireextinguisherGarage         Shpritz        
+
+Pogruzchik     Kanistra       Shpritz        FireextinguisherPogruzchik     
+
+Accumulator    Shpritz        Kanistra       Keys           Kanistra       
+
+Kanistra       FireextinguisherPogruzchik     Kanistra       Shpritz        
+
+FireextinguisherKanistra       FireextinguisherFireextinguisherAccumulator    
+
+Accumulator    Keys           Shpritz        Shpritz        Pogruzchik     
+
+Pogruzchik     Shpritz        Pogruzchik     Keys           Kanistra       
+
+Keys           Accumulator    Accumulator    Accumulator    Garage         
+
+Shpritz        Kanistra       Garage         Shpritz        Shpritz        
+
+Garage         Shpritz        Kanistra       Keys           Fireextinguisher
+
+Pogruzchik     Garage         Shpritz        Pogruzchik     Garage         
+
+Shpritz        Keys           Pogruzchik     FireextinguisherKanistra       
+
+Kanistra       Kanistra       Accumulator    Shpritz        Shpritz        
+
+FireextinguisherAccumulator    Shpritz        Kanistra       Pogruzchik     
+
+Shpritz        Pogruzchik     Kanistra       Pogruzchik     Keys           
+
+Kanistra       Shpritz        Garage         Accumulator    Shpritz        
+
+Pogruzchik     Keys           FireextinguisherShpritz        Kanistra       
+
+Keys           FireextinguisherPogruzchik     Kanistra       Garage         
+
+Accumulator    Accumulator    Accumulator    Pogruzchik     Shpritz        
+
+FireextinguisherKanistra       Kanistra       Shpritz        Pogruzchik     
+
+Pogruzchik     FireextinguisherShpritz        Kanistra       Box            
+
+Shpritz        Pogruzchik     Accumulator    FireextinguisherKanistra       
+
+Kanistra       Shpritz        FireextinguisherAccumulator    Accumulator    
+
+FireextinguisherAccumulator    Kanistra       Pogruzchik     Box            
+
+Shpritz        Garage         Garage         Keys           Keys           
+
+Pogruzchik     Kanistra       Pogruzchik     Kanistra       Kanistra       
+
+Kanistra       Shpritz        Shpritz        Pogruzchik     Shpritz        
+
+FireextinguisherPogruzchik     Kanistra       Shpritz        Fireextinguisher
+
+Pogruzchik     Box            Accumulator    Kanistra       Kanistra       
+
+Shpritz        Accumulator    Garage         Accumulator    Accumulator    
+
+Accumulator    Kanistra       Pogruzchik     Pogruzchik     Pogruzchik     
+
+Garage         Garage         FireextinguisherKanistra       Shpritz        
+
+Shpritz        Accumulator    Kanistra       Shpritz        Fireextinguisher
+
+Kanistra       Shpritz        Accumulator    Accumulator    Kanistra       
+
+Pogruzchik     Kanistra       Keys           Kanistra       Garage         
+
+Shpritz        Garage         Garage         Garage         Pogruzchik     
+
+Kanistra       Accumulator    Shpritz        Accumulator    Shpritz        
+
+Accumulator    Pogruzchik     Accumulator    Pogruzchik     Kanistra       
+
+Shpritz        Kanistra       Keys           Kanistra       Accumulator    
+
+Kanistra       FireextinguisherKanistra       FireextinguisherShpritz        
+
+Garage         Shpritz        Pogruzchik     Accumulator    Pogruzchik     
+
+FireextinguisherKanistra       Shpritz        Garage         Garage         
+
+Shpritz        Accumulator    Garage         Kanistra       Fireextinguisher
+
+Box            Shpritz        Accumulator    Accumulator    Kanistra       
+
+Garage         Garage         Pogruzchik     Pogruzchik     Garage         
+
+Pogruzchik     Kanistra       Shpritz        Shpritz        Accumulator    
+
+Kanistra       FireextinguisherAccumulator    Keys           Shpritz        
+
+Accumulator    Shpritz        Garage         Accumulator    Kanistra       
+
+Shpritz        Accumulator    Keys           Pogruzchik     Fireextinguisher
+
+Kanistra       Pogruzchik     Kanistra       Garage         Keys           
+
+Garage         Shpritz        FireextinguisherKanistra       Shpritz        
+
+Accumulator    Kanistra       Pogruzchik     Keys           Kanistra       
+
+Pogruzchik     Box            Kanistra       Pogruzchik     Fireextinguisher
+
+Kanistra       Keys           Shpritz        Shpritz        Garage         
+
+Accumulator    Kanistra       Accumulator    Accumulator    Keys           
+
+Shpritz        FireextinguisherPogruzchik     Kanistra       Pogruzchik     
+
+Kanistra       Pogruzchik     FireextinguisherShpritz        Accumulator    
+
+FireextinguisherShpritz        Garage         Pogruzchik     Shpritz        
+
+Shpritz        Accumulator    Shpritz        Kanistra       Keys           
+
+Pogruzchik     Pogruzchik     Keys           Shpritz        Kanistra       
+
+Accumulator    Kanistra       Pogruzchik     Accumulator    Accumulator    
+
+Kanistra       Keys           Shpritz        Kanistra       Shpritz        
+
+Shpritz        Shpritz        Accumulator    Shpritz        Box            
+
+Pogruzchik     Pogruzchik     Garage         Accumulator    Kanistra       
+
+Garage         Garage         FireextinguisherFireextinguisherGarage         
+
+Keys           Shpritz        Shpritz        Kanistra       Shpritz        
+
+Kanistra       Kanistra       Garage         Pogruzchik     Accumulator    
+
+Shpritz        FireextinguisherBox            Shpritz        Keys           
+
+Pogruzchik     Accumulator    Kanistra       Accumulator    Kanistra       
+
+Accumulator    Pogruzchik     Pogruzchik     Garage         Shpritz        
+
+Kanistra       Shpritz        Shpritz        Kanistra       Accumulator    
+
+FireextinguisherGarage         Kanistra       Pogruzchik     Pogruzchik     
+
+Pogruzchik     Keys           FireextinguisherBox            Keys           
+
+Accumulator    FireextinguisherPogruzchik     Shpritz        Shpritz        
+
+Kanistra       Accumulator    Kanistra       Keys           Accumulator    
+
+FireextinguisherShpritz        Shpritz        Accumulator    Pogruzchik     
+
+Shpritz        Garage         Pogruzchik     Pogruzchik     Fireextinguisher
+
+Kanistra       Kanistra       Kanistra       FireextinguisherShpritz        
+
+Pogruzchik     Shpritz        Shpritz        Shpritz        Pogruzchik     
+
+Shpritz        Box            FireextinguisherGarage         Keys           
+
+Kanistra       Pogruzchik     Kanistra       FireextinguisherShpritz        
+
+Garage         Shpritz        Garage         Accumulator    Pogruzchik     
+
+Pogruzchik     FireextinguisherPogruzchik     Garage         Fireextinguisher
+
+Accumulator    Accumulator    Shpritz        Kanistra       Accumulator    
+
+Kanistra       Pogruzchik     Accumulator    FireextinguisherShpritz        
+
+Keys           FireextinguisherKanistra       Shpritz        Kanistra       
+
+Shpritz        Kanistra       Shpritz        Pogruzchik     Pogruzchik     
+
+FireextinguisherPogruzchik     FireextinguisherKanistra       Fireextinguisher
+
+Kanistra       Garage         Keys           Shpritz        Accumulator    
+
+Pogruzchik     Box            Accumulator    Garage         Pogruzchik     
+
+Accumulator    Pogruzchik     Garage         Kanistra       Keys           
+
+Shpritz        FireextinguisherKanistra       Keys           Accumulator    
+
+Garage         Shpritz        Shpritz        Pogruzchik     Fireextinguisher
+
+Kanistra       Kanistra       Garage         Kanistra       Box            
+
+Shpritz        Pogruzchik     Pogruzchik     Accumulator    Kanistra       
+
+FireextinguisherBox            Kanistra       Box            Accumulator    
+
+Accumulator    Shpritz        Garage         Kanistra       Pogruzchik     
+
+Pogruzchik     Kanistra       Pogruzchik     FireextinguisherShpritz        
+
+Kanistra       Accumulator    FireextinguisherAccumulator    Garage         
+
+FireextinguisherPogruzchik     Accumulator    Shpritz        Kanistra       
+
+Accumulator    Shpritz        Kanistra       Pogruzchik     Pogruzchik     
+
+Kanistra       Kanistra       Shpritz        Garage         Fireextinguisher
+
+Pogruzchik     Garage         Keys           Shpritz        Kanistra       
+
+Garage         Accumulator    Garage         Accumulator    Shpritz        
+
+Accumulator    Pogruzchik     Accumulator    Kanistra       Pogruzchik     
+
+Shpritz        Shpritz        FireextinguisherFireextinguisherKanistra       
+
+Kanistra       Garage         Shpritz        Garage         Shpritz        
+
+FireextinguisherFireextinguisherPogruzchik     Kanistra       Accumulator    
+
+Shpritz        Accumulator    Kanistra       FireextinguisherPogruzchik     
+
+Kanistra       Box            FireextinguisherShpritz        Keys           
+
+Garage         Kanistra       Accumulator    Box            Kanistra       
+
+Shpritz        Shpritz        Shpritz        Pogruzchik     Fireextinguisher
+
+Kanistra       Accumulator    Pogruzchik     Keys           Shpritz        
+
+FireextinguisherKanistra       Kanistra       Shpritz        Accumulator    
+
+Shpritz        FireextinguisherKeys           Kanistra       Pogruzchik     
+
+Keys           Shpritz        FireextinguisherGarage         Kanistra       
+
+Garage         Kanistra       Kanistra       Pogruzchik     Garage         
+
+Kanistra       Keys           Pogruzchik     Accumulator    Keys           
+
+Accumulator    Garage         Shpritz        FireextinguisherPogruzchik     
+
+Shpritz        FireextinguisherAccumulator    Shpritz        Fireextinguisher
+
+Garage         Shpritz        Kanistra       Accumulator    Shpritz        
+
+Accumulator    Accumulator    Shpritz        Garage         Garage         
+
+Kanistra       Kanistra       Accumulator    Shpritz        Kanistra       
+
+Box            Shpritz        Kanistra       Box            Pogruzchik     
+
+Shpritz        Pogruzchik     Garage         Pogruzchik     Shpritz        
+
+Accumulator    Kanistra       Keys           Kanistra       Kanistra       
+
+Kanistra       FireextinguisherKanistra       Shpritz        Pogruzchik     
+
+Shpritz        Shpritz        Accumulator    Pogruzchik     Fireextinguisher
+
+Accumulator    Accumulator    Pogruzchik     Kanistra       Kanistra       
+
+Kanistra       Kanistra       Garage         Shpritz        Shpritz        
+
+Keys           Shpritz        Shpritz        Pogruzchik     Fireextinguisher
+
+FireextinguisherAccumulator    Accumulator    Accumulator    Kanistra       
+
+Accumulator    FireextinguisherGarage         Keys           Accumulator    
+
+Kanistra       Pogruzchik     Shpritz        FireextinguisherGarage         
+
+Shpritz        Garage         Kanistra       Pogruzchik     Shpritz        
+
+Pogruzchik     Shpritz        Garage         Shpritz        Kanistra       
+
+Garage         Kanistra       Accumulator    Kanistra       Pogruzchik     
+
+Shpritz        Pogruzchik     Shpritz        FireextinguisherGarage         
+
+Accumulator    FireextinguisherFireextinguisherShpritz        Kanistra       
+
+FireextinguisherKanistra       Keys           Garage         Shpritz        
+
+Kanistra       Accumulator    Accumulator    FireextinguisherGarage         
+
+Garage         Garage         Shpritz        Accumulator    Kanistra       
+
+Shpritz        Pogruzchik     Garage         Kanistra       Shpritz        
+
+Pogruzchik     Shpritz        Pogruzchik     Pogruzchik     Fireextinguisher
+
+Keys           Accumulator    Accumulator    Garage         Kanistra       
+
+Kanistra       Kanistra       Shpritz        FireextinguisherBox            
+
+Pogruzchik     Garage         Keys           Shpritz        Pogruzchik     
+
+Accumulator    Shpritz        FireextinguisherGarage         Kanistra       
+
+Box            Kanistra       Garage         Accumulator    Accumulator    
+
+Garage         Accumulator    Accumulator    Pogruzchik     Shpritz        
+
+Kanistra       FireextinguisherShpritz        Shpritz        Fireextinguisher
+
+Pogruzchik     Shpritz        Kanistra       Accumulator    Accumulator    
+
+Garage         Kanistra       Accumulator    Kanistra       Kanistra       
+
+Shpritz        Accumulator    FireextinguisherPogruzchik     Pogruzchik     
+
+Accumulator    Shpritz        Kanistra       Accumulator    Shpritz        
+
+Pogruzchik     Pogruzchik     Shpritz        Kanistra       Fireextinguisher
+
+FireextinguisherAccumulator    Garage         Shpritz        Kanistra       
+
+Shpritz        FireextinguisherAccumulator    Accumulator    Accumulator    
+
+Pogruzchik     Kanistra       Shpritz        Pogruzchik     Shpritz        
+
+Garage         Shpritz        Kanistra       Shpritz        Pogruzchik     
+
+Shpritz        FireextinguisherPogruzchik     Kanistra       Fireextinguisher
+
+Pogruzchik     Garage         Accumulator    Garage         Accumulator    
+
+Kanistra       Shpritz        Shpritz        Shpritz        Pogruzchik     
+
+Accumulator    Keys           Box            Kanistra       Kanistra       
+
+Pogruzchik     FireextinguisherGarage         Pogruzchik     Fireextinguisher
+
+Shpritz        Shpritz        Kanistra       Accumulator    Shpritz        
+
+Keys           Pogruzchik     Shpritz        Kanistra       Kanistra       
+
+Kanistra       Kanistra       Accumulator    Shpritz        Pogruzchik     
+
+FireextinguisherShpritz        Garage         Garage         Accumulator    
+
+Keys           Pogruzchik     Pogruzchik     Kanistra       Kanistra       
+
+Accumulator    Kanistra       Shpritz        Shpritz        Shpritz        
+
+Kanistra       Shpritz        Kanistra       Pogruzchik     Fireextinguisher
+
+Pogruzchik     FireextinguisherKeys           Accumulator    Kanistra       
+
+Accumulator    Pogruzchik     Accumulator    Shpritz        Accumulator    
+
+Kanistra       Accumulator    Shpritz        Garage         Fireextinguisher
+
+Pogruzchik     Kanistra       Keys           Keys           Pogruzchik     
+
+Shpritz        Shpritz        Pogruzchik     Kanistra       Garage         
+
+Garage         Keys           Shpritz        Accumulator    Shpritz        
+
+Pogruzchik     Kanistra       Accumulator    Garage         Kanistra       
+
+Shpritz        Shpritz        Keys           Pogruzchik     Keys           
+
+Kanistra       Accumulator    Kanistra       Accumulator    Fireextinguisher
+
+FireextinguisherKanistra       Garage         Shpritz        Garage         
+
+Shpritz        Shpritz        Shpritz        Garage         Kanistra       
+
+Garage         FireextinguisherAccumulator    Kanistra       Accumulator    
+
+Kanistra       Kanistra       FireextinguisherShpritz        Fireextinguisher
+
+Box            Accumulator    Shpritz        Accumulator    Shpritz        
+
+Accumulator    Pogruzchik     Garage         Pogruzchik     Garage         
+
+Garage         Kanistra       Accumulator    Box            Kanistra       
+
+FireextinguisherGarage         Kanistra       Garage         Shpritz        
+
+Pogruzchik     Accumulator    Pogruzchik     Kanistra       Pogruzchik     
+
+Accumulator    Shpritz        Shpritz        Shpritz        Accumulator    
+
+Shpritz        Kanistra       FireextinguisherPogruzchik     Fireextinguisher
+
+Kanistra       Box            Garage         Accumulator    Garage         
+
+Box            Shpritz        Accumulator    Kanistra       Accumulator    
+
+Shpritz        Accumulator    Kanistra       Shpritz        Fireextinguisher
+
+Kanistra       Kanistra       FireextinguisherAccumulator    Kanistra       
+
+FireextinguisherFireextinguisherGarage         Pogruzchik     Pogruzchik     
+
+Pogruzchik     Shpritz        Pogruzchik     Shpritz        Shpritz        
+
+Keys           Garage         Kanistra       Kanistra       Accumulator    
+
+Kanistra       Kanistra       Shpritz        FireextinguisherPogruzchik     
+
+Accumulator    Accumulator    FireextinguisherShpritz        Shpritz        
+
+FireextinguisherShpritz        Kanistra       Garage         Accumulator    
+
+Kanistra       Garage         Accumulator    Kanistra       Pogruzchik     
+
+Shpritz        Accumulator    Pogruzchik     Shpritz        Fireextinguisher
+
+Accumulator    Pogruzchik     Garage         FireextinguisherKanistra       
+
+Garage         Keys           FireextinguisherKanistra       Pogruzchik     
+
+Kanistra       Kanistra       Keys           Accumulator    Shpritz        
+
+Shpritz        Accumulator    Garage         FireextinguisherKanistra       
+
+Pogruzchik     FireextinguisherKanistra       Shpritz        Pogruzchik     
+
+FireextinguisherShpritz        Pogruzchik     Keys           Shpritz        
+
+Kanistra       Accumulator    Garage         Kanistra       Kanistra       
+
+Accumulator    Pogruzchik     Kanistra       Shpritz        Garage         
+
+Shpritz        Shpritz        Accumulator    Accumulator    Accumulator    
+
+Garage         Kanistra       Pogruzchik     Pogruzchik     Kanistra       
+
+Kanistra       Box            Kanistra       Kanistra       Garage         
+
+Shpritz        Garage         Shpritz        Shpritz        Fireextinguisher
+
+FireextinguisherPogruzchik     Accumulator    Garage         Shpritz        
+
+Pogruzchik     Accumulator    Pogruzchik     FireextinguisherGarage         
+
+Shpritz        Shpritz        Garage         Accumulator    Keys           
+
+Keys           Pogruzchik     Accumulator    Shpritz        Kanistra       
+
+Kanistra       FireextinguisherPogruzchik     Kanistra       Pogruzchik     
+
+Accumulator    Garage         Keys           Box            Accumulator    
+
+Shpritz        Keys           FireextinguisherPogruzchik     Shpritz        
+
+Pogruzchik     Shpritz        Kanistra       Kanistra       Keys           
+
+Kanistra       Garage         Accumulator    Shpritz        Pogruzchik     
+
+Shpritz        Kanistra       Shpritz        Pogruzchik     Kanistra       
+
+Garage         Accumulator    Garage         Accumulator    Keys           
+
+Accumulator    Shpritz        FireextinguisherShpritz        Accumulator    
+
+Kanistra       Kanistra       Accumulator    Kanistra       Garage         
+
+Shpritz        FireextinguisherPogruzchik     Garage         Shpritz        
+
+Accumulator    Keys           Garage         Shpritz        Box            
+
+Pogruzchik     Pogruzchik     Kanistra       FireextinguisherKanistra       
+
+Garage         Kanistra       FireextinguisherKanistra       Accumulator    
+
+Shpritz        Garage         Accumulator    Shpritz        Shpritz        
+
+Keys           Pogruzchik     Kanistra       FireextinguisherPogruzchik     
+
+Accumulator    Shpritz        Shpritz        Kanistra       Kanistra       
+
+FireextinguisherAccumulator    Pogruzchik     Pogruzchik     Garage         
+
+Shpritz        Kanistra       Kanistra       Shpritz        Shpritz        
+
+Accumulator    Garage         Keys           Accumulator    Pogruzchik     
+
+Pogruzchik     Shpritz        Pogruzchik     Pogruzchik     Kanistra       
+
+Garage         Kanistra       Shpritz        Garage         Shpritz        
+
+Keys           Pogruzchik     Kanistra       Shpritz        Accumulator    
+
+Shpritz        Shpritz        Accumulator    Keys           Pogruzchik     
+
+Accumulator    Kanistra       Shpritz        Garage         Garage         
+
+FireextinguisherPogruzchik     Kanistra       Kanistra       Keys           
+
+Shpritz        Accumulator    Pogruzchik     Shpritz        Accumulator    
+
+Garage         Kanistra       Accumulator    Pogruzchik     Shpritz        
+
+Box            FireextinguisherKanistra       FireextinguisherFireextinguisher
+
+Shpritz        Shpritz        Shpritz        Accumulator    Garage         
+
+Garage         Kanistra       Accumulator    Shpritz        Accumulator    
+
+Kanistra       Accumulator    FireextinguisherGarage         Shpritz        
+
+Pogruzchik     Garage         Pogruzchik     Kanistra       Fireextinguisher
+
+Shpritz        Shpritz        Kanistra       FireextinguisherKanistra       
+
+Keys           Kanistra       Shpritz        Pogruzchik     Pogruzchik     
+
+Box            Pogruzchik     Pogruzchik     Kanistra       Shpritz        
+
+Pogruzchik     Accumulator    Garage         Shpritz        Accumulator    
+
+Garage         Shpritz        Kanistra       FireextinguisherKanistra       
+
+Shpritz        Pogruzchik     Shpritz        Accumulator    Fireextinguisher
+
+Accumulator    Kanistra       Accumulator    Kanistra       Accumulator    
+
+Kanistra       Accumulator    Kanistra       Shpritz        Shpritz        
+
+Pogruzchik     Pogruzchik     Shpritz        Accumulator    Garage         
+
+Shpritz        Shpritz        Keys           Kanistra       Accumulator    
+
+Kanistra       FireextinguisherKanistra       Garage         Shpritz        
+
+Accumulator    Pogruzchik     Accumulator    Shpritz        Pogruzchik     
+
+Shpritz        Kanistra       Shpritz        Kanistra       Fireextinguisher
+
+Kanistra       Shpritz        Pogruzchik     Accumulator    Accumulator    
+
+Accumulator    Pogruzchik     Accumulator    Shpritz        Garage         
+
+Pogruzchik     Garage         Kanistra       Garage         Pogruzchik     
+
+Kanistra       FireextinguisherFireextinguisherKanistra       Fireextinguisher
+
+Accumulator    Shpritz        Accumulator    Accumulator    Shpritz        
+
+Shpritz        Kanistra       Shpritz        Shpritz        Garage         
+
+FireextinguisherGarage         Garage         Kanistra       Pogruzchik     
+
+Box            Shpritz        Keys           Pogruzchik     Accumulator    
+
+Kanistra       Accumulator    Shpritz        Accumulator    Shpritz        
+
+Shpritz        Garage         Accumulator    Shpritz        Kanistra       
+
+Pogruzchik     Pogruzchik     Kanistra       Kanistra       Garage         
+
+FireextinguisherKanistra       Shpritz        FireextinguisherAccumulator    
+
+Accumulator    Keys           Accumulator    Accumulator    Pogruzchik     
+
+Shpritz        FireextinguisherFireextinguisherKanistra       Kanistra       
+
+Kanistra       Pogruzchik     Shpritz        Garage         Shpritz        
+
+FireextinguisherAccumulator    Kanistra       Accumulator    Pogruzchik     
+
+Shpritz        Shpritz        Accumulator    Shpritz        Accumulator    
+
+Accumulator    Kanistra       Garage         Pogruzchik     Shpritz        
+
+FireextinguisherAccumulator    FireextinguisherKanistra       Fireextinguisher
+
+Pogruzchik     Shpritz        Shpritz        Shpritz        Garage         
+
+Accumulator    Kanistra       Pogruzchik     Accumulator    Shpritz        
+
+Shpritz        Garage         Kanistra       Kanistra       Kanistra       
+
+FireextinguisherPogruzchik     FireextinguisherKeys           Accumulator    
+
+Kanistra       Kanistra       Pogruzchik     Garage         Pogruzchik     
+
+Shpritz        Garage         Garage         Pogruzchik     Garage         
+
+Keys           Accumulator    Accumulator    Shpritz        Kanistra       
+
+Kanistra       FireextinguisherKanistra       Accumulator    Shpritz        
+
+Pogruzchik     Kanistra       Shpritz        Kanistra       Keys           
+
+Accumulator    Keys           FireextinguisherFireextinguisherGarage         
+
+FireextinguisherAccumulator    Pogruzchik     Shpritz        Fireextinguisher
+
+Keys           Shpritz        Accumulator    Garage         Pogruzchik     
+
+Shpritz        Pogruzchik     Kanistra       Pogruzchik     Shpritz        
+
+Kanistra       Keys           Keys           Shpritz        Accumulator    
+
+Garage         Shpritz        Garage         Kanistra       Garage         
+
+Shpritz        Garage         Accumulator    Accumulator    Shpritz        
+
+Kanistra       Kanistra       Shpritz        Shpritz        Kanistra       
+
+Garage         Accumulator    Keys           Kanistra       Pogruzchik     
+
+Pogruzchik     Shpritz        Kanistra       Keys           Accumulator    
+
+Shpritz        Kanistra       Pogruzchik     Accumulator    Keys           
+
+Accumulator    Garage         Garage         Kanistra       Fireextinguisher
+
+Kanistra       Shpritz        Kanistra       FireextinguisherShpritz        
+
+Pogruzchik     Pogruzchik     FireextinguisherAccumulator    Kanistra       
+
+Accumulator    Garage         Accumulator    Kanistra       Accumulator    
+
+Kanistra       FireextinguisherPogruzchik     Garage         Pogruzchik     
+
+Garage         Shpritz        Garage         Accumulator    Fireextinguisher
+
+Shpritz        Accumulator    Accumulator    Pogruzchik     Accumulator    
+
+Accumulator    Kanistra       Pogruzchik     Kanistra       Garage         
+
+FireextinguisherShpritz        Shpritz        Keys           Fireextinguisher
+
+Shpritz        Garage         Kanistra       Shpritz        Accumulator    
+
+Accumulator    FireextinguisherGarage         FireextinguisherShpritz        
+
+Keys           Pogruzchik     Pogruzchik     Kanistra       Pogruzchik     
+
+Kanistra       Shpritz        Kanistra       Accumulator    Kanistra       
+
+Shpritz        FireextinguisherKeys           Garage         Accumulator    
+
+Box            Pogruzchik     FireextinguisherKanistra       Shpritz        
+
+Kanistra       Garage         Shpritz        Pogruzchik     Kanistra       
+
+Keys           Kanistra       Pogruzchik     Shpritz        Keys           
+
+Shpritz        Accumulator    Kanistra       Accumulator    Pogruzchik     
+
+Kanistra       Keys           Shpritz        Pogruzchik     Shpritz        
+
+Accumulator    Shpritz        Pogruzchik     FireextinguisherGarage         
+
+Keys           Garage         Box            Kanistra       Accumulator    
+
+Shpritz        Kanistra       Garage         Shpritz        Keys           
+
+Garage         Accumulator    Pogruzchik     Accumulator    Kanistra       
+
+Accumulator    Keys           Accumulator    Pogruzchik     Fireextinguisher
+
+Kanistra       Kanistra       Kanistra       Garage         Accumulator    
+
+Shpritz        Accumulator    Pogruzchik     Kanistra       Kanistra       
+
+Accumulator    Pogruzchik     Shpritz        Shpritz        Fireextinguisher
+
+Kanistra       Kanistra       Kanistra       Pogruzchik     Accumulator    
+
+Garage         Garage         Pogruzchik     Keys           Kanistra       
+
+FireextinguisherShpritz        Shpritz        Shpritz        Shpritz        
+
+Pogruzchik     Kanistra       Accumulator    Kanistra       Pogruzchik     
+
+Kanistra       Pogruzchik     Kanistra       Pogruzchik     Accumulator    
+
+FireextinguisherKeys           Shpritz        Shpritz        Kanistra       
+
+Accumulator    Accumulator    Accumulator    Accumulator    Pogruzchik     
+
+Kanistra       FireextinguisherKanistra       Kanistra       Shpritz        
+
+Garage         Keys           Pogruzchik     Shpritz        Kanistra       
+
+Shpritz        Pogruzchik     Accumulator    FireextinguisherAccumulator    
+
+FireextinguisherAccumulator    Kanistra       Box            Shpritz        
+
+Kanistra       Shpritz        Shpritz        Pogruzchik     Fireextinguisher
+
+Keys           Pogruzchik     FireextinguisherAccumulator    Kanistra       
+
+Shpritz        Kanistra       Pogruzchik     Shpritz        Garage         
+
+Accumulator    Accumulator    Garage         Pogruzchik     Shpritz        
+
+Garage         Pogruzchik     Kanistra       FireextinguisherKanistra       
+
+Pogruzchik     Kanistra       FireextinguisherAccumulator    Pogruzchik     
+
+Shpritz        Box            Accumulator    Pogruzchik     Keys           
+
+Kanistra       Garage         Shpritz        FireextinguisherShpritz        
+
+Accumulator    FireextinguisherGarage         Shpritz        Kanistra       
+
+Shpritz        Accumulator    FireextinguisherKanistra       Fireextinguisher
+
+Kanistra       Garage         Kanistra       Accumulator    Pogruzchik     
+
+Accumulator    Shpritz        Accumulator    Pogruzchik     Garage         
+
+Shpritz        Kanistra       Pogruzchik     Kanistra       Kanistra       
+
+Kanistra       Keys           Kanistra       FireextinguisherAccumulator    
+
+FireextinguisherShpritz        Keys           Garage         Shpritz        
+
+Pogruzchik     Garage         FireextinguisherShpritz        Pogruzchik     
+
+Shpritz        Pogruzchik     Pogruzchik     Accumulator    Keys           
+
+Kanistra       FireextinguisherKanistra       Kanistra       Shpritz        
+
+Accumulator    Accumulator    Shpritz        Pogruzchik     Pogruzchik     
+
+Shpritz        Garage         FireextinguisherShpritz        Kanistra       
+
+Pogruzchik     FireextinguisherGarage         Accumulator    Garage         
+
+Garage         Kanistra       Kanistra       Keys           Shpritz        
+
+FireextinguisherAccumulator    FireextinguisherPogruzchik     Pogruzchik     
+
+Kanistra       Pogruzchik     Keys           Shpritz        Kanistra       
+
+Shpritz        Garage         Kanistra       Accumulator    Garage         
+
+Accumulator    Accumulator    Accumulator    FireextinguisherPogruzchik     
+
+Box            FireextinguisherShpritz        Shpritz        Shpritz        
+
+Pogruzchik     Kanistra       Box            Accumulator    Kanistra       
+
+Accumulator    Accumulator    Garage         FireextinguisherPogruzchik     
+
+Shpritz        FireextinguisherKanistra       Shpritz        Accumulator    
+
+Box            Pogruzchik     Pogruzchik     Garage         Kanistra       
+
+Accumulator    Shpritz        Shpritz        Kanistra       Shpritz        
+
+Kanistra       Accumulator    FireextinguisherPogruzchik     Accumulator    
+
+Pogruzchik     Kanistra       Accumulator    Shpritz        Fireextinguisher
+
+Shpritz        Pogruzchik     Shpritz        Kanistra       Shpritz        
+
+FireextinguisherShpritz        FireextinguisherFireextinguisherKanistra       
+
+Garage         Kanistra       Pogruzchik     Accumulator    Garage         
+
+Shpritz        Keys           Accumulator    Shpritz        Accumulator    
+
+Pogruzchik     Pogruzchik     Shpritz        FireextinguisherKeys           
+
+Garage         Shpritz        Kanistra       Accumulator    Shpritz        
+
+Accumulator    FireextinguisherAccumulator    Shpritz        Accumulator    
+
+Shpritz        Pogruzchik     Shpritz        Kanistra       Pogruzchik     
+
+FireextinguisherKanistra       Keys           Pogruzchik     Kanistra       
+
+Garage         Garage         FireextinguisherShpritz        Shpritz        
+
+Pogruzchik     Accumulator    Shpritz        Keys           Accumulator    
+
+Accumulator    Shpritz        Garage         Kanistra       Keys           
+
+Keys           Garage         Pogruzchik     Shpritz        Kanistra       
+
+Shpritz        Kanistra       Kanistra       Pogruzchik     Shpritz        
+
+Garage         Shpritz        Shpritz        Kanistra       Pogruzchik     
+
+Accumulator    FireextinguisherAccumulator    Shpritz        Kanistra       
+
+Pogruzchik     Accumulator    Pogruzchik     Box            Accumulator    
+
+Shpritz        Pogruzchik     Shpritz        Kanistra       Shpritz        
+
+Kanistra       Shpritz        Accumulator    Accumulator    Kanistra       
+
+FireextinguisherKanistra       Kanistra       Shpritz        Garage         
+
+Garage         Accumulator    Pogruzchik     Pogruzchik     Accumulator    
+
+Kanistra       Pogruzchik     Garage         Garage         Kanistra       
+
+Pogruzchik     Shpritz        Kanistra       Kanistra       Shpritz        
+
+Shpritz        Accumulator    Shpritz        Accumulator    Accumulator    
+
+Accumulator    Garage         Accumulator    Pogruzchik     Kanistra       
+
+Garage         Pogruzchik     Kanistra       Shpritz        Shpritz        
+
+FireextinguisherBox            Pogruzchik     Garage         Accumulator    
+
+Shpritz        Shpritz        Garage         Box            Kanistra       
+
+Kanistra       Accumulator    FireextinguisherKanistra       Garage         
+
+Accumulator    FireextinguisherPogruzchik     Garage         Accumulator    
+
+FireextinguisherKanistra       Garage         Shpritz        Pogruzchik     
+
+Shpritz        Pogruzchik     FireextinguisherAccumulator    Kanistra       
+
+Kanistra       Shpritz        Kanistra       Kanistra       Shpritz        
+
+FireextinguisherKeys           Keys           Garage         Fireextinguisher
+
+Accumulator    FireextinguisherShpritz        Accumulator    Kanistra       
+
+Garage         Accumulator    Kanistra       Kanistra       Accumulator    
+
+Kanistra       Kanistra       Garage         Garage         Shpritz        
+
+FireextinguisherPogruzchik     Pogruzchik     Accumulator    Pogruzchik     
+
+Accumulator    Shpritz        FireextinguisherPogruzchik     Kanistra       
+
+Kanistra       Kanistra       Shpritz        Kanistra       Shpritz        
+
+FireextinguisherFireextinguisherKanistra       Accumulator    Keys           
+
+Shpritz        Shpritz        Accumulator    Shpritz        Garage         
+
+Pogruzchik     Pogruzchik     Shpritz        Kanistra       Shpritz        
+
+Garage         Garage         Kanistra       Garage         Kanistra       
+
+Accumulator    Kanistra       Pogruzchik     Accumulator    Accumulator    
+
+Keys           Accumulator    FireextinguisherKanistra       Shpritz        
+
+Shpritz        Shpritz        Keys           Shpritz        Kanistra       
+
+Kanistra       Kanistra       Kanistra       FireextinguisherAccumulator    
+
+Pogruzchik     FireextinguisherAccumulator    Accumulator    Fireextinguisher
+
+Keys           Shpritz        Pogruzchik     Kanistra       Garage         
+
+Accumulator    Kanistra       Kanistra       Shpritz        Shpritz        
+
+Kanistra       Garage         Shpritz        Accumulator    Pogruzchik     
+
+Shpritz        Accumulator    Accumulator    Kanistra       Accumulator    
+
+Keys           Kanistra       Kanistra       FireextinguisherShpritz        
+
+Kanistra       Garage         Shpritz        Shpritz        Kanistra       
+
+Shpritz        Shpritz        Pogruzchik     Accumulator    Fireextinguisher
+
+Pogruzchik     Accumulator    Accumulator    Keys           Shpritz        
+
+Accumulator    FireextinguisherKanistra       Pogruzchik     Kanistra       
+
+Kanistra       Kanistra       Garage         Kanistra       Pogruzchik     
+
+Pogruzchik     Shpritz        Accumulator    Accumulator    Garage         
+
+Shpritz        Garage         Kanistra       Keys           Kanistra       
+
+Kanistra       Accumulator    Pogruzchik     Shpritz        Keys           
+
+FireextinguisherKanistra       Shpritz        Garage         Accumulator    
+
+Accumulator    Garage         Accumulator    FireextinguisherGarage         
+
+Keys           Pogruzchik     Pogruzchik     Keys           Shpritz        
+
+FireextinguisherAccumulator    Kanistra       Garage         Kanistra       
+
+Accumulator    Kanistra       Shpritz        Kanistra       Accumulator    
+
+Garage         Keys           Pogruzchik     Shpritz        Keys           
+
+Pogruzchik     Shpritz        Accumulator    Keys           Pogruzchik     
+
+Kanistra       Kanistra       Shpritz        Accumulator    Shpritz        
+
+Garage         Accumulator    Kanistra       Kanistra       Fireextinguisher
+
+Keys           Pogruzchik     Accumulator    Keys           Accumulator    
+
+Kanistra       Kanistra       FireextinguisherPogruzchik     Shpritz        
+
+Garage         Accumulator    Pogruzchik     Kanistra       Pogruzchik     
+
+Accumulator    Box            Accumulator    Shpritz        Kanistra       
+
+Pogruzchik     Kanistra       Shpritz        Pogruzchik     Accumulator    
+
+Garage         Pogruzchik     Garage         Accumulator    Pogruzchik     
+
+Shpritz        Shpritz        Kanistra       Shpritz        Shpritz        
+
+Keys           Accumulator    Shpritz        Keys           Kanistra       
+
+Kanistra       Garage         Accumulator    Kanistra       Accumulator    
+
+Pogruzchik     Shpritz        Pogruzchik     Shpritz        Shpritz        
+
+Garage         Accumulator    Shpritz        FireextinguisherKeys           
+
+Kanistra       Kanistra       Accumulator    Kanistra       Fireextinguisher
+
+Pogruzchik     Pogruzchik     Garage         Accumulator    Shpritz        
+
+Shpritz        Accumulator    Kanistra       Shpritz        Kanistra       
+
+Kanistra       Garage         Shpritz        Kanistra       Accumulator    
+
+Accumulator    Shpritz        Pogruzchik     Garage         Keys           
+
+Shpritz        Kanistra       FireextinguisherShpritz        Kanistra       
+
+Pogruzchik     Pogruzchik     Kanistra       Accumulator    Garage         
+
+Kanistra       Accumulator    Pogruzchik     Kanistra       Pogruzchik     
+
+Garage         Garage         Shpritz        Pogruzchik     Fireextinguisher
+
+Pogruzchik     FireextinguisherKanistra       Box            Kanistra       
+
+FireextinguisherKanistra       FireextinguisherShpritz        Shpritz        
+
+Accumulator    Accumulator    Pogruzchik     Pogruzchik     Pogruzchik     
+
+Garage         Shpritz        Kanistra       Accumulator    Fireextinguisher
+
+Pogruzchik     Kanistra       Shpritz        FireextinguisherKeys           
+
+Kanistra       Accumulator    Garage         Kanistra       Kanistra       
+
+Shpritz        Shpritz        Pogruzchik     Shpritz        Shpritz        
+
+Pogruzchik     Kanistra       Kanistra       Accumulator    Accumulator    
+
+Accumulator    Pogruzchik     Accumulator    Kanistra       Garage         
+
+Shpritz        Garage         Shpritz        Shpritz        Kanistra       
+
+Garage         Kanistra       Pogruzchik     Accumulator    Accumulator    
+
+Kanistra       Pogruzchik     Kanistra       Keys           Fireextinguisher
+
+Pogruzchik     Accumulator    Shpritz        Kanistra       Kanistra       
+
+Shpritz        Keys           FireextinguisherAccumulator    Shpritz        
+
+Accumulator    Kanistra       Garage         Garage         Pogruzchik     
+
+Kanistra       Accumulator    Accumulator    FireextinguisherKanistra       
+
+Pogruzchik     Shpritz        Shpritz        Accumulator    Keys           
+
+Accumulator    Pogruzchik     Keys           Shpritz        Shpritz        
+
+Kanistra       Kanistra       Kanistra       Garage         Kanistra       
+
+Shpritz        Garage         FireextinguisherAccumulator    Fireextinguisher
+
+Garage         Shpritz        Shpritz        Kanistra       Shpritz        
+
+Pogruzchik     Kanistra       Accumulator    Pogruzchik     Kanistra       
+
+Accumulator    Pogruzchik     FireextinguisherFireextinguisherPogruzchik     
+
+Kanistra       Shpritz        Kanistra       Kanistra       Garage         
+
+Shpritz        Kanistra       Garage         Accumulator    Kanistra       
+
+Accumulator    Garage         Shpritz        Garage         Accumulator    
+
+Kanistra       Pogruzchik     Kanistra       Kanistra       Shpritz        
+
+Pogruzchik     FireextinguisherAccumulator    Shpritz        Kanistra       
+
+Shpritz        Accumulator    Pogruzchik     Accumulator    Fireextinguisher
+
+Kanistra       Pogruzchik     Shpritz        FireextinguisherShpritz        
+
+FireextinguisherShpritz        FireextinguisherShpritz        Pogruzchik     
+
+Pogruzchik     Kanistra       Pogruzchik     Kanistra       Garage         
+
+Kanistra       Accumulator    Shpritz        Garage         Shpritz        
+
+Shpritz        Pogruzchik     Accumulator    FireextinguisherKanistra       
+
+Box            Kanistra       Keys           Accumulator    Pogruzchik     
+
+Kanistra       Garage         Pogruzchik     Keys           Accumulator    
+
+Shpritz        Accumulator    Kanistra       Shpritz        Kanistra       
+
+Accumulator    FireextinguisherShpritz        FireextinguisherKeys           
+
+Pogruzchik     Pogruzchik     FireextinguisherAccumulator    Accumulator    
+
+FireextinguisherAccumulator    Pogruzchik     Shpritz        Garage         
+
+Kanistra       FireextinguisherShpritz        Pogruzchik     Kanistra       
+
+Keys           Kanistra       Kanistra       FireextinguisherShpritz        
+
+FireextinguisherGarage         Accumulator    Garage         Garage         
+
+Shpritz        Shpritz        Shpritz        Shpritz        Accumulator    
+
+Kanistra       Kanistra       Garage         Pogruzchik     Kanistra       
+
+Pogruzchik     Pogruzchik     Kanistra       Garage         Shpritz        
+
+Accumulator    Garage         Shpritz        Kanistra       Accumulator    
+
+Shpritz        Accumulator    Pogruzchik     Pogruzchik     Kanistra       
+
+Pogruzchik     Shpritz        Garage         Garage         Pogruzchik     
+
+Kanistra       Kanistra       Kanistra       Accumulator    Garage         
+
+Shpritz        Accumulator    Shpritz        Kanistra       Shpritz        
+
+FireextinguisherPogruzchik     Accumulator    FireextinguisherFireextinguisher
+
+Accumulator    Kanistra       FireextinguisherGarage         Garage         
+
+Kanistra       Keys           Keys           Shpritz        Shpritz        
+
+Shpritz        Shpritz        Shpritz        Pogruzchik     Kanistra       
+
+Pogruzchik     FireextinguisherKanistra       Kanistra       Garage         
+
+Kanistra       Accumulator    Pogruzchik     Garage         Accumulator    
+
+Accumulator    Shpritz        Shpritz        Pogruzchik     Pogruzchik     
+
+Pogruzchik     FireextinguisherKanistra       Shpritz        Kanistra       
+
+Garage         Kanistra       Accumulator    Garage         Shpritz        
+
+Kanistra       Accumulator    Shpritz        FireextinguisherAccumulator    
+
+Keys           Garage         Kanistra       Shpritz        Pogruzchik     
+
+Pogruzchik     Kanistra       Pogruzchik     Pogruzchik     Shpritz        
+
+Kanistra       FireextinguisherShpritz        Kanistra       Fireextinguisher
+
+Accumulator    Shpritz        Kanistra       Shpritz        Kanistra       
+
+Keys           Pogruzchik     Keys           Garage         Shpritz        
+
+Shpritz        Keys           Shpritz        Pogruzchik     Garage         
+
+Accumulator    Garage         Kanistra       FireextinguisherAccumulator    
+
+Kanistra       Kanistra       Garage         Kanistra       Kanistra       
+
+Pogruzchik     Pogruzchik     Shpritz        Pogruzchik     Shpritz        
+
+Garage         Garage         Kanistra       Shpritz        Fireextinguisher
+
+Shpritz        Shpritz        Pogruzchik     Accumulator    Kanistra       
+
+Kanistra       Kanistra       Shpritz        Kanistra       Pogruzchik     
+
+FireextinguisherPogruzchik     Kanistra       Pogruzchik     Shpritz        
+
+Accumulator    Accumulator    Pogruzchik     FireextinguisherKanistra       
+
+Shpritz        Shpritz        Shpritz        Kanistra       Fireextinguisher
+

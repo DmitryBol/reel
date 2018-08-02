@@ -1,0 +1,264 @@
+Star           Dollar         Dollar         Orange         Plum           
+
+Orange         Plum           Plum           Plum           Melon          
+
+Lemon          Cherry         Cherry         Lemon          Orange         
+
+Dollar         7              Star           Cherry         Dollar         
+
+Plum           Lemon          Orange         Dollar         Cherry         
+
+Cherry         Plum           Bell           Orange         Lemon          
+
+Orange         Bell           Plum           7              Bell           
+
+Dollar         7              Lemon          Lemon          Dollar         
+
+Plum           Grape          Bell           Cherry         Orange         
+
+Lemon          Bell           Plum           Melon          Melon          
+
+7              Cherry         Orange         7              Bell           
+
+Plum           Dollar         Bell           Bell           Orange         
+
+Orange         Bell           Lemon          Cherry         Melon          
+
+Lemon          Cherry         Star           Lemon          Bell           
+
+Star           Orange         Melon          Grape          Plum           
+
+Plum           Lemon          7              Plum           Lemon          
+
+Lemon          Crown          Cherry         Melon          Star           
+
+Cherry         Grape          Star           Orange         Melon          
+
+Grape          Orange         Bell           Plum           Orange         
+
+Star           Plum           Cherry         Grape          Bell           
+
+Lemon          Lemon          Lemon          Bell           Plum           
+
+Cherry         Bell           Bell           Orange         Dollar         
+
+7              Cherry         7              Lemon          Bell           
+
+Orange         Lemon          Crown          Bell           Lemon          
+
+Melon          Bell           Bell           Cherry         Star           
+
+Cherry         Grape          Cherry         Plum           Orange         
+
+Bell           Dollar         Orange         Melon          Plum           
+
+Lemon          Bell           Plum           Grape          Cherry         
+
+Cherry         Plum           Dollar         Plum           Grape          
+
+Orange         Crown          Bell           Lemon          Plum           
+
+7              Cherry         Lemon          7              Lemon          
+
+Plum           7              Dollar         Cherry         Orange         
+
+Bell           Dollar         Plum           Orange         Bell           
+
+Cherry         Cherry         Bell           Bell           Grape          
+
+Melon          Plum           7              Plum           7              
+
+Bell           Melon          Star           Orange         Bell           
+
+Grape          7              Plum           Lemon          Plum           
+
+Cherry         Grape          Bell           Grape          Cherry         
+
+Lemon          Plum           Cherry         Cherry         Melon          
+
+Plum           Cherry         Orange         Lemon          7              
+
+7              Dollar         Star           Orange         Plum           
+
+Bell           Orange         Plum           Crown          Bell           
+
+Orange         Grape          Orange         Bell           Grape          
+
+Plum           Lemon          Dollar         Grape          Melon          
+
+Cherry         Plum           Lemon          Plum           Lemon          
+
+Star           Cherry         Plum           Cherry         Plum           
+
+Orange         Orange         Cherry         Orange         Star           
+
+Cherry         Plum           Orange         Plum           Lemon          
+
+Melon          Bell           7              Cherry         Grape          
+
+Grape          Grape          Star           7              Orange         
+
+Bell           Orange         Melon          Lemon          Bell           
+
+Plum           Lemon          Lemon          Bell           Cherry         
+
+Melon          Cherry         Cherry         Cherry         7              
+
+7              Orange         Dollar         Grape          Plum           
+
+Dollar         Plum           Orange         Plum           Orange         
+
+Orange         Lemon          Cherry         Cherry         Dollar         
+
+Bell           Grape          Dollar         Bell           7              
+
+Plum           Cherry         Grape          Orange         Lemon          
+
+Lemon          Orange         Orange         Melon          Cherry         
+
+Grape          7              Lemon          7              Grape          
+
+Melon          Melon          Star           Bell           Plum           
+
+Bell           Orange         Orange         Lemon          Cherry         
+
+Plum           Plum           Plum           Melon          Orange         
+
+Orange         Bell           Grape          Bell           Plum           
+
+Lemon          Melon          Dollar         Orange         Lemon          
+
+Grape          Plum           Orange         Dollar         Bell           
+
+7              Cherry         Plum           Plum           Dollar         
+
+Dollar         Lemon          Bell           Orange         Plum           
+
+Cherry         Bell           Orange         Dollar         Orange         
+
+Bell           Cherry         Crown          Lemon          7              
+
+Plum           Orange         Melon          Melon          Lemon          
+
+Melon          Plum           Cherry         Bell           Plum           
+
+Bell           Cherry         Orange         Lemon          Cherry         
+
+Lemon          Orange         Plum           Plum           Star           
+
+Dollar         Lemon          Bell           Orange         Orange         
+
+Cherry         Melon          Star           Bell           Cherry         
+
+Orange         7              Lemon          Dollar         Lemon          
+
+Lemon          Lemon          Melon          Lemon          Grape          
+
+Melon          Orange         Grape          Orange         Cherry         
+
+Orange         Dollar         Lemon          Grape          Bell           
+
+Plum           Melon          Bell           Lemon          Melon          
+
+Lemon          Bell           Star           Bell           Orange         
+
+Bell           7              Grape          Orange         Plum           
+
+Plum           Plum           Cherry         Plum           7              
+
+Orange         Lemon          Melon          Cherry         Bell           
+
+Bell           Bell           Dollar         Lemon          Cherry         
+
+7              Melon          Lemon          Plum           7              
+
+Cherry         Plum           Bell           Cherry         Dollar         
+
+Lemon          Cherry         Plum           Lemon          Bell           
+
+Orange         Bell           Lemon          Dollar         Orange         
+
+Dollar         Grape          Orange         Orange         Cherry         
+
+Plum           Melon          Melon          Cherry         Lemon          
+
+Bell           Lemon          Star           Bell           Plum           
+
+Orange         Orange         Plum           Plum           Orange         
+
+Grape          Bell           Cherry         Orange         7              
+
+Cherry         Cherry         Orange         Lemon          Melon          
+
+7              7              Plum           7              Cherry         
+
+Lemon          Plum           Lemon          Grape          Grape          
+
+Bell           Lemon          Star           Crown          Orange         
+
+Plum           Cherry         Plum           Bell           Cherry         
+
+Orange         Plum           Orange         Cherry         Bell           
+
+Cherry         Lemon          Bell           Melon          Lemon          
+
+Bell           Orange         Cherry         Bell           Cherry         
+
+Plum           Melon          Star           Plum           Plum           
+
+Grape          Bell           Bell           Dollar         Lemon          
+
+Cherry         Orange         Orange         Melon          Cherry         
+
+Lemon          Lemon          Cherry         Plum           Grape          
+
+Bell           Bell           7              7              Orange         
+
+Orange         Orange         Melon          Cherry         Lemon          
+
+Cherry         Plum           Grape          Orange         Plum           
+
+Lemon          Cherry         Cherry         Plum           Cherry         
+
+Orange         Orange         Lemon          Bell           Lemon          
+
+Grape          Plum           Orange         7              Orange         
+
+Cherry         Bell           Cherry         Orange         Bell           
+
+Bell           Orange         Bell           Cherry         Plum           
+
+Plum           Lemon          Lemon          Bell           Cherry         
+
+Orange         Bell           Grape          Plum           Bell           
+
+Melon          Orange         Bell           Cherry         Lemon          
+
+               Orange         
+
+               Bell           
+
+               
+
+               
+
+               
+
+               
+
+               
+
+               
+
+               
+
+               
+
+               
+
+               
+
+               
+
+               
+

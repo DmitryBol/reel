@@ -1,0 +1,436 @@
+J              Vsadnik        A              Tyanka         A              
+
+A              Q              10             Katany         Tyanka         
+
+Vsadnik        Pagoda         Tyanka         Q              J              
+
+Yumi           10             A              Vsadnik        Katany         
+
+K              Vsadnik        Q              A              Dom            
+
+10             Tyanka         Dom            Pagoda         Tyanka         
+
+Dom            Q              Yumi           Vsadnik        10             
+
+K              Dom            K              Yumi           Q              
+
+10             J              Dom            J              K              
+
+A              Yumi           Vsadnik        K              Pagoda         
+
+Mujik          K              A              10             A              
+
+K              J              Pagoda         Dom            Dom            
+
+Vsadnik        10             10             A              Katany         
+
+Q              Pagoda         Tyanka         Yumi           A              
+
+J              Yumi           Q              10             Pagoda         
+
+Katany         Tyanka         Yumi           Q              Yumi           
+
+A              Vsadnik        Pagoda         Vsadnik        Tyanka         
+
+Vsadnik        A              Tyanka         Pagoda         A              
+
+Tyanka         10             Vsadnik        K              Vsadnik        
+
+Q              Pagoda         Pagoda         Dom            Pagoda         
+
+J              Dom            Yumi           J              Yumi           
+
+Pagoda         10             J              Pagoda         Tyanka         
+
+Q              Pagoda         Pagoda         Vsadnik        Katany         
+
+K              J              K              A              Q              
+
+Pagoda         10             Dom            J              Yumi           
+
+Dom            Tyanka         Mujik          Q              Dom            
+
+Tyanka         Q              Q              Yumi           K              
+
+Vsadnik        Pagoda         J              J              Vsadnik        
+
+Dom            J              Pagoda         A              Dom            
+
+Yumi           A              Dom            Dom            Q              
+
+Katany         K              Tyanka         Tyanka         10             
+
+10             Dom            Yumi           10             Dom            
+
+Yumi           J              Dom            Yumi           K              
+
+K              Yumi           10             Mujik          Pagoda         
+
+J              Tyanka         Vsadnik        10             A              
+
+Q              Mujik          J              J              10             
+
+Dom            Vsadnik        Yumi           Q              Q              
+
+A              J              Q              Dom            K              
+
+Q              Yumi           A              Yumi           10             
+
+Tyanka         10             Tyanka         Tyanka         Q              
+
+Vsadnik        Q              Q              Dom            Yumi           
+
+A              Pagoda         K              Q              10             
+
+Pagoda         Tyanka         J              K              Pagoda         
+
+K              K              Katany         Pagoda         Q              
+
+Katany         Dom            Q              10             Yumi           
+
+J              Vsadnik        K              Dom            Pagoda         
+
+Yumi           Pagoda         Dom            Tyanka         J              
+
+Pagoda         Q              10             J              Tyanka         
+
+A              Mujik          A              10             Pagoda         
+
+Vsadnik        Tyanka         Yumi           Tyanka         Dom            
+
+Q              Yumi           Dom            Dom            Vsadnik        
+
+Pagoda         Dom            Q              Q              Q              
+
+Vsadnik        Vsadnik        Pagoda         Vsadnik        10             
+
+10             A              K              J              Dom            
+
+Dom            J              Tyanka         Dom            Yumi           
+
+Pagoda         Pagoda         Pagoda         A              A              
+
+A              A              Q              Pagoda         K              
+
+Q              J              10             Vsadnik        Katany         
+
+Dom            Katany         J              Dom            J              
+
+Yumi           Pagoda         Vsadnik        Yumi           Pagoda         
+
+K              Q              K              Tyanka         A              
+
+J              Yumi           A              Katany         10             
+
+Q              J              10             K              Pagoda         
+
+A              Tyanka         Pagoda         J              Vsadnik        
+
+Tyanka         A              Yumi           Yumi           Yumi           
+
+Katany         K              Katany         Dom            Tyanka         
+
+Vsadnik        Dom            Tyanka         J              J              
+
+10             Pagoda         Pagoda         Q              Vsadnik        
+
+Pagoda         Vsadnik        K              Tyanka         Pagoda         
+
+Dom            K              A              J              Dom            
+
+Vsadnik        Mujik          J              10             10             
+
+10             10             Tyanka         Tyanka         Vsadnik        
+
+Dom            Katany         Pagoda         J              Q              
+
+J              Yumi           A              Vsadnik        Pagoda         
+
+Q              Dom            Dom            Katany         A              
+
+Tyanka         Pagoda         Katany         Yumi           Tyanka         
+
+K              J              10             K              Q              
+
+Dom            Tyanka         Pagoda         Tyanka         Dom            
+
+A              Dom            J              10             Vsadnik        
+
+Pagoda         Pagoda         Q              K              A              
+
+Vsadnik        K              Vsadnik        Pagoda         Pagoda         
+
+K              Dom            Pagoda         J              Vsadnik        
+
+Yumi           J              Dom            Vsadnik        10             
+
+Pagoda         10             10             A              Q              
+
+J              Dom            Pagoda         Dom            Vsadnik        
+
+Vsadnik        K              J              Tyanka         A              
+
+Pagoda         A              Tyanka         10             Yumi           
+
+Tyanka         Yumi           Vsadnik        Vsadnik        J              
+
+10             Pagoda         Yumi           Yumi           Dom            
+
+Pagoda         A              A              K              Yumi           
+
+Dom            Yumi           J              Pagoda         Q              
+
+A              Dom            Tyanka         J              K              
+
+Pagoda         Q              Pagoda         Dom            J              
+
+Yumi           J              Yumi           Pagoda         10             
+
+J              A              A              K              A              
+
+Vsadnik        Yumi           Dom            Q              Pagoda         
+
+Dom            Katany         10             Pagoda         Vsadnik        
+
+10             10             Tyanka         Yumi           K              
+
+Tyanka         Vsadnik        A              A              Pagoda         
+
+Mujik          Pagoda         Vsadnik        J              A              
+
+Yumi           Yumi           Dom            Yumi           Tyanka         
+
+Pagoda         A              10             Q              J              
+
+10             Pagoda         K              J              Dom            
+
+Tyanka         K              J              A              K              
+
+Dom            Tyanka         Tyanka         Q              10             
+
+Q              Pagoda         Q              J              Q              
+
+Pagoda         A              J              K              Tyanka         
+
+Yumi           10             Pagoda         10             A              
+
+Q              Katany         10             Dom            Pagoda         
+
+A              J              A              Tyanka         Vsadnik        
+
+K              K              Q              Vsadnik        Yumi           
+
+J              Vsadnik        K              A              Tyanka         
+
+Q              10             J              J              J              
+
+Yumi           Katany         A              Pagoda         Vsadnik        
+
+Vsadnik        Dom            Pagoda         10             Pagoda         
+
+A              10             Vsadnik        Tyanka         K              
+
+10             Pagoda         J              Q              J              
+
+Vsadnik        Q              K              Vsadnik        A              
+
+A              Dom            Dom            A              Q              
+
+Dom            10             Vsadnik        Dom            Yumi           
+
+K              A              Q              K              J              
+
+A              Pagoda         Mujik          Q              Vsadnik        
+
+Katany         Vsadnik        Katany         Tyanka         K              
+
+Vsadnik        A              Vsadnik        A              Tyanka         
+
+Tyanka         Tyanka         A              Q              Dom            
+
+J              Q              Dom            Vsadnik        K              
+
+Yumi           Vsadnik        Q              Pagoda         Vsadnik        
+
+10             10             10             10             A              
+
+Tyanka         J              Tyanka         Tyanka         Dom            
+
+J              Yumi           Pagoda         Pagoda         Q              
+
+Yumi           Dom            J              A              Tyanka         
+
+10             Tyanka         Dom            Tyanka         Dom            
+
+J              Q              10             Vsadnik        A              
+
+A              K              Tyanka         Q              Yumi           
+
+Vsadnik        Mujik          Pagoda         Dom            J              
+
+Mujik          Yumi           Katany         10             Mujik          
+
+K              A              J              Vsadnik        Q              
+
+A              Vsadnik        A              J              Tyanka         
+
+Dom            K              K              A              Vsadnik        
+
+Pagoda         10             Vsadnik        Dom            J              
+
+K              Tyanka         A              Tyanka         K              
+
+Yumi           Katany         K              J              Pagoda         
+
+Q              Pagoda         Vsadnik        Q              10             
+
+Dom            A              A              Dom            J              
+
+10             Tyanka         Yumi           10             Q              
+
+A              Dom            Q              A              K              
+
+Dom            10             Vsadnik        Katany         J              
+
+Tyanka         Q              Pagoda         K              Tyanka         
+
+A              Dom            J              A              Pagoda         
+
+K              Tyanka         K              Dom            Yumi           
+
+J              Q              Pagoda         Pagoda         K              
+
+Tyanka         10             Dom            Yumi           J              
+
+10             Vsadnik        K              Dom            10             
+
+Q              Q              Q              Pagoda         K              
+
+Pagoda         Pagoda         Yumi           K              Pagoda         
+
+Vsadnik        Dom            K              10             Yumi           
+
+Katany         Vsadnik        J              Pagoda         Q              
+
+Dom            A              Tyanka         Dom            10             
+
+10             J              Pagoda         J              Dom            
+
+Yumi           Vsadnik        Vsadnik        A              Mujik          
+
+Tyanka         A              10             Dom            Yumi           
+
+Vsadnik        Q              Dom            Mujik          10             
+
+Pagoda         Tyanka         Mujik          Katany         J              
+
+J              Vsadnik        A              Dom            A              
+
+K              Dom            Tyanka         Yumi           K              
+
+Dom            Q              Q              A              Katany         
+
+Q              A              Pagoda         K              A              
+
+Vsadnik        Dom            Vsadnik        Yumi           Dom            
+
+A              J              J              A              10             
+
+Pagoda         A              Katany         Tyanka         Q              
+
+Q              K              Yumi           Pagoda         J              
+
+10             Dom            Tyanka         K              Dom            
+
+J              10             10             Q              Pagoda         
+
+A              Yumi           Q              Pagoda         Vsadnik        
+
+Pagoda         K              Mujik          Vsadnik        K              
+
+J              A              Tyanka         A              J              
+
+Yumi           Tyanka         K              Tyanka         Katany         
+
+Pagoda         Yumi           Yumi           10             Mujik          
+
+Dom            10             J              Pagoda         Yumi           
+
+J              K              10             K              Dom            
+
+K              Pagoda         Yumi           J              Vsadnik        
+
+Yumi           Dom            Dom            Mujik          Pagoda         
+
+Tyanka         Yumi           A              Pagoda         J              
+
+10             Tyanka         Yumi           J              A              
+
+Dom            A              J              Mujik          Vsadnik        
+
+Pagoda         J              Q              10             Dom            
+
+K              10             Dom            A              A              
+
+Tyanka         Yumi           10             Yumi           Yumi           
+
+10             A              J              Katany         Mujik          
+
+A              K              Vsadnik        Q              10             
+
+K              Dom            A              Yumi           Q              
+
+Yumi           Vsadnik        10             Tyanka         K              
+
+A              10             Dom            10             J              
+
+10             J              Vsadnik        A              A              
+
+Tyanka         Q              10             Q              Dom            
+
+Q              Yumi           Dom            Pagoda         Tyanka         
+
+10             J              A              Dom            J              
+
+J              Q              Vsadnik        Yumi           10             
+
+Q              Dom            Dom            Q              Q              
+
+10             A              10             K              Pagoda         
+
+J              10             Yumi           10             10             
+
+Dom            Q              K              Pagoda         Yumi           
+
+Pagoda         J              Q              A              Tyanka         
+
+10             Vsadnik        A              K              Pagoda         
+
+J              A              Yumi           Vsadnik        Dom            
+
+Tyanka         Pagoda         Dom            Pagoda         Tyanka         
+
+Mujik          J              10             Q              J              
+
+J              Q              Vsadnik        Vsadnik        Vsadnik        
+
+Yumi           Tyanka         Yumi           10             10             
+
+Pagoda         K              A              Pagoda         A              
+
+Tyanka         J              10             Vsadnik        Tyanka         
+
+Q              Tyanka         K              10             10             
+
+A              K              Pagoda         Yumi           A              
+
+Dom            Vsadnik        Q              K              Tyanka         
+
+Tyanka         Pagoda         J              10             Dom            
+
+Q              Q              Yumi           Vsadnik        10             
+
+Yumi           K              Dom            Yumi           Yumi           
+
+Dom            Yumi           Tyanka         A              Dom            
+
