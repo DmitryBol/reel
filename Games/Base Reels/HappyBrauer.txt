@@ -1,0 +1,802 @@
+s3             j2             s3             s4             s2             
+
+s1             wild           j4             j1             j2             
+
+j4             j4             s1             s3             j3             
+
+j2             s3             wild           s5             s4             
+
+s1             s5             j5             j3             s2             
+
+j4             Scat           s5             s3             j1             
+
+s2             s4             s2             wild           s3             
+
+j2             j3             Scat           s4             j2             
+
+j1             s3             j3             j3             s5             
+
+s5             j4             s5             j4             s3             
+
+Scat           j2             s3             s5             wild           
+
+j4             j1             s2             s4             j4             
+
+j1             wild           j3             s3             s4             
+
+j3             s3             j1             s2             s3             
+
+s5             j3             s4             s1             j5             
+
+j2             j4             j4             s5             s1             
+
+s1             j5             Scat           j3             j1             
+
+s5             s2             s3             s1             s2             
+
+j3             s4             s1             s5             j2             
+
+j2             s5             j1             j5             s4             
+
+s4             j2             s5             j2             j4             
+
+j1             Scat           j2             s3             j3             
+
+s5             j5             j5             s1             j5             
+
+s3             s4             s5             j1             Scat           
+
+j4             j2             j1             s3             j4             
+
+s1             j5             s2             s5             s5             
+
+j1             s3             s5             j2             j3             
+
+j2             j2             Scat           j5             j2             
+
+s2             s5             j3             wild           s1             
+
+j3             j4             s2             s2             j5             
+
+s1             j3             s1             j5             j4             
+
+s3             j2             s4             s1             s1             
+
+s2             j5             j3             j4             j3             
+
+j3             j4             s1             s4             s5             
+
+j5             j3             s4             j5             j2             
+
+Scat           j2             j3             s2             j5             
+
+j1             s1             j2             s3             j4             
+
+j5             j1             j1             s5             s3             
+
+j2             j3             j5             Scat           s5             
+
+s2             j2             j3             j5             s1             
+
+s3             s1             wild           s2             j2             
+
+j5             j4             j2             j4             s3             
+
+s2             s5             j5             j5             j3             
+
+j1             s3             s5             s3             j5             
+
+j3             wild           Scat           s2             j2             
+
+wild           j3             j3             wild           wild           
+
+s2             s2             s1             Scat           j4             
+
+s5             s5             j2             j3             j3             
+
+j5             j2             s5             j1             s2             
+
+s4             j4             s3             s5             s3             
+
+j4             s2             s2             s3             j3             
+
+s5             s1             j5             s2             j5             
+
+s3             Scat           s3             s5             Scat           
+
+s4             j4             j1             j5             s2             
+
+s2             wild           wild           s2             s1             
+
+s3             j5             s2             j4             s4             
+
+j4             j4             s5             s4             j2             
+
+s1             Scat           wild           s2             s5             
+
+j3             j1             s3             wild           s3             
+
+s4             j5             j4             j3             s4             
+
+s5             wild           s5             j4             j3             
+
+j1             j2             s2             j2             s3             
+
+Scat           s2             s3             j1             j4             
+
+j4             s1             j5             s3             j5             
+
+j5             s5             j4             s5             s5             
+
+s1             j1             j1             s2             s3             
+
+s4             s3             j5             j4             s1             
+
+j1             s4             wild           j3             j1             
+
+wild           s2             s4             j5             Scat           
+
+Scat           s3             j1             s3             s1             
+
+j1             j5             j2             j1             j2             
+
+s3             j2             j3             Scat           j3             
+
+s5             j3             s3             wild           s4             
+
+j5             j4             s5             j4             s3             
+
+j3             s2             j5             s5             j4             
+
+wild           s3             j1             j5             j2             
+
+s1             s4             s1             s1             j5             
+
+s3             j5             j2             s3             s1             
+
+j4             s1             s2             j3             s4             
+
+s4             wild           s3             s5             s5             
+
+wild           s4             j4             j4             s3             
+
+s2             Scat           j3             s3             j3             
+
+s1             s3             j1             s1             j4             
+
+j3             j3             s2             j5             j5             
+
+s3             j5             j5             j3             Scat           
+
+j5             s3             s5             j1             j3             
+
+s1             j2             Scat           s3             j1             
+
+j2             j3             j1             j5             j5             
+
+j1             j1             s4             j4             Scat           
+
+s5             s4             j5             s4             wild           
+
+s1             wild           s3             s1             s5             
+
+j2             s3             j1             j2             s2             
+
+s3             s4             j4             s2             s3             
+
+s2             s1             j2             s4             j5             
+
+Scat           j1             j1             s3             j3             
+
+s5             s5             s4             j3             s4             
+
+s1             s4             j3             wild           s2             
+
+j4             s2             s5             j4             j5             
+
+s2             s3             s1             s5             s4             
+
+s3             j5             s2             j2             s2             
+
+j4             j2             s3             s2             j3             
+
+j1             j4             s4             Scat           s3             
+
+s1             s5             j5             j3             j4             
+
+s5             Scat           j2             s5             s4             
+
+s3             j3             s2             s4             s3             
+
+Scat           j2             s4             s1             s1             
+
+s5             s2             j4             j3             s4             
+
+s2             j4             wild           s3             j4             
+
+j1             s1             s4             j4             j5             
+
+s5             j1             j3             s5             s2             
+
+j5             s2             Scat           s1             s3             
+
+Scat           j2             s4             j2             j5             
+
+s3             j1             j3             j5             j1             
+
+s1             s2             Scat           s2             s4             
+
+j1             s4             s4             s1             Scat           
+
+wild           j3             j4             j5             j3             
+
+j3             j5             j1             wild           j4             
+
+s3             j2             j3             j4             s3             
+
+Scat           j3             j5             Scat           j2             
+
+j2             s1             j1             s2             j4             
+
+s4             s5             j4             j4             wild           
+
+j5             j5             Scat           j5             s5             
+
+j2             j3             s3             s5             j3             
+
+j1             j2             wild           j1             s3             
+
+s4             s3             j2             j3             j2             
+
+j5             s1             j5             j5             j5             
+
+s3             j4             s4             j2             j3             
+
+s1             Scat           s1             s1             s1             
+
+Scat           s1             j2             s3             s5             
+
+j4             j3             wild           j2             j2             
+
+j3             j5             s2             Scat           j3             
+
+s4             s3             j3             j1             wild           
+
+s2             s1             s3             j2             j2             
+
+j4             j1             j2             j5             s2             
+
+j3             s4             wild           s4             Scat           
+
+s2             s5             j1             j1             j3             
+
+s4             j1             s3             j2             s1             
+
+s1             s1             j4             j5             j5             
+
+s3             j5             j5             j1             s3             
+
+s4             j2             s4             s3             s5             
+
+s2             s1             j2             j4             s2             
+
+j2             j3             j1             j3             s1             
+
+j1             j1             s1             j2             j2             
+
+wild           s3             Scat           j4             s3             
+
+Scat           j4             s3             j1             j5             
+
+j2             j3             s4             s3             wild           
+
+j3             j2             s2             j2             j4             
+
+s3             s3             j5             j5             s5             
+
+s1             j3             j4             j4             j3             
+
+j1             j2             s4             s5             s1             
+
+s4             s5             s3             j1             j2             
+
+s2             s2             s1             j2             s4             
+
+j3             s3             j4             j5             s3             
+
+j4             s4             wild           s2             j2             
+
+j1             Scat           j5             s5             j1             
+
+s2             j4             s2             j3             s2             
+
+s5             j5             j4             j1             j5             
+
+j1             j3             s5             s4             s1             
+
+j2             s3             j2             j2             j2             
+
+s5             s4             s1             wild           j3             
+
+s2             j1             s3             s3             s5             
+
+s1             s1             j5             j4             s2             
+
+s3             s4             j3             s1             wild           
+
+j5             j5             j1             j2             s3             
+
+j1             s2             s3             s4             s2             
+
+j2             j3             s5             j1             j4             
+
+s1             s3             s1             s5             s5             
+
+j1             Scat           j3             s4             j3             
+
+j3             wild           s5             j3             j2             
+
+s1             j2             s4             j1             j5             
+
+j4             s2             j1             j5             s4             
+
+j3             s3             Scat           j4             s1             
+
+s1             s1             j3             s5             j4             
+
+j5             s2             wild           j5             Scat           
+
+s3             s4             s4             s2             s4             
+
+s4             j3             s2             j4             j1             
+
+j5             j1             j5             s1             j4             
+
+j3             j5             wild           j3             j3             
+
+j4             s3             j3             j1             s3             
+
+s1             j3             s2             s4             j1             
+
+s3             Scat           s4             s3             wild           
+
+j3             s5             j4             j2             s3             
+
+s5             s1             s5             j4             s2             
+
+s2             j1             j5             s2             j4             
+
+s4             wild           j2             j5             s3             
+
+j4             s1             j4             s4             j3             
+
+s3             j3             j5             j3             s1             
+
+j5             s2             j2             j2             s2             
+
+j1             j2             j4             s5             wild           
+
+s2             j4             j1             s4             s4             
+
+s5             wild           j3             s3             j5             
+
+s4             s2             j4             j2             s5             
+
+wild           j1             j5             j4             s1             
+
+s2             s5             j3             j5             j5             
+
+j2             j2             s4             j2             s5             
+
+j3             wild           wild           s1             j3             
+
+j5             s5             Scat           s3             s1             
+
+s5             s4             s4             j5             s2             
+
+Scat           j4             s3             j2             j4             
+
+s4             s3             j1             Scat           j1             
+
+j3             j5             wild           s5             s4             
+
+j4             j2             s5             j1             j3             
+
+j5             s3             j3             wild           s5             
+
+j2             s5             j2             j3             j1             
+
+s2             s2             s2             s2             j3             
+
+s1             j4             s5             j1             s2             
+
+s4             s1             j1             s4             j4             
+
+s2             s3             j4             j2             j5             
+
+j3             j1             j3             s5             j3             
+
+s1             j4             s3             s4             s4             
+
+j5             j2             j5             j4             s1             
+
+s3             j1             s1             j1             wild           
+
+s5             j3             s5             s4             Scat           
+
+j5             s3             s4             s2             s5             
+
+j2             s4             j4             j1             s1             
+
+j3             j4             s2             s5             s2             
+
+j1             s2             s3             j3             j1             
+
+s4             j1             s1             Scat           j2             
+
+j4             s5             j3             j5             s5             
+
+s5             j3             s5             s1             j5             
+
+s1             j5             s4             j2             s2             
+
+j3             s4             j1             s3             j4             
+
+s3             s1             j3             j4             j5             
+
+j2             s2             s5             s4             j1             
+
+s2             s4             j4             s5             j4             
+
+s3             s1             s1             j4             s2             
+
+s4             j5             s3             j3             j1             
+
+s5             j4             j1             j1             s5             
+
+s3             Scat           j5             s4             j3             
+
+s4             j5             s4             wild           j2             
+
+s1             wild           j2             s3             j4             
+
+j1             s1             j1             s2             s4             
+
+s5             j5             s2             j3             j3             
+
+j3             j1             s4             s5             j1             
+
+s4             j4             j4             s3             s1             
+
+j5             j3             j5             s4             j5             
+
+s2             s2             s3             j1             Scat           
+
+Scat           j1             j3             s1             s3             
+
+j5             j5             s1             j3             j2             
+
+s4             s1             s2             s5             s2             
+
+s2             s2             j2             s2             s4             
+
+j5             j4             j3             j5             j3             
+
+j3             j5             s3             j1             s1             
+
+wild           s1             j4             s1             s5             
+
+j4             s4             j1             s4             s4             
+
+j2             j1             s4             j1             j1             
+
+s1             s5             j3             s1             s5             
+
+s2             s3             s1             s3             j5             
+
+s4             j1             s2             j3             s1             
+
+j4             s1             j5             j2             s5             
+
+s5             j5             j2             j1             j1             
+
+j3             s2             s5             s2             s4             
+
+s4             j4             wild           wild           j5             
+
+wild           s3             s2             s1             s1             
+
+j5             j2             j1             s2             s3             
+
+s2             s5             s3             j2             s2             
+
+j2             Scat           j3             wild           j2             
+
+s4             s4             s1             j4             s5             
+
+j5             s2             j4             s1             s2             
+
+j2             s1             s3             s2             j2             
+
+wild           j2             s2             s4             s1             
+
+s2             j1             s1             j2             j1             
+
+j1             s5             j3             s1             j4             
+
+j2             j4             s3             Scat           j5             
+
+s3             s3             s1             j4             s5             
+
+j4             s4             s5             s4             j2             
+
+wild           s1             j4             s3             wild           
+
+j2             j3             s4             j3             s1             
+
+s2             s2             s1             j1             s2             
+
+j4             s5             j1             s4             j3             
+
+s1             j5             s2             wild           j5             
+
+j5             j2             s5             s2             s4             
+
+j1             s2             j4             j1             j4             
+
+s2             j1             j2             j4             j1             
+
+j2             j3             j5             s3             s4             
+
+j4             j4             s1             s5             Scat           
+
+j5             s2             s5             j3             s5             
+
+j3             s1             j3             s2             j1             
+
+wild           j3             s2             j5             j4             
+
+s5             s2             s1             j3             s2             
+
+j1             j1             s4             j1             s1             
+
+s3             j3             j2             j4             j5             
+
+j3             j4             j4             j5             s4             
+
+s5             j5             j1             j2             j1             
+
+s2             j1             s3             s1             wild           
+
+s3             s5             j5             Scat           s5             
+
+j5             s1             j1             j1             s4             
+
+j3             s4             j2             s2             s1             
+
+j1             s3             j3             s5             j2             
+
+j4             j1             s1             s4             j5             
+
+wild           s2             j2             j4             j1             
+
+s1             j5             j4             wild           s1             
+
+j4             s1             s4             s4             j5             
+
+j1             wild           wild           s5             j2             
+
+s5             j1             s2             s1             j1             
+
+s4             s4             s4             s4             s5             
+
+j4             s3             s5             Scat           Scat           
+
+j1             j5             s1             j1             s1             
+
+s1             wild           j5             s5             j2             
+
+s5             s4             j2             wild           s4             
+
+s3             j4             s5             j4             wild           
+
+j3             s2             j3             s3             j1             
+
+j2             s3             j4             s1             j3             
+
+j1             s5             j5             j3             s5             
+
+s5             s2             s1             j2             j4             
+
+j2             j5             wild           s1             j2             
+
+s1             s4             j4             j3             j1             
+
+s3             s3             s1             Scat           s4             
+
+j4             j4             j1             s2             s5             
+
+wild           s1             j3             j5             s2             
+
+s4             j5             j2             j1             s3             
+
+s2             s4             s4             s2             j2             
+
+j1             s3             s3             s3             j4             
+
+s5             j5             s5             s5             j5             
+
+wild           j4             s4             s1             j1             
+
+s4             j3             Scat           s3             j4             
+
+j3             j1             s5             s5             s4             
+
+j2             s4             s3             j5             j1             
+
+j5             wild           s1             s4             j3             
+
+s5             s5             s4             s2             j5             
+
+j1             s2             j2             j2             j4             
+
+j4             j2             s5             s1             s5             
+
+wild           s1             s3             j5             s1             
+
+j5             s5             j4             s2             s4             
+
+s4             j3             s1             s3             s5             
+
+j4             j4             j2             s4             s1             
+
+s2             s2             j4             s2             j2             
+
+s4             j3             j5             j1             wild           
+
+j4             s1             s4             s1             s2             
+
+j2             s4             s2             j5             s4             
+
+j3             j1             s3             j4             j5             
+
+s2             j4             s4             s2             s2             
+
+s1             j2             j3             j5             s1             
+
+j3             j1             j1             s1             s3             
+
+s3             s5             s5             j4             j1             
+
+s5             s4             s2             j2             s1             
+
+j3             j1             s1             s1             s2             
+
+j4             s5             j5             j3             s4             
+
+j2             j2             j2             s2             j4             
+
+j5             s4             s3             s4             j3             
+
+j1             j1             s5             j4             wild           
+
+s4             j5             s4             j1             s5             
+
+j4             s5             j3             j3             j4             
+
+j1             s1             j2             s4             j1             
+
+s2             j1             s4             s5             s1             
+
+s1             s2             s5             j2             j4             
+
+s4             s5             j3             s2             j2             
+
+s3             s4             j4             j3             s3             
+
+j4             s2             s5             s4             j1             
+
+j2             s5             j2             j4             j4             
+
+s1             j5             j5             wild           s3             
+
+j1             j3             s1             s4             s1             
+
+j2             s5             s2             s1             j2             
+
+s3             j1             s4             j4             j3             
+
+j5             j5             s5             j1             s5             
+
+j3             s5             s1             wild           s2             
+
+j2             s4             s3             j5             s3             
+
+j5             j3             j5             j1             j4             
+
+j4             s2             j2             s1             s5             
+
+j3             wild           s2             s4             s3             
+
+j2             s3             s3             s2             s2             
+
+j1             s4             j2             j2             j4             
+
+j5             s5             j5             j5             j1             
+
+j4             j2             j3             s2             s2             
+
+s1             j4             j2             s1             s3             
+
+s5             s1             j5             j2             s1             
+
+s2             j2             j4             j3             s5             
+
+j2             s2             j2             s2             j1             
+
+s4             s3             s2             s1             s4             
+
+j5             s4             j4             s3             j2             
+
+s3             s5             j1             j1             s2             
+
+s1             s2             s1             s5             j1             
+
+s5             j4             j2             j4             s3             
+
+s2             j5             s3             j2             s2             
+
+s4             s4             s2             s1             j2             
+
+j3             s5             j5             s3             s1             
+
+j2             j3             s1             j2             j3             
+
+j4             s2             s5             j3             j4             
+
+s3             j2             s2             s5             wild           
+
+j2             s4             s3             s3             j1             
+
+j5             j3             s1             j2             s3             
+
+s5             s5             s2             j3             j5             
+
+s4             wild           j5             s4             j1             
+
+j1             s1             j2             j2             s4             
+
+s1             j4             j1             s1             wild           
+
+s5             j1             s1             s3             j2             
+
+j5             s3             j4             j5             s2             
+
+s2             s5             s5             j2             j1             
+
+j2             j4             j1             s5             s5             
+
+s5             j2             s2             j5             j5             
+
+wild           s1             j2             s3             j1             
+
+s4             s5             j1             j3             s2             
+
+s1             j4             s2             j1             j2             
+
+j5             j2             j4             j4             s4             
+
+s3             j5             j1             s4             j1             
+
+j4             s1             s1             s5             s2             
+
+j3             j1             s2             s1             s3             
+
+j5             s3             j4             j3             s4             
+
+s3             j2             j1             s2             j3             
+
+s5             j3             s1             s1             s3             
+
+s4             s1             s2             j3             s4             
+

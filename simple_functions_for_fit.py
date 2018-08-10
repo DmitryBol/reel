@@ -2,6 +2,7 @@
 import json
 import FrontEnd.structure_alpha as Q
 import math
+import copy
 
 
 class OutResult:
@@ -9,6 +10,22 @@ class OutResult:
         self.scatter_index_with_frequency = {scat: 1 for scat in scatterlist}
         self.total_length = 3*len(scatterlist)
         self.total_scats = len(scatterlist)
+
+    def add_symbols(self, symbols):
+        self.total_length = 3 * len(symbols)
+
+
+def notice_positions(frequency, gametype):
+    window_width = len(frequency)
+    n_symbols = len(gametype.symbol)
+    res = copy.deepcopy(frequency)
+    for reel_id in range(window_width):
+        for symbol_id in range(n_symbols):
+            if reel_id in gametype.symbol[symbol_id].position:
+                continue
+            else:
+                res[reel_id][symbol_id] = 0
+    return res
 
 
 def get_scatter_frequency(gameFileName, HR, ERROR):
@@ -36,6 +53,7 @@ def get_scatter_frequency(gameFileName, HR, ERROR):
         index += 1
     reel[index] = res.total_length - res.total_scats
     frequency = [reel for _ in range(game.window[0])]
+    frequency = notice_positions(frequency, game.base)
     game.base.fill_frequency(frequency)
     game.base.fill_scatter_num_comb(game.window)
 
@@ -53,7 +71,8 @@ def get_scatter_frequency(gameFileName, HR, ERROR):
             res.total_length = sum(game.base.frequency[0])
         else:
             for scat in game.base.scatterlist:
-                res.scatter_index_with_frequency[scat] += 1
+                if max(game.base.symbol[scat].scatter) > 0:
+                    res.scatter_index_with_frequency[scat] += 1
             s = 0
             for key in res.scatter_index_with_frequency:
                 s += res.scatter_index_with_frequency[key]
@@ -61,7 +80,8 @@ def get_scatter_frequency(gameFileName, HR, ERROR):
             res.total_length = 3 * s
             reel = [0] * len(game.base.symbol)
             for scat in game.base.scatterlist:
-                reel[scat] = res.scatter_index_with_frequency[scat]
+                if max(game.base.symbol[scat].scatter) > 0:
+                    reel[scat] = res.scatter_index_with_frequency[scat]
             index = 0
             while index in game.base.scatterlist:
                 index += 1

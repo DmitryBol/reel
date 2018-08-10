@@ -4,7 +4,8 @@ import itertools
 import re
 import copy
 
-import moments
+from FrontEnd import moments
+#import moments
 import FrontEnd.reelWork.reel_generator_alpha as rg
 
 
@@ -186,6 +187,21 @@ class Gametype:
     def fill_reels(self, in_reels):
         self.reels = copy.deepcopy(in_reels)
 
+    def count_base_RTP_gametype(self, window, lines):
+        s = 0
+        for str_with_count in self.simple_num_comb:
+            string = str_with_count[0]
+            payment = str_with_count[2]
+            s += str_with_count[1] / self.all_combinations2() * payment
+
+        for scatter_comb in self.scatter_num_comb:
+            scat = scatter_comb[0]
+            counts = scatter_comb[1]
+            for cnt in range(window[0] + 1):
+                s += self.symbol[scat].payment[cnt] * len(lines) * counts[
+                        cnt] / self.all_combinations2()
+        return s / len(lines)
+
 
 # noinspection PyArgumentList
 class Game:
@@ -257,35 +273,9 @@ class Game:
     # noinspection PyPep8Naming,SpellCheckingInspection
     def count_base_RTP2(self, game):
         if game == 'base':
-            s = 0
-            for str_with_count in self.base.simple_num_comb:
-                string = str_with_count[0]
-                #payment = self.base.get_simple_payment(string)
-                payment = str_with_count[2]
-                s += str_with_count[1] / self.base.all_combinations() * payment
-
-            for scatter_comb in self.base.scatter_num_comb:
-                scat = scatter_comb[0]
-                counts = scatter_comb[1]
-                for cnt in range(self.window[0] + 1):
-                    s += self.base.symbol[scat].payment[cnt] * len(self.line) * counts[
-                        cnt] / self.base.all_combinations()
-            return s / len(self.line)
+            return self.base.count_base_RTP_gametype(self.window, self.line)
         elif game == 'free':
-            s = 0
-            for str_with_count in self.free.simple_num_comb:
-                string = str_with_count[0]
-                #payment = self.free.get_simple_payment(string)
-                payment = str_with_count[2]
-                s += str_with_count[1] / self.free.all_combinations() * payment
-
-            for scatter_comb in self.free.scatter_num_comb:
-                scat = scatter_comb[0]
-                counts = scatter_comb[1]
-                for cnt in range(self.window[0] + 1):
-                    s += self.free.symbol[scat].payment[cnt] * len(self.line) * counts[
-                        cnt] / self.free.all_combinations()
-            return s / len(self.line)
+            return self.free.count_base_RTP_gametype(self.window, self.line)
 
     # noinspection SpellCheckingInspection
     def freemean2(self):
@@ -295,7 +285,7 @@ class Game:
             scat = scatter_comb[0]
             counts = scatter_comb[1]
             for cnt in range(self.window[0] + 1):
-                v += self.free.symbol[scat].scatter[cnt] * counts[cnt] / self.free.all_combinations()
+                v += self.free.symbol[scat].scatter[cnt] * counts[cnt] / self.free.all_combinations2()
 
         return self.free_multiplier * s * 1.0 / (1 - v)
 
@@ -307,7 +297,7 @@ class Game:
             scat = scatter_comb[0]
             counts = scatter_comb[1]
             for cnt in range(self.window[0] + 1):
-                s += FreeMean * self.base.symbol[scat].scatter[cnt] * counts[cnt] / self.base.all_combinations()
+                s += FreeMean * self.base.symbol[scat].scatter[cnt] * counts[cnt] / self.base.all_combinations2()
         return s
 
     def count_volatility2new(self, FreeMean, RTP):
@@ -337,14 +327,14 @@ class Game:
             string = str_with_count[0]
             #payment = self.base.get_simple_payment(string)
             payment = str_with_count[2]
-            s += str_with_count[1] / self.base.all_combinations() * payment ** 2
+            s += str_with_count[1] / self.base.all_combinations2() * payment ** 2
 
         for scatter_comb in self.base.scatter_num_comb:
             scat = scatter_comb[0]
             counts = scatter_comb[1]
             for cnt in range(self.window[0] + 1):
                 s += (self.base.symbol[scat].payment[cnt] * len(self.line) + self.base.symbol[scat].scatter[
-                    cnt] * FreeMean) ** 2 * counts[cnt] / self.base.all_combinations()
+                    cnt] * FreeMean) ** 2 * counts[cnt] / self.base.all_combinations2()
         return np.sqrt(s - rtp ** 2) / len(self.line)
 
     def count_hitrate2(self):
@@ -360,8 +350,7 @@ class Game:
         else:
             return 0
 
-
-    #paymnt = base_payment + xi + eta * zeta
+    #payment = base_payment + xi + eta * zeta
     #zeta = bonus_payment + xi_free + eta_free * zeta
     def count_volatility_alpha(self, FreeMean):
         res = 0
@@ -369,8 +358,8 @@ class Game:
         s = 0
         for str_with_count in self.base.simple_num_comb:
             payment = str_with_count[2]
-            s2 += str_with_count[1] / self.base.all_combinations() * payment**2
-            s += str_with_count[1] / self.base.all_combinations() * payment
+            s2 += str_with_count[1] / self.base.all_combinations2() * payment**2
+            s += str_with_count[1] / self.base.all_combinations2() * payment
         res += s2 - s**2
 
         xi = 0
@@ -380,8 +369,8 @@ class Game:
             counts = scatter_comb[1]
             for cnt in range(self.window[0] + 1):
                 payment = self.base.symbol[scat].payment[cnt] * len(self.line)
-                xi += payment / self.base.all_combinations() * counts[cnt]
-                xi2 += payment**2 / self.base.all_combinations() * counts[cnt]
+                xi += payment / self.base.all_combinations2() * counts[cnt]
+                xi2 += payment**2 / self.base.all_combinations2() * counts[cnt]
         res += xi2 - xi**2
 
         xi_eta = 0
@@ -391,14 +380,13 @@ class Game:
             scat = scatter_comb[0]
             counts = scatter_comb[1]
             for cnt in range(self.window[0] + 1):
-                eta += self.base.symbol[scat].scatter[cnt] * counts[cnt] / self.base.all_combinations()
-                eta2 += self.base.symbol[scat].scatter[cnt]**2 * counts[cnt] / self.base.all_combinations()
+                eta += self.base.symbol[scat].scatter[cnt] * counts[cnt] / self.base.all_combinations2()
+                eta2 += self.base.symbol[scat].scatter[cnt]**2 * counts[cnt] / self.base.all_combinations2()
                 xi_eta += self.base.symbol[scat].payment[cnt] * len(self.line) * self.base.symbol[scat].scatter[cnt] \
-                          * counts[cnt] / self.base.all_combinations()
+                          * counts[cnt] / self.base.all_combinations2()
         res += 2 * FreeMean * (xi_eta - xi * eta)
 
         res -= eta**2 * FreeMean**2
-
 
         eta_free2 = 0
         xi_free2 = 0
@@ -409,16 +397,16 @@ class Game:
             counts = scatter_comb[1]
             for cnt in range(self.window[0] + 1):
                 payment = self.free.symbol[scat].payment[cnt] * len(self.line)
-                eta_free2 += self.free.symbol[scat].scatter[cnt]**2 * counts[cnt] / self.free.all_combinations()
-                xi_free2 += payment**2 / self.free.all_combinations() * counts[cnt]
-                xi_free += payment / self.free.all_combinations() * counts[cnt]
-                eta_free += self.free.symbol[scat].scatter[cnt] * counts[cnt] / self.free.all_combinations()
+                eta_free2 += self.free.symbol[scat].scatter[cnt]**2 * counts[cnt] / self.free.all_combinations2()
+                xi_free2 += payment**2 / self.free.all_combinations2() * counts[cnt]
+                xi_free += payment / self.free.all_combinations2() * counts[cnt]
+                eta_free += self.free.symbol[scat].scatter[cnt] * counts[cnt] / self.free.all_combinations2()
         s_free = 0
         s_free2 = 0
         for str_with_count in self.free.simple_num_comb:
             payment = str_with_count[2]
-            s_free2 += str_with_count[1] / self.free.all_combinations() * payment**2
-            s_free += str_with_count[1] / self.free.all_combinations() * payment
+            s_free2 += str_with_count[1] / self.free.all_combinations2() * payment**2
+            s_free += str_with_count[1] / self.free.all_combinations2() * payment
         if eta_free >= 1:
             print('Many than 1 retrigger free spin per free spin in average')
             return 0
@@ -432,8 +420,11 @@ class Game:
         freemean = self.freemean2()
         rtp = self.count_RTP2(freemean, base_rtp)
         sd = self.count_volatility2(freemean, rtp)
-        sdnew = self.count_volatility2new(freemean, rtp)
+        #sdnew = self.count_volatility2new(freemean, rtp)
         sdalpha = self.count_volatility_alpha(freemean)
         hitrate = self.count_hitrate2()
 
-        return {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sd': sd, 'sdnew': sdnew, 'sdalpha': sdalpha, 'hitrate': hitrate}
+
+        return {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sd': sd,  'sdnew': sdalpha, 'hitrate': hitrate}
+
+        #return {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sd': sd, 'sdnew': sdnew, 'sdalpha': sdalpha, 'hitrate': hitrate}

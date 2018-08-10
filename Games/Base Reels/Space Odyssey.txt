@@ -1,0 +1,584 @@
+Planet         K              MonkeyBot      UFO            J              
+
+A              Rocket         K              J              Rocket         
+
+Crystal        Q              J              Rocket         A              
+
+Rocket         UFO            MonkeyBot      UFO            K              
+
+UFO            Alien          Q              Alien          Alien          
+
+K              Crystal        Alien          A              Q              
+
+Alien          A              UFO            UFO            J              
+
+A              J              K              K              A              
+
+Rocket         Q              Alien          Planet         UFO            
+
+K              MonkeyBot      J              UFO            J              
+
+MonkeyBot      A              K              Rocket         Rocket         
+
+J              Alien          UFO            MonkeyBot      Alien          
+
+A              Q              Planet         A              Q              
+
+Rocket         Rocket         Rocket         Alien          MonkeyBot      
+
+Alien          MonkeyBot      Alien          Rocket         UFO            
+
+Crystal        Alien          A              Planet         Q              
+
+K              K              Q              MonkeyBot      A              
+
+Q              UFO            Alien          K              K              
+
+Alien          Alien          J              Alien          MonkeyBot      
+
+Rocket         J              Rocket         A              Alien          
+
+Q              Rocket         K              Crystal        Planet         
+
+UFO            MonkeyBot      J              MonkeyBot      K              
+
+Alien          K              Alien          Q              Crystal        
+
+Q              A              K              A              J              
+
+A              MonkeyBot      UFO            J              A              
+
+K              Rocket         MonkeyBot      UFO            Rocket         
+
+Planet         UFO            K              MonkeyBot      Planet         
+
+UFO            Q              Q              Q              J              
+
+Rocket         K              Rocket         Planet         A              
+
+A              MonkeyBot      J              Alien          Crystal        
+
+UFO            Rocket         UFO            UFO            MonkeyBot      
+
+Q              A              Crystal        J              UFO            
+
+A              MonkeyBot      Planet         Q              Rocket         
+
+UFO            Rocket         Q              MonkeyBot      J              
+
+J              J              A              K              Alien          
+
+Q              UFO            J              Alien          K              
+
+UFO            K              K              UFO            J              
+
+MonkeyBot      MonkeyBot      Q              Rocket         Rocket         
+
+Planet         A              MonkeyBot      MonkeyBot      A              
+
+Rocket         Q              K              K              UFO            
+
+K              Planet         A              Alien          K              
+
+A              K              UFO            UFO            A              
+
+Rocket         Alien          Crystal        Q              UFO            
+
+MonkeyBot      MonkeyBot      Alien          J              Crystal        
+
+A              A              Q              UFO            J              
+
+Alien          Alien          J              Rocket         UFO            
+
+MonkeyBot      J              MonkeyBot      K              Planet         
+
+K              UFO            Rocket         J              K              
+
+Q              Alien          A              Q              UFO            
+
+Alien          Q              UFO            MonkeyBot      MonkeyBot      
+
+K              UFO            MonkeyBot      Rocket         Alien          
+
+MonkeyBot      J              Planet         Planet         Rocket         
+
+J              K              J              K              J              
+
+K              MonkeyBot      Q              Rocket         MonkeyBot      
+
+Q              A              MonkeyBot      Crystal        Alien          
+
+UFO            Q              Alien          Alien          UFO            
+
+Crystal        UFO            J              MonkeyBot      MonkeyBot      
+
+Rocket         K              K              Rocket         K              
+
+UFO            Q              A              UFO            A              
+
+MonkeyBot      J              Rocket         A              UFO            
+
+K              A              UFO            K              Planet         
+
+J              K              K              Alien          Alien          
+
+MonkeyBot      MonkeyBot      Q              J              Rocket         
+
+Crystal        Alien          Alien          Rocket         J              
+
+Alien          Rocket         Planet         Alien          Alien          
+
+Q              A              Rocket         J              UFO            
+
+K              Planet         A              MonkeyBot      A              
+
+Alien          Q              K              Q              Rocket         
+
+Q              A              MonkeyBot      Rocket         MonkeyBot      
+
+J              Rocket         A              UFO            A              
+
+Rocket         Alien          Rocket         J              Planet         
+
+A              K              UFO            MonkeyBot      UFO            
+
+MonkeyBot      A              A              A              MonkeyBot      
+
+UFO            UFO            Alien          UFO            A              
+
+A              Q              MonkeyBot      K              Q              
+
+Q              MonkeyBot      UFO            Rocket         Rocket         
+
+MonkeyBot      J              Rocket         UFO            Alien          
+
+Rocket         K              Planet         Alien          A              
+
+Alien          UFO            Q              K              J              
+
+K              Alien          A              A              Alien          
+
+J              K              Alien          Q              Planet         
+
+A              Q              Q              Crystal        A              
+
+Rocket         UFO            K              K              J              
+
+Alien          MonkeyBot      Crystal        A              Rocket         
+
+J              A              J              MonkeyBot      UFO            
+
+Planet         Alien          Planet         Crystal        Alien          
+
+UFO            Rocket         K              J              A              
+
+Rocket         Q              Alien          K              K              
+
+K              Alien          A              Rocket         MonkeyBot      
+
+MonkeyBot      K              K              A              UFO            
+
+UFO            Q              UFO            J              A              
+
+Alien          J              Alien          MonkeyBot      Q              
+
+MonkeyBot      K              A              A              MonkeyBot      
+
+J              MonkeyBot      Rocket         UFO            Rocket         
+
+Planet         Alien          Q              Q              K              
+
+A              Rocket         K              Alien          Planet         
+
+Rocket         A              A              A              A              
+
+MonkeyBot      Planet         UFO            J              MonkeyBot      
+
+Alien          Q              MonkeyBot      K              Q              
+
+Rocket         Rocket         J              A              K              
+
+A              K              K              J              UFO            
+
+K              MonkeyBot      Alien          Planet         MonkeyBot      
+
+UFO            Alien          A              UFO            Q              
+
+MonkeyBot      Rocket         UFO            MonkeyBot      Alien          
+
+K              MonkeyBot      J              J              Crystal        
+
+UFO            K              Q              Alien          J              
+
+MonkeyBot      A              A              MonkeyBot      Rocket         
+
+A              J              K              UFO            Q              
+
+Rocket         K              Q              K              MonkeyBot      
+
+UFO            A              J              MonkeyBot      A              
+
+K              Q              Rocket         UFO            K              
+
+MonkeyBot      MonkeyBot      K              Alien          MonkeyBot      
+
+J              UFO            A              J              Rocket         
+
+A              Rocket         Q              UFO            K              
+
+K              Q              Rocket         MonkeyBot      Crystal        
+
+Q              UFO            Alien          Q              UFO            
+
+Rocket         K              K              A              Rocket         
+
+J              A              MonkeyBot      K              Q              
+
+Alien          J              A              Planet         UFO            
+
+Q              Q              Q              Alien          Alien          
+
+J              Crystal        MonkeyBot      MonkeyBot      MonkeyBot      
+
+UFO            J              A              K              A              
+
+MonkeyBot      Q              Rocket         Alien          Alien          
+
+Crystal        Alien          UFO            A              MonkeyBot      
+
+J              Crystal        Alien          J              A              
+
+Rocket         K              Q              Q              Rocket         
+
+UFO            J              Rocket         MonkeyBot      K              
+
+Q              A              UFO            Rocket         Q              
+
+J              Alien          MonkeyBot      Q              Rocket         
+
+A              Q              K              A              UFO            
+
+Alien          K              Q              MonkeyBot      J              
+
+Q              J              MonkeyBot      Q              Alien          
+
+UFO            Planet         UFO            Planet         Q              
+
+K              K              K              Alien          J              
+
+Q              A              A              UFO            UFO            
+
+Alien          UFO            MonkeyBot      Crystal        Rocket         
+
+Planet         Q              UFO            Rocket         Crystal        
+
+Rocket         J              Q              K              Alien          
+
+K              K              K              UFO            UFO            
+
+Planet         Planet         MonkeyBot      MonkeyBot      Q              
+
+A              Crystal        UFO            A              Rocket         
+
+Rocket         Alien          Rocket         K              J              
+
+MonkeyBot      Rocket         Alien          Alien          Q              
+
+J              K              A              UFO            A              
+
+Crystal        A              K              Rocket         UFO            
+
+A              Rocket         Rocket         Q              Q              
+
+K              UFO            Alien          J              K              
+
+Alien          J              MonkeyBot      A              Alien          
+
+A              Alien          A              Rocket         UFO            
+
+K              MonkeyBot      UFO            MonkeyBot      Planet         
+
+J              UFO            Rocket         Alien          Crystal        
+
+UFO            J              Q              Rocket         Alien          
+
+Q              A              K              A              A              
+
+K              Planet         A              J              MonkeyBot      
+
+Alien          K              MonkeyBot      Q              J              
+
+J              UFO            K              K              UFO            
+
+MonkeyBot      J              Rocket         Alien          A              
+
+UFO            MonkeyBot      Alien          J              K              
+
+Rocket         Rocket         UFO            A              MonkeyBot      
+
+A              A              MonkeyBot      UFO            Rocket         
+
+J              MonkeyBot      Q              Crystal        J              
+
+MonkeyBot      Alien          A              A              Alien          
+
+UFO            Q              MonkeyBot      UFO            Q              
+
+J              K              Rocket         MonkeyBot      Crystal        
+
+Planet         Rocket         Alien          Rocket         UFO            
+
+Alien          UFO            MonkeyBot      Alien          Q              
+
+MonkeyBot      Alien          J              J              J              
+
+J              A              Crystal        K              UFO            
+
+Q              MonkeyBot      Rocket         Alien          K              
+
+Planet         UFO            Q              Rocket         MonkeyBot      
+
+K              Alien          J              UFO            A              
+
+UFO            J              Rocket         K              K              
+
+Rocket         Planet         Q              Alien          Rocket         
+
+K              Q              J              Rocket         A              
+
+Crystal        UFO            Alien          A              J              
+
+Alien          Rocket         Planet         Alien          Q              
+
+K              J              MonkeyBot      Rocket         MonkeyBot      
+
+Rocket         Q              Rocket         A              UFO            
+
+Alien          Rocket         A              Q              K              
+
+MonkeyBot      K              Planet         K              Rocket         
+
+A              J              UFO            Alien          Alien          
+
+Q              Crystal        Crystal        Rocket         UFO            
+
+UFO            K              Alien          Q              Rocket         
+
+Crystal        A              UFO            UFO            MonkeyBot      
+
+K              MonkeyBot      MonkeyBot      K              Alien          
+
+MonkeyBot      Rocket         J              MonkeyBot      Q              
+
+Alien          Q              Alien          UFO            A              
+
+Crystal        MonkeyBot      Q              Q              K              
+
+K              UFO            UFO            Rocket         Q              
+
+UFO            Alien          Rocket         A              Crystal        
+
+Alien          Planet         Q              MonkeyBot      Alien          
+
+A              J              K              K              J              
+
+J              UFO            Rocket         J              K              
+
+MonkeyBot      Rocket         UFO            A              MonkeyBot      
+
+K              A              J              Rocket         J              
+
+Q              Alien          K              K              A              
+
+J              UFO            Alien          Q              K              
+
+MonkeyBot      Rocket         MonkeyBot      Planet         Q              
+
+K              MonkeyBot      J              K              UFO            
+
+A              UFO            Alien          MonkeyBot      A              
+
+Rocket         A              MonkeyBot      Crystal        K              
+
+Q              Alien          K              Q              Rocket         
+
+J              K              UFO            A              A              
+
+A              A              Rocket         MonkeyBot      Alien          
+
+Alien          Alien          MonkeyBot      J              Q              
+
+Q              K              J              Q              MonkeyBot      
+
+Rocket         A              Alien          Planet         UFO            
+
+A              Rocket         MonkeyBot      MonkeyBot      J              
+
+UFO            MonkeyBot      UFO            Rocket         Rocket         
+
+Alien          UFO            Crystal        UFO            Alien          
+
+K              A              A              K              A              
+
+A              Rocket         UFO            Alien          Rocket         
+
+Rocket         UFO            J              Q              Q              
+
+K              Crystal        Q              UFO            K              
+
+Alien          Rocket         A              Crystal        A              
+
+J              UFO            UFO            K              J              
+
+UFO            MonkeyBot      Q              Q              K              
+
+MonkeyBot      J              A              UFO            UFO            
+
+J              Alien          Rocket         J              J              
+
+Alien          Rocket         K              Rocket         Rocket         
+
+MonkeyBot      Q              UFO            A              Planet         
+
+UFO            UFO            A              J              MonkeyBot      
+
+Q              J              J              MonkeyBot      Rocket         
+
+A              K              UFO            A              Q              
+
+Rocket         A              K              Q              K              
+
+Q              J              MonkeyBot      Alien          MonkeyBot      
+
+J              Rocket         A              A              A              
+
+Rocket         Q              J              J              K              
+
+K              J              UFO            MonkeyBot      UFO            
+
+UFO            Alien          MonkeyBot      Rocket         MonkeyBot      
+
+Q              Planet         Rocket         K              Q              
+
+K              Rocket         Alien          J              Alien          
+
+UFO            MonkeyBot      J              MonkeyBot      MonkeyBot      
+
+Q              UFO            Q              Alien          Rocket         
+
+Rocket         J              Alien          J              Alien          
+
+J              MonkeyBot      A              K              K              
+
+Q              A              K              UFO            UFO            
+
+MonkeyBot      K              Q              J              Alien          
+
+K              UFO            Alien          Q              MonkeyBot      
+
+A              Crystal        MonkeyBot      UFO            Q              
+
+MonkeyBot      MonkeyBot      Q              Rocket         UFO            
+
+Alien          UFO            UFO            Q              MonkeyBot      
+
+Rocket         Rocket         J              J              Q              
+
+MonkeyBot      Alien          K              Alien          K              
+
+A              UFO            UFO            A              Rocket         
+
+UFO            Rocket         J              K              MonkeyBot      
+
+Rocket         J              A              MonkeyBot      K              
+
+Q              UFO            Planet         Alien          Rocket         
+
+MonkeyBot      Alien          MonkeyBot      K              MonkeyBot      
+
+K              K              UFO            A              K              
+
+UFO            MonkeyBot      Alien          Rocket         UFO            
+
+Q              A              J              UFO            J              
+
+K              UFO            Crystal        Q              K              
+
+A              Alien          K              K              Alien          
+
+UFO            MonkeyBot      A              Alien          UFO            
+
+Q              J              MonkeyBot      A              K              
+
+Rocket         K              UFO            K              A              
+
+Alien          A              K              Alien          J              
+
+MonkeyBot      UFO            Alien          A              Rocket         
+
+A              Q              Rocket         MonkeyBot      A              
+
+J              K              J              Rocket         Alien          
+
+Rocket         Rocket         A              Q              UFO            
+
+A              A              UFO            J              Rocket         
+
+UFO            Alien          MonkeyBot      UFO            MonkeyBot      
+
+MonkeyBot      UFO            Alien          A              UFO            
+
+A              A              J              Q              J              
+
+UFO            Q              A              Alien          Q              
+
+Alien          Alien          Rocket         A              Alien          
+
+A              Rocket         UFO            K              A              
+
+MonkeyBot      MonkeyBot      A              Crystal        K              
+
+Alien          Alien          MonkeyBot      J              Alien          
+
+A              UFO            Rocket         UFO            A              
+
+Rocket         Rocket         Q              Rocket         J              
+
+Alien          Crystal        Crystal        MonkeyBot      K              
+
+J              K              Rocket         A              Q              
+
+Rocket         A              Q              Rocket         A              
+
+UFO            J              Alien          Q              Rocket         
+
+K              MonkeyBot      A              UFO            K              
+
+Q              Q              J              Rocket         Alien          
+
+A              A              Rocket         A              J              
+
+UFO            J              A              K              Q              
+
+Alien          Alien          Alien          Alien          A              
+
+J              Rocket         K              A              MonkeyBot      
+
+MonkeyBot      K              Rocket         J              Q              
+
+A              MonkeyBot      UFO            UFO            Alien          
+
+Q              Q              Alien          MonkeyBot      J              
+
+J              UFO            A              Alien          UFO            
+
+Alien          MonkeyBot      Rocket         Q              MonkeyBot      
+
+UFO            Q              J              UFO            Q              
+
+J              Crystal        K              Rocket         Alien          
+
+Alien          A              Rocket         Q              Rocket         
+
+UFO            J              Crystal        K              K              
+

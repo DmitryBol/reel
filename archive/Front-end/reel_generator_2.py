@@ -23,6 +23,9 @@ def reel_generator(self, array, width):
     names = self.symbol
     for i in range(len(array)):
         alpha = 1
+
+        scat_and_wild = self.scatterlist + self.ewildlist
+
         bag = copy.deepcopy(array[i])
         available = np.arange(len(array[i]))
         tmp = support.g(bag, available, len(self.reels[i]), self.reels[i], alpha, names)
