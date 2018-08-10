@@ -44,7 +44,7 @@ class Symbol:
                 self.direction = sought(sought(sought(interim, 'symbol')[i], type), 'direction')
             else:
                 self.direction = "left"
-            if sought(sought(sought(interim, 'symbol')[i], type), 'position'):
+            if sought(sought(sought(interim, 'symbol')[i], type), 'position') is not None:
                 self.position = sought(sought(sought(interim, 'symbol')[i], type), 'position')[:]
                 self.position[:] = [x - 1 for x in self.position]
             else:

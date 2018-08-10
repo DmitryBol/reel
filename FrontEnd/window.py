@@ -24,6 +24,40 @@ def isfloat(value):
         return False
 
 
+def float_validate(self, bot, top):
+    sender = self.sender()
+    if str(sender.text()) != '':
+        try:
+            if not bot <= float(sender.text()) <= top:
+                raise ValueError
+            sender.setStyleSheet('')
+        except ValueError:
+            sender.setStyleSheet('QLineEdit {background-color: #f6989d;}')
+    else:
+        sender.setStyleSheet('')
+
+
+def int_validate(self, bot, top):
+    sender = self.sender()
+    if str(sender.text()) != '':
+        try:
+            if not bot <= int(sender.text()) <= top:
+                raise ValueError
+            sender.setStyleSheet('')
+        except ValueError:
+            sender.setStyleSheet('QLineEdit {background-color: #f6989d;}')
+    else:
+        sender.setStyleSheet('')
+
+
+def string_validate(self):
+    sender = self.sender()
+    if str(sender.text()) == '':
+        sender.setStyleSheet('QLineEdit {background-color: #f6989d;}')
+    else:
+        sender.setStyleSheet('')
+
+
 class Aesthetic(QtWidgets.QWidget):
     def __init__(self, obj):
         super(Aesthetic, self).__init__()
@@ -35,19 +69,23 @@ class Aesthetic(QtWidgets.QWidget):
 
 
 class LineEdits(QtWidgets.QWidget):
-    def __init__(self, width, size, height=None, space=None):
+    def __init__(self, length, width, bot, top, height=None, space=None, double=None):
         super(LineEdits, self).__init__()
 
         self.fon = QtWidgets.QHBoxLayout()
         self.lines = []
 
-        self.init_ui(width, size, height, space)
+        self.init_ui(length, width, bot, top, height, space, double)
 
-    def init_ui(self, width, size, height, space):
-        for i in range(width):
+    def init_ui(self, length, width, bot, top, height, space, double):
+        for i in range(length):
             line = QtWidgets.QLineEdit()
+            if double is None:
+                line.textChanged.connect(lambda: self.int_validate(bot, top))
+            else:
+                line.textChanged.connect(lambda: self.float_validate(bot, top))
             self.lines.append(line)
-            self.lines[i].setFixedWidth(size)
+            self.lines[i].setFixedWidth(width)
             if height is not None:
                 self.lines[i].setFixedHeight(height)
             self.fon.addWidget(self.lines[i])
@@ -56,6 +94,9 @@ class LineEdits(QtWidgets.QWidget):
         self.fon.addStretch(40)
 
         self.setLayout(self.fon)
+
+    int_validate = int_validate
+    float_validate = float_validate
 
     def collect_info(self):
         info = []
@@ -72,6 +113,14 @@ class LineEdits(QtWidgets.QWidget):
             else:
                 return None
         return info
+
+    def set_info(self, interim_info):
+        for obj in interim_info:
+            self.lines[obj[0] - 1].setText(str(obj[1]))
+
+    def fill_info(self, interim_info):
+        for i in range(len(interim_info)):
+            self.lines[i].setText(str(interim_info[i]))
 
 
 class SwitchButtons(QtWidgets.QWidget):
@@ -129,6 +178,11 @@ class SwitchButtons(QtWidgets.QWidget):
                 info.append(i + 1)
         return info
 
+    def set_info(self, interim_symbol_type):
+        for i in range(len(self.buttons)):
+            if i + 1 not in interim_symbol_type['position']:
+                self.buttons[i].click()
+
 
 class Wild(QtWidgets.QWidget):
     def __init__(self):
@@ -153,6 +207,7 @@ class Wild(QtWidgets.QWidget):
         self.fon.addWidget(self.label_multiplier, 0, 0)
         self.fon.addWidget(self.line_multiplier, 0, 1)
         self.line_multiplier.setFixedWidth(40)
+        self.line_multiplier.textChanged.connect(lambda: self.float_validate(0, sys.maxsize))
 
         self.fon.addWidget(self.label_substitute, 1, 0)
         self.fon.addWidget(self.line_substitute, 1, 1)
@@ -169,6 +224,8 @@ class Wild(QtWidgets.QWidget):
         w = fm.boundingRect(text).width()
         self.line_substitute.setFixedWidth(max(w + 12, 40))
 
+    float_validate = float_validate
+
     def collect_info(self):
         d = {}
         if isint(str(self.line_multiplier.text())) >= 0:
@@ -176,9 +233,19 @@ class Wild(QtWidgets.QWidget):
         if self.checkbox_expand.checkState() == QtCore.Qt.Checked:
             d.update({'expand': True})
         words = str(self.line_substitute.text()).split('; ')
-        if words is not None:
+        if words is not None and words != ['']:
             d.update({'substitute': words})
         return d
+
+    def set_info(self, interim_symbol_type):
+        if 'multiplier' in interim_symbol_type['wild']:
+            self.line_multiplier.setText(str(interim_symbol_type['wild']['multiplier']))
+
+        if 'expand' in interim_symbol_type['wild'] and interim_symbol_type['wild']['expand'] is True:
+            self.checkbox_expand.setChecked(True)
+
+        if 'substitute' in interim_symbol_type['wild']:
+            self.line_substitute.setText('; '.join(interim_symbol_type['wild']['substitute']))
 
 
 class Gametype(QtWidgets.QWidget):
@@ -236,8 +303,8 @@ class Gametype(QtWidgets.QWidget):
         self.fon.addWidget(Aesthetic(self.checkbox_wild), 5, 1)
         self.checkbox_wild.stateChanged.connect(self.wild_check)
 
-        self.frame.setLineWidth(2)
-        self.frame.setFrameShape(QtWidgets.QFrame.Panel)
+        #self.frame.setLineWidth(2)
+        self.frame.setFrameShape(QtWidgets.QFrame.WinPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.frame.setLayout(self.fon)
 
@@ -254,7 +321,7 @@ class Gametype(QtWidgets.QWidget):
     def scatter_check(self, state):
         if state == QtCore.Qt.Checked:
             self.fon.addWidget(self.label_freespins, 4, 0)
-            self.line_freespins = LineEdits(self.width, 40)
+            self.line_freespins = LineEdits(self.width, 40, 0, sys.maxsize, None, None, True)
             self.fon.addWidget(self.line_freespins, 4, 1)
         else:
             self.fon.removeWidget(self.label_freespins)
@@ -296,7 +363,7 @@ class Gametype(QtWidgets.QWidget):
         else:
             self.frame.setAutoFillBackground(True)
             p = self.frame.palette()
-            p.setColor(self.frame.backgroundRole(), QtGui.QColor(255, 240, 196))
+            p.setColor(self.frame.backgroundRole(), QtGui.QColor(220, 220, 220))
             self.frame.setPalette(p)
 
     def collect_info(self):
@@ -308,6 +375,23 @@ class Gametype(QtWidgets.QWidget):
         if self.checkbox_wild.checkState() == QtCore.Qt.Checked:
             d.update({'wild': self.wild.collect_info()})
         return d
+
+    def set_info(self, interim_symbol_type):
+        if 'direction' in interim_symbol_type:
+            index = self.line_direction.findText(interim_symbol_type['direction'], QtCore.Qt.MatchFixedString)
+            if index >= 0:
+                self.line_direction.setCurrentIndex(index)
+
+        if 'position' in interim_symbol_type:
+            self.buttons_position.set_info(interim_symbol_type)
+
+        if 'scatter' in interim_symbol_type:
+            self.checkbox_scatter.setCheckState(QtCore.Qt.Checked)
+            self.line_freespins.set_info(interim_symbol_type['scatter'])
+
+        if 'wild' in interim_symbol_type:
+            self.checkbox_wild.setCheckState(QtCore.Qt.Checked)
+            self.wild.set_info(interim_symbol_type)
 
 
 class Symbol(QtWidgets.QWidget):
@@ -346,9 +430,10 @@ class Symbol(QtWidgets.QWidget):
         self.fon_name.addWidget(self.label_name)
         self.line_name.setFixedWidth(225)
         self.fon_name.addWidget(Aesthetic(self.line_name))
+        self.line_name.textChanged.connect(self.string_validate)
 
         self.fon_payment.addWidget(self.label_payment)
-        self.line_payment = LineEdits(self.width, 40)
+        self.line_payment = LineEdits(self.width, 40, 0, sys.maxsize, None, None, True)
         self.fon_payment.addWidget(self.line_payment)
 
         self.fon_symbol.addLayout(self.fon_name)
@@ -372,13 +457,12 @@ class Symbol(QtWidgets.QWidget):
 
         self.fon_symbol.addWidget(self.border)
 
-        self.frame_symbol.setLineWidth(3)
-        self.frame_symbol.setFrameShape(QtWidgets.QFrame.Panel)
-        self.frame_symbol.setObjectName('Hoering')
-        self.frame_symbol.setStyleSheet('#Hoering {color: #F5DEB3}')
+        #self.frame_symbol.setLineWidth(2)
+        self.frame_symbol.setFrameShape(QtWidgets.QFrame.WinPanel)
+        self.frame_symbol.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_symbol.setAutoFillBackground(True)
         p = self.frame_symbol.palette()
-        p.setColor(self.frame_symbol.backgroundRole(), QtGui.QColor(255, 240, 196))
+        p.setColor(self.frame_symbol.backgroundRole(), QtGui.QColor(220, 220, 220))
         self.frame_symbol.setPalette(p)
 
         self.frame_symbol.setLayout(self.fon_symbol)
@@ -418,6 +502,8 @@ class Symbol(QtWidgets.QWidget):
             self.button_free.setToolTip('Edit free game properties')
             self.button_state = True
 
+    string_validate = string_validate
+
     def collect_info(self):
         d = {}
         d.update({'name': str(self.line_name.text())})
@@ -426,6 +512,15 @@ class Symbol(QtWidgets.QWidget):
         if self.free is not None:
             d.update({'free': self.free.collect_info()})
         return d
+
+    def set_info(self, interim_symbol):
+        self.line_name.setText(str(interim_symbol['name']))
+        self.line_payment.set_info(interim_symbol['payment'])
+        if 'base' in interim_symbol:
+            self.base.set_info(interim_symbol['base'])
+        if 'free' in interim_symbol:
+            self.button_free_clicked()
+            self.free.set_info(interim_symbol['free'])
 
 
 class Window(QtWidgets.QWidget):
@@ -502,7 +597,9 @@ class Window(QtWidgets.QWidget):
         self.line_height.setFixedWidth(80)
 
         self.line_width.textChanged.connect(self.width_changed)
+        self.line_width.textChanged.connect(lambda: self.int_validate(1, sys.maxsize))
         self.line_height.textChanged.connect(self.height_changed)
+        self.line_height.textChanged.connect(lambda: self.int_validate(1, sys.maxsize))
 
         # symbols
         self.grid_symbols.setHorizontalSpacing(0)
@@ -537,33 +634,43 @@ class Window(QtWidgets.QWidget):
 
         self.fon.addWidget(self.label_freemultiplier, 5, 0)
         self.fon.addWidget(self.line_freemultiplier, 5, 1, 1, 2)
+        self.line_freemultiplier.textChanged.connect(self.float_validate)
 
         self.fon.addWidget(self.label_distance, 6, 0)
         self.fon.addWidget(self.line_distance, 6, 1, 1, 2)
+        self.line_distance.textChanged.connect(self.int_validate)
 
         self.fon.addWidget(self.label_rtp, 7, 0)
         self.fon.addWidget(self.line_rtp, 7, 1)
         self.line_rtp.setFixedWidth(80)
         self.fon.addWidget(self.line_rtp_error, 7, 2)
         self.line_rtp_error.setFixedWidth(80)
+        self.line_rtp.textChanged.connect(self.float_validate)
+        self.line_rtp_error.textChanged.connect(self.float_validate)
 
         self.fon.addWidget(self.label_volatility, 8, 0)
         self.fon.addWidget(self.line_volatility, 8, 1)
         self.line_volatility.setFixedWidth(80)
         self.fon.addWidget(self.line_volatility_error, 8, 2)
         self.line_volatility_error.setFixedWidth(80)
+        self.line_volatility.textChanged.connect(self.float_validate)
+        self.line_volatility_error.textChanged.connect(self.float_validate)
 
         self.fon.addWidget(self.label_hitrate, 9, 0)
         self.fon.addWidget(self.line_hitrate, 9, 1)
         self.line_hitrate.setFixedWidth(80)
         self.fon.addWidget(self.line_hitrate_error, 9, 2)
         self.line_hitrate_error.setFixedWidth(80)
+        self.line_hitrate.textChanged.connect(self.float_validate)
+        self.line_hitrate_error.textChanged.connect(self.float_validate)
 
         self.fon.addWidget(self.label_baseRTP, 10, 0)
         self.fon.addWidget(self.line_baseRTP, 10, 1)
         self.line_baseRTP.setFixedWidth(80)
         self.fon.addWidget(self.line_baseRTP_error, 10, 2)
         self.line_baseRTP_error.setFixedWidth(80)
+        self.line_baseRTP.textChanged.connect(self.float_validate)
+        self.line_baseRTP_error.textChanged.connect(self.float_validate)
 
         self.setLayout(self.fon)
 
@@ -582,11 +689,6 @@ class Window(QtWidgets.QWidget):
 
         self.grid_symbols.addWidget(self.symbols[-1], count, 0)
 
-        #self.symbols[-1].frame_symbol.setAutoFillBackground(True)
-        #p = self.symbols[-1].frame_symbol.palette()
-        #p.setColor(self.symbols[-1].frame_symbol.backgroundRole(), QtGui.QColor(255, 240, 196))
-        #self.symbols[-1].frame_symbol.setPalette(p)
-
         self.symbols[-1].fon_name.addWidget(self.deleteButtons[-1])
 
         count += 1
@@ -604,7 +706,7 @@ class Window(QtWidgets.QWidget):
     def click_add_line(self):
         global count_lines
 
-        line = LineEdits(self.width, 28, 24, 0)
+        line = LineEdits(self.width, 28, 1, self.height, 24, 0)
         self.lines.append(line)
 
         button_delete = QtWidgets.QPushButton()
@@ -640,7 +742,7 @@ class Window(QtWidgets.QWidget):
                 self.symbols[i].fon_payment.removeWidget(self.symbols[i].line_payment)
                 sip.delete(self.symbols[i].line_payment)
 
-                self.symbols[i].line_payment = LineEdits(self.width, 40)
+                self.symbols[i].line_payment = LineEdits(self.width, 40, 0, sys.maxsize, None, None, True)
                 self.symbols[i].fon_payment.addWidget(self.symbols[i].line_payment)
 
                 self.symbols[i].base.width = self.width
@@ -653,7 +755,7 @@ class Window(QtWidgets.QWidget):
                 if self.symbols[i].base.checkbox_scatter.checkState() == QtCore.Qt.Checked:
                     self.symbols[i].base.fon.removeWidget(self.symbols[i].base.line_freespins)
                     sip.delete(self.symbols[i].base.line_freespins)
-                    self.symbols[i].base.line_freespins = LineEdits(self.width, 28)
+                    self.symbols[i].base.line_freespins = LineEdits(self.width, 28, 0, sys.maxsize, None, None, True)
                     self.symbols[i].base.fon.addWidget(self.symbols[i].base.line_freespins, 4, 1)
 
                 if self.symbols[i].free is not None:
@@ -667,7 +769,7 @@ class Window(QtWidgets.QWidget):
                     if self.symbols[i].free.checkbox_scatter.checkState() == QtCore.Qt.Checked:
                         self.symbols[i].free.fon.removeWidget(self.symbols[i].free.line_freespins)
                         sip.delete(self.symbols[i].free.line_freespins)
-                        self.symbols[i].free.line_freespins = LineEdits(self.width, 28)
+                        self.symbols[i].free.line_freespins = LineEdits(self.width, 28, 0, sys.maxsize, None, None, True)
                         self.symbols[i].free.fon.addWidget(self.symbols[i].free.line_freespins, 4, 1)
 
             for i in range(len(self.lines)):
@@ -675,12 +777,24 @@ class Window(QtWidgets.QWidget):
                 self.grid_lines.removeWidget(self.lines[i])
                 sip.delete(self.lines[i])
 
-                self.lines[i] = LineEdits(self.width, 28, 24, 0)
+                self.lines[i] = LineEdits(self.width, 28, 1, self.height, 24, 0)
                 self.grid_lines.addWidget(self.lines[i], pos[0], pos[1])
 
     def height_changed(self):
         if isint(str(self.line_height.text())) > 0:
             self.height = int(str(self.line_height.text()))
+            for line in self.lines:
+                for atom in line.lines:
+                    try:
+                        atom.disconnect()
+                    except:
+                        pass
+
+                    atom.textChanged.connect(lambda: self.int_validate(1, self.height))
+                    atom.textChanged.emit(atom.text())
+
+    int_validate = int_validate
+    float_validate = float_validate
 
     def collect_info(self):
         d = {}
@@ -688,13 +802,13 @@ class Window(QtWidgets.QWidget):
         symbols = []
         for i in range(len(self.symbols)):
             symbols.append(self.symbols[i].collect_info())
-        d.update({'symbol': symbols})
+        d.update({'symbols': symbols})
 
         lines = []
         for i in range(len(self.lines)):
             if self.lines[i].arrange_info() is not None:
                 lines.append(self.lines[i].arrange_info())
-        d.update({'line': lines})
+        d.update({'lines': lines})
 
         if isint(str(self.line_freemultiplier.text())) >= 0:
             d.update({'free_multiplier': int(str(self.line_freemultiplier.text()))})
@@ -714,6 +828,43 @@ class Window(QtWidgets.QWidget):
         if isfloat(str(self.line_baseRTP.text())) and isfloat(str(self.line_baseRTP_error.text())):
             d.update({'baseRTP': [float(str(self.line_baseRTP.text())), float(str(self.line_baseRTP_error.text()))]})
         return d
+
+    def set_info(self, interim):
+        if 'window' in interim:
+            self.line_width.setText(str(interim['window'][0]))
+            self.width = interim['window'][0]
+            self.line_height.setText(str(interim['window'][1]))
+            self.height = interim['window'][1]
+
+        for i in range(len(interim['symbols'])):
+            self.click_add_symbol()
+            self.symbols[i].set_info(interim['symbols'][i])
+
+        for i in range(len(interim['lines'])):
+            self.click_add_line()
+            self.lines[i].fill_info(interim['lines'][i])
+
+        if 'free_multiplier' in interim:
+            self.line_freemultiplier.setText(str(interim['free_multiplier']))
+
+        if 'distance' in interim:
+            self.line_distance.setText(str(interim['distance']))
+
+        if 'RTP' in interim:
+            self.line_rtp.setText(str(interim['RTP'][0]))
+            self.line_rtp_error.setText(str(interim['RTP'][1]))
+
+        if 'volatility' in interim:
+            self.line_volatility.setText(str(interim['volatility'][0]))
+            self.line_volatility_error.setText(str(interim['volatility'][1]))
+
+        if 'hitrate' in interim:
+            self.line_hitrate.setText(str(interim['hitrate'][0]))
+            self.line_hitrate_error.setText(str(interim['hitrate'][1]))
+
+        if 'baseRTP' in interim:
+            self.line_baseRTP.setText(str(interim['baseRTP'][0]))
+            self.line_baseRTP_error.setText(str(interim['baseRTP'][1]))
 
 
 class Scroll(QtWidgets.QScrollArea):
@@ -745,6 +896,7 @@ class Main(QtWidgets.QMainWindow):
 
         self.action_open = QtWidgets.QAction(QtGui.QIcon('icons/open.png'), 'Open', self)
         self.action_open.setShortcut('Ctrl+O')
+        self.action_open.triggered.connect(self.trigger_open)
 
         self.action_save = QtWidgets.QAction(QtGui.QIcon('icons/save.png'), 'Save', self)
         self.action_save.setShortcut('Ctrl+S')
@@ -810,19 +962,29 @@ class Main(QtWidgets.QMainWindow):
         self.action_run.setEnabled(True)
 
     def trigger_save(self):
-        data = json.dumps(self.info)
         file = open(self.json_path, 'w')
-        json.dump(data, file)
+        json.dump(self.info, file)
         file.close()
 
     def trigger_saveas(self):
         self.json_path, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File', '', 'All Files (*);;Json Files (*.json)')
         if self.json_path:
-            data = json.dumps(self.info)
             file = open(self.json_path, 'w')
-            json.dump(data, file)
+            json.dump(self.info, file)
             file.close()
             self.action_save.setEnabled(True)
+
+    def trigger_open(self):
+        self.json_path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File', '', 'All Files (*);;Json Files (*.json)')
+        if self.json_path:
+            file = open(self.json_path, 'r')
+            j = file.read()
+            self.info = json.loads(j)
+            self.scroll.window.set_info(self.info)
+            file.close()
+            self.action_save.setEnabled(True)
+            self.action_saveas.setEnabled(True)
+            self.action_run.setEnabled(True)
 
     def trigger_quit(self):
         QtWidgets.qApp.quit()
