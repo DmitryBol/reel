@@ -2,10 +2,17 @@
 import sys
 import sip
 import json
+import ntpath
 from PyQt5 import QtWidgets, QtGui, QtCore
 
 count = 0
 count_lines = 0
+count_tabs = 1
+
+
+def path_leaf(path):
+    head, tail = ntpath.split(path)
+    return tail or ntpath.basename(head)
 
 
 def isint(value):
@@ -527,6 +534,9 @@ class Window(QtWidgets.QWidget):
     def __init__(self):
         super(Window, self).__init__()
 
+        self.fon_scroll = QtWidgets.QHBoxLayout()
+        self.scroll = QtWidgets.QScrollArea()
+        self.widget = QtWidgets.QWidget()
         self.fon = QtWidgets.QGridLayout()
 
         self.label_window = QtWidgets.QLabel('window')
@@ -541,6 +551,7 @@ class Window(QtWidgets.QWidget):
         self.frame_symbols = QtWidgets.QFrame()
         self.fon_symbols = QtWidgets.QVBoxLayout()
         self.grid_symbols = QtWidgets.QGridLayout()
+        self.count_symbols = 0
 
         self.add_symbol = QtWidgets.QPushButton('Add symbol')
 
@@ -551,6 +562,7 @@ class Window(QtWidgets.QWidget):
         self.frame_lines = QtWidgets.QFrame()
         self.fon_lines = QtWidgets.QVBoxLayout()
         self.grid_lines = QtWidgets.QGridLayout()
+        self.count_lines = 0
 
         self.add_line = QtWidgets.QPushButton('Add line')
 
@@ -634,50 +646,53 @@ class Window(QtWidgets.QWidget):
 
         self.fon.addWidget(self.label_freemultiplier, 5, 0)
         self.fon.addWidget(self.line_freemultiplier, 5, 1, 1, 2)
-        self.line_freemultiplier.textChanged.connect(self.float_validate)
+        self.line_freemultiplier.textChanged.connect(lambda: self.float_validate(0, sys.maxsize))
 
         self.fon.addWidget(self.label_distance, 6, 0)
         self.fon.addWidget(self.line_distance, 6, 1, 1, 2)
-        self.line_distance.textChanged.connect(self.int_validate)
+        self.line_distance.textChanged.connect(lambda: self.int_validate(0, len(self.symbols)))
 
         self.fon.addWidget(self.label_rtp, 7, 0)
         self.fon.addWidget(self.line_rtp, 7, 1)
         self.line_rtp.setFixedWidth(80)
         self.fon.addWidget(self.line_rtp_error, 7, 2)
         self.line_rtp_error.setFixedWidth(80)
-        self.line_rtp.textChanged.connect(self.float_validate)
-        self.line_rtp_error.textChanged.connect(self.float_validate)
+        self.line_rtp.textChanged.connect(lambda: self.float_validate(0, sys.maxsize))
+        self.line_rtp_error.textChanged.connect(lambda: self.float_validate(0, sys.maxsize))
 
         self.fon.addWidget(self.label_volatility, 8, 0)
         self.fon.addWidget(self.line_volatility, 8, 1)
         self.line_volatility.setFixedWidth(80)
         self.fon.addWidget(self.line_volatility_error, 8, 2)
         self.line_volatility_error.setFixedWidth(80)
-        self.line_volatility.textChanged.connect(self.float_validate)
-        self.line_volatility_error.textChanged.connect(self.float_validate)
+        self.line_volatility.textChanged.connect(lambda: self.float_validate(0, sys.maxsize))
+        self.line_volatility_error.textChanged.connect(lambda: self.float_validate(0, sys.maxsize))
 
         self.fon.addWidget(self.label_hitrate, 9, 0)
         self.fon.addWidget(self.line_hitrate, 9, 1)
         self.line_hitrate.setFixedWidth(80)
         self.fon.addWidget(self.line_hitrate_error, 9, 2)
         self.line_hitrate_error.setFixedWidth(80)
-        self.line_hitrate.textChanged.connect(self.float_validate)
-        self.line_hitrate_error.textChanged.connect(self.float_validate)
+        self.line_hitrate.textChanged.connect(lambda: self.float_validate(0, sys.maxsize))
+        self.line_hitrate_error.textChanged.connect(lambda: self.float_validate(0, sys.maxsize))
 
         self.fon.addWidget(self.label_baseRTP, 10, 0)
         self.fon.addWidget(self.line_baseRTP, 10, 1)
         self.line_baseRTP.setFixedWidth(80)
         self.fon.addWidget(self.line_baseRTP_error, 10, 2)
         self.line_baseRTP_error.setFixedWidth(80)
-        self.line_baseRTP.textChanged.connect(self.float_validate)
-        self.line_baseRTP_error.textChanged.connect(self.float_validate)
+        self.line_baseRTP.textChanged.connect(lambda: self.float_validate(0, sys.maxsize))
+        self.line_baseRTP_error.textChanged.connect(lambda: self.float_validate(0, sys.maxsize))
 
-        self.setLayout(self.fon)
+        self.widget.setLayout(self.fon)
+        self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setWidget(self.widget)
+        self.fon_scroll.addWidget(self.scroll)
+        self.setLayout(self.fon_scroll)
 
     def click_add_symbol(self):
-        global count
-
-        symbol = Symbol(count, self.width)
+        symbol = Symbol(self.count_symbols, self.width)
         self.symbols.append(symbol)
 
         button_delete = QtWidgets.QPushButton()
@@ -687,11 +702,13 @@ class Window(QtWidgets.QWidget):
         self.deleteButtons.append(button_delete)
         self.deleteButtons[-1].clicked.connect(self.click_delete_symbol)
 
-        self.grid_symbols.addWidget(self.symbols[-1], count, 0)
+        self.grid_symbols.addWidget(self.symbols[-1], self.count_symbols, 0)
 
         self.symbols[-1].fon_name.addWidget(self.deleteButtons[-1])
 
-        count += 1
+        self.count_symbols += 1
+
+        self.line_distance.textChanged.emit(self.line_distance.text())
 
     def click_delete_symbol(self):
         sender = self.sender()
@@ -703,9 +720,9 @@ class Window(QtWidgets.QWidget):
 
         del self.deleteButtons[num]
 
-    def click_add_line(self):
-        global count_lines
+        self.line_distance.textChanged.emit(self.line_distance.text())
 
+    def click_add_line(self):
         line = LineEdits(self.width, 28, 1, self.height, 24, 0)
         self.lines.append(line)
 
@@ -715,11 +732,11 @@ class Window(QtWidgets.QWidget):
         self.deleteLines.append(button_delete)
         self.deleteLines[-1].clicked.connect(self.click_delete_line)
 
-        self.grid_lines.addWidget(self.lines[-1], count_lines, 0)
+        self.grid_lines.addWidget(self.lines[-1], self.count_lines, 0)
 
-        self.grid_lines.addWidget(self.deleteLines[-1], count_lines, 1)
+        self.grid_lines.addWidget(self.deleteLines[-1], self.count_lines, 1)
 
-        count_lines += 1
+        self.count_lines += 1
 
     def click_delete_line(self):
         sender = self.sender()
@@ -867,17 +884,6 @@ class Window(QtWidgets.QWidget):
             self.line_baseRTP_error.setText(str(interim['baseRTP'][1]))
 
 
-class Scroll(QtWidgets.QScrollArea):
-    def __init__(self):
-        super(Scroll, self).__init__()
-
-        self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-        self.setWidgetResizable(True)
-        self.window = Window()
-
-        self.setWidget(self.window)
-
-
 class Main(QtWidgets.QMainWindow):
     def __init__(self):
         super(Main, self).__init__()
@@ -885,7 +891,8 @@ class Main(QtWidgets.QMainWindow):
         self.setWindowTitle('Azino 777')
         self.setWindowIcon(QtGui.QIcon('icons/yarlyk.png'))
         self.setGeometry(200, 200, 1000, 600)
-        self.scroll = Scroll()
+
+        self.tab = QtWidgets.QTabWidget()
 
         self.tool_file = self.addToolBar('file')
         self.tool_run = self.addToolBar('run')
@@ -893,6 +900,7 @@ class Main(QtWidgets.QMainWindow):
 
         self.action_new = QtWidgets.QAction(QtGui.QIcon('icons/new.png'), 'New', self)
         self.action_new.setShortcut('Ctrl+N')
+        self.action_new.triggered.connect(self.trigger_new)
 
         self.action_open = QtWidgets.QAction(QtGui.QIcon('icons/open.png'), 'Open', self)
         self.action_open.setShortcut('Ctrl+O')
@@ -930,7 +938,11 @@ class Main(QtWidgets.QMainWindow):
         self.init_ui()
 
     def init_ui(self):
-        self.setCentralWidget(self.scroll)
+        self.setCentralWidget(self.tab)
+
+        self.tab.setTabsClosable(True)
+        self.tab.tabCloseRequested.connect(self.close_tab)
+        self.tab.setMovable(True)
 
         file = self.bar.addMenu('File')
         run = self.bar.addMenu('Run')
@@ -955,11 +967,32 @@ class Main(QtWidgets.QMainWindow):
         self.tool_run.addAction(self.action_run)
         self.tool_run.addAction(self.action_submitnrun)
 
+    def close_tab(self, current_index):
+        current_widget = self.tab.widget(current_index)
+        current_widget.deleteLater()
+        self.tab.removeTab(current_index)
+        if self.tab.__len__() == 0:
+            self.action_submit.setEnabled(False)
+
     def trigger_submit(self):
-        self.info = self.scroll.window.collect_info()
+        current = self.tab.currentWidget()
+        self.info = current.collect_info()
         print(self.info)
         self.action_saveas.setEnabled(True)
         self.action_run.setEnabled(True)
+
+    def trigger_new(self):
+        global count_tabs
+        new_tab = Window()
+        self.tab.addTab(new_tab, 'untitled' + str(count_tabs))
+        self.tab.setCurrentWidget(new_tab)
+        count_tabs += 1
+        self.action_submit.setEnabled(True)
+
+        #button = QtWidgets.QPushButton('x')
+
+        #tab_bar = self.tab.tabBar()
+        #tab_bar.setTabButton(self.tab.currentIndex(), QtWidgets.QTabBar.RightSide, button)
 
     def trigger_save(self):
         file = open(self.json_path, 'w')
@@ -973,6 +1006,8 @@ class Main(QtWidgets.QMainWindow):
             json.dump(self.info, file)
             file.close()
             self.action_save.setEnabled(True)
+            i = self.tab.currentIndex()
+            self.tab.setTabText(i, str(path_leaf(self.json_path)))
 
     def trigger_open(self):
         self.json_path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File', '', 'All Files (*);;Json Files (*.json)')
@@ -980,8 +1015,14 @@ class Main(QtWidgets.QMainWindow):
             file = open(self.json_path, 'r')
             j = file.read()
             self.info = json.loads(j)
-            self.scroll.window.set_info(self.info)
             file.close()
+
+            new_tab = Window()
+            new_tab.set_info(self.info)
+
+            self.tab.addTab(new_tab, str(path_leaf(self.json_path)))
+            self.tab.setCurrentWidget(new_tab)
+
             self.action_save.setEnabled(True)
             self.action_saveas.setEnabled(True)
             self.action_run.setEnabled(True)
