@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
-import sip
 import json
 import ntpath
-from PyQt5 import QtWidgets, QtGui, QtCore
+from PyQt5 import QtWidgets, QtGui, QtCore, sip
 
 count = 0
 count_lines = 0
@@ -766,7 +765,7 @@ class Window(QtWidgets.QWidget):
 
                 self.symbols[i].base.fon.removeWidget(self.symbols[i].base.buttons_position)
                 sip.delete(self.symbols[i].base.buttons_position)
-                self.symbols[i].base.buttons_position = SwitchButtons(self.width, 28)
+                self.symbols[i].base.buttons_position = SwitchButtons(self.width, 40)
                 self.symbols[i].base.fon.addWidget(self.symbols[i].base.buttons_position, 2, 1)
 
                 if self.symbols[i].base.checkbox_scatter.checkState() == QtCore.Qt.Checked:
