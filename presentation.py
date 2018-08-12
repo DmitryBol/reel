@@ -1,26 +1,24 @@
-import neighborhood as descent
+import Descent.Optimize as descent
 import random
 
-all_games = ['Games\Shining_Crown.txt',
-             'Games\Katana.txt',
-             'Games\Attila.txt',
-             'Games\Garage.txt',
-             'Games\Space Odyssey.txt',
+all_games = [
              'Games\HappyBrauer.txt'
              ]
 
-hit_rates = [random.gauss(180, 20) for _ in all_games]
-all_base_rtp = [0.65 for _ in all_games]
-index = all_games.index('Games\Shining_Crown.txt')
-hit_rates[index] = -1
-all_base_rtp[index] = 0.95
+
 L = len(all_games)
 
+params = {'base_rtp': 0.65,
+          'rtp': 0.95,
+          'sdnew': 4,
+          'hitrate': 160,
+          'err_base_rtp': 0.01,
+          'err_rtp': 0.01,
+          'err_sdnew': 0.5,
+          'err_hitrate': 1}
+
 for index in range(L):
-    descent.SecondMethod(file_name=all_games[index],
-                         hitrate=hit_rates[index],
-                         err_hitrate=1,
-                         base_rtp=all_base_rtp[index],
-                         err_base_rtp=0.001
+    descent.Descent(file_name=all_games[index],
+                    params=params
                          )
     print(all_games[index] + ' done\n\n\n')

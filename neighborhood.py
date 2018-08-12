@@ -258,10 +258,10 @@ def parametrs(file_name, out):
     roots = [root]
 
     roots = roots + initialDistributions(obj, out)
-
     print(time.time() - start_time)
 
     return distr, params['base_rtp'], params['rtp'], params['sdnew'], params['hitrate'], obj, roots
+
 
 def initialDistributions(obj, out):
     t = [0 for j in range(len(obj.base.symbol))]
@@ -434,7 +434,6 @@ def FirstMethod(hitrate, err_hitrate, file_name):
 class group:
     def __init__(self, root, num, sortedSymbols, obj, blocked_scatters=[]):
         self.root = root
-
         self.total = [sum(i) for i in root.frequency]
 
         self.groups = []

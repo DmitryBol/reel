@@ -8,6 +8,10 @@ from FrontEnd import moments
 #import moments
 import FrontEnd.reelWork.reel_generator_alpha as rg
 
+Inf = 0.05
+wildInf = 0.025
+ewildInf = 0.015
+
 
 def sought(dictionary, string):
     K = list(dictionary.keys())[:]
@@ -74,7 +78,7 @@ class Symbol:
 
 
 class Gametype:
-    def __init__(self, interim, type, w, lines):
+    def __init__(self, interim, type, w, lines, height):
         if sought(interim, 'symbol'):
             self.symbol = [None] * len(sought(interim, 'symbol'))
             for i in range(len(sought(interim, 'symbol'))):
@@ -103,6 +107,8 @@ class Gametype:
         # (line_id, symbol_id, count_killed for every reel from 0 to window_width)
         self.count_killed = {line_id: {symbol_id: [0 for _ in range(w)] for symbol_id in range(len(self.symbol))} for
                              line_id in range(len(self.lines))}
+        self.window = [w, height]
+        self.max_border = 0.9 * (1 / height)
 
     def wildlists(self):
         for i in range(len(self.symbol)):
@@ -202,6 +208,30 @@ class Gametype:
                         cnt] / self.all_combinations2()
         return s / len(lines)
 
+    def check(self, frequency):
+        n_reels = len(frequency)
+        if n_reels <= 0:
+            return False
+        n_symbols = len(frequency[0])
+        reels_lens = []
+        for reel_id in range(n_reels):
+            for symbol_id in range(n_symbols):
+                if frequency[reel_id][symbol_id] < 0:
+                    return False
+                elif frequency[reel_id][symbol_id] > 0 and reel_id not in self.symbol[symbol_id].position:
+                    return False
+            reels_lens.append(sum(frequency[reel_id]))
+        if max(reels_lens) != min(reels_lens):
+            return False
+        return True
+
+    def infPart(self, symbol_id):
+        if symbol_id in self.ewildlist:
+            return ewildInf
+        elif symbol_id in self.wildlist:
+            return wildInf
+        else:
+            return Inf
 
 # noinspection PyArgumentList
 class Game:
@@ -217,8 +247,8 @@ class Game:
         else:
             raise Exception('Field "line" is not found in json file.')
 
-        self.base = Gametype(interim, 'base', self.window[0], self.line)
-        self.free = Gametype(interim, 'free', self.window[0], self.line)
+        self.base = Gametype(interim, 'base', self.window[0], self.line, self.window[1])
+        self.free = Gametype(interim, 'free', self.window[0], self.line, self.window[1])
 
         if sought(interim, 'free_multiplier'):
             self.free_multiplier = sought(interim, 'free_multiplier')
@@ -236,6 +266,8 @@ class Game:
         self.baseRTP = sought(interim, 'baseRTP')
         self.borders = sought(interim, 'border')
         self.weights = sought(interim, 'weight')
+
+        self.parameters = {'base_rtp': -1, 'freemean': -1, 'rtp': -1,  'sdnew': -1, 'hitrate': -1}
 
         self.base.wildlists()
         self.base.scatterlists()
@@ -415,16 +447,26 @@ class Game:
         res += eta2 * zeta2
         return res**0.5 / len(self.line)
 
-    def count_parameters(self):
-        base_rtp = self.count_base_RTP2('base')
-        freemean = self.freemean2()
-        rtp = self.count_RTP2(freemean, base_rtp)
-        sd = self.count_volatility2(freemean, rtp)
-        #sdnew = self.count_volatility2new(freemean, rtp)
-        sdalpha = self.count_volatility_alpha(freemean)
-        hitrate = self.count_hitrate2()
+    def count_parameters(self, base=True, sd_flag=False):
+        if base:
+            base_rtp = self.count_base_RTP2('base')
+            hitrate = self.count_hitrate2()
+            self.parameters = {'base_rtp': base_rtp, 'freemean': -1, 'rtp': -1,  'sdnew': -1, 'hitrate': hitrate}
 
+        elif not sd_flag:
+            #base_rtp = self.count_base_RTP2('base')
+            freemean = self.freemean2()
+            rtp = self.count_RTP2(freemean, self.base_rtp)
+            hitrate = self.count_hitrate2()
+            self.parameters = {'base_rtp': self.baseRTP, 'freemean': freemean, 'rtp': rtp,  'sdnew': -1, 'hitrate': hitrate}
 
-        return {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sd': sd,  'sdnew': sdalpha, 'hitrate': hitrate}
+        else:
+            freemean = self.freemean2()
+            rtp = self.count_RTP2(freemean, self.base_rtp)
+            sdalpha = self.count_volatility_alpha(freemean)
+            hitrate = self.count_hitrate2()
+            self.parameters = {'base_rtp': self.baseRTP, 'freemean': freemean, 'rtp': rtp,  'sdnew': sdalpha, 'hitrate': hitrate}
+
+        return self.parameters
 
         #return {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sd': sd, 'sdnew': sdnew, 'sdalpha': sdalpha, 'hitrate': hitrate}
