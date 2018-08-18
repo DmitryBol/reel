@@ -33,15 +33,17 @@ class Group:
                 for j in range(i + 1, number):
                     group1 = self.split.groupTransfer(gametype, i, j)
                     if group1:
+                        new_point = Point(group1.frequency, root.freeFrequency, game)
+                        new_point.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
                         self.points.append(
-                            Point(root.baseFrequency, group1.frequency, game).fillPoint(
-                                game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
+                            new_point
                         )
                     group2 = self.split.groupTransfer(gametype, j, i)
                     if group2:
+                        new_point = Point(group2.frequency, root.freeFrequency, game)
+                        new_point.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
                         self.points.append(
-                            Point(root.baseFrequency, group2.frequency, game).fillPoint(
-                                game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
+                            new_point
                         )
 
         elif type == 'free':
@@ -53,16 +55,14 @@ class Group:
                 for j in range(i + 1, number):
                     group1 = self.split.groupTransfer(gametype, i, j)
                     if group1:
-                        self.points.append(
-                            Point(root.baseFrequency, group1.frequency, game).fillPoint(
-                                game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=True)
-                        )
+                        new_point = Point(root.baseFrequency, group1.frequency, game)
+                        new_point.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=False)
+                        self.points.append(new_point)
                     group2 = self.split.groupTransfer(gametype, j, i)
                     if group2:
-                        self.points.append(
-                            Point(root.baseFrequency, group2.frequency, game).fillPoint(
-                                game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=True)
-                        )
+                        new_point = Point(root.baseFrequency, group2.frequency, game)
+                        new_point.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=False)
+                        self.points.append(new_point)
         else:
             exit('Not supported gametype')
 
@@ -78,3 +78,12 @@ class Group:
             return -1
         else:
             return copy.deepcopy(self.points[index])
+
+    def printGroup(self, type='base'):
+        for point in self.points:
+            if type == 'base':
+                print('point value: ', point.value, point.baseFrequency)
+            elif type == 'free':
+                print('point value: ', point.value, 'rtp: ', point.rtp, 'base_rtp: ', point.base_rtp, point.baseFrequency, point.freeFrequency)
+            else:
+                exit('no such gametype')

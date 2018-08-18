@@ -110,11 +110,12 @@ def initialDistributions(obj, out, params):
         initial.append(Point(baseFrequency, baseFrequency, obj))
 
     counter = 1
-    for point in initial:
+    # TODO убрать slice
+    for point in initial[:1]:
         point.fillPoint(obj, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
-        print('end point ', counter)
+        print('end point ', counter, point.baseFrequency, point.value)
         counter += 1
-    return initial
+    return initial[:1]
 
 
 def initialFreeDistributions(obj, baseFrequency, params):
@@ -127,15 +128,16 @@ def initialFreeDistributions(obj, baseFrequency, params):
     err_sdnew = params['err_sdnew']
 
     initial = []
-    freeFrequency = [int(100/len(obj.free.symbol)) for _ in range(len(obj.free.symbol))]
+    freeFrequency = [[int(300/len(obj.free.symbol)) for _ in range(len(obj.free.symbol))] for _ in range(obj.window[0])]
     freeFrequency = sm.notice_positions(freeFrequency, obj.free)
     initial.append(Point(baseFrequency, freeFrequency, obj))
-    initial[0].fillPoint(obj, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=True)
+    for p in initial:
+        p.fillPoint(obj, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=False)
 
     return initial
 
 
-def Descent(params, file_name):
+def Descent_base(params, file_name):
 
     base_rtp = params['base_rtp']
     rtp = params['rtp']
@@ -175,7 +177,7 @@ def Descent(params, file_name):
 
     value_list = []
     for root in roots:
-        root.fillVal(base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
+        #root.fillVal(base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
         print(root.baseFrequency, ' value is ', root.value, 'base_rtp, rtp, sdnew, hitrate :',
               root.base_rtp, root.rtp, root.sdnew, root.hitrate)
         value_list = value_list + [root.value]
@@ -184,6 +186,7 @@ def Descent(params, file_name):
     print('assuming base rtp, rtp, sd ', base_rtp, rtp, sdnew)
     print('assuming errors for base rtp, rtp,  sd ', err_base_rtp, err_rtp, err_sdnew)
 
+    #print(value_list)
     index_list = [0] + index_list
 
     for index in index_list:
@@ -193,17 +196,17 @@ def Descent(params, file_name):
               roots[index].base_rtp, roots[index].rtp, roots[index].sdnew, roots[index].hitrate)
         root = roots[index]
 
-
-
         min_is_found = False
         currentScale = 0
         while not min_is_found and currentScale < scaleLimit:
             number_of_groups = len(game.base.wildlist) + len(game.base.ewildlist) + \
                 len(game.base.scatterlist) - len(blocked_scatters) + 1
             max_number_of_groups = len(game.base.symbol) - len(blocked_scatters)
-            while number_of_groups < max_number_of_groups:
+            while number_of_groups <= max_number_of_groups:
                 temp_group = Group(game, 'base', root, number_of_groups, params)
                 print('группы ', temp_group.split.groups)
+
+                temp_group.printGroup()
 
                 findedMin = temp_group.findMin()
                 if findedMin != -1:
@@ -222,9 +225,12 @@ def Descent(params, file_name):
                         print('path ', findedMin.value)
                         root = copy.deepcopy(findedMin)
                 else:
-                    number_of_groups += 1
-                    if number_of_groups > 0.5 * max_number_of_groups :
+
+                    if number_of_groups > 0.5 * max_number_of_groups and number_of_groups < max_number_of_groups:
                         number_of_groups = max_number_of_groups
+                    else:
+                        number_of_groups += 1
+
 
             if not min_is_found:
                 root.scaling()
@@ -232,7 +238,94 @@ def Descent(params, file_name):
                 print('SCALING ', currentScale)
             else:
                 break
+        if min_is_found:
+            break
 
     print('Base done')
 
+    findedMin.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
+
+    return [findedMin, game]
+
+
+def Descent_free(params, start_point, game):
+
+    base_rtp = params['base_rtp']
+    rtp = params['rtp']
+    sdnew = params['sdnew']
+    err_base_rtp = params['err_base_rtp']
+    err_rtp = params['err_rtp']
+    err_sdnew = params['err_sdnew']
+    hitrate = params['hitrate']
+    err_hitrate = params['err_hitrate']
+
+    print('started_free')
+
+    roots = initialFreeDistributions(game, start_point.baseFrequency, params)
+
+    value_list = []
+    for root in roots:
+        print(root.freeFrequency, ' value is ', root.value, 'base_rtp, rtp, sdnew, hitrate :',
+              root.base_rtp, root.rtp, root.sdnew, root.hitrate)
+        value_list = value_list + [root.value]
+
+    index_list = list(range(len(value_list)))
+    double_bouble(value_list, index_list)
+    print('assuming base rtp, rtp, sd ', base_rtp, rtp, sdnew)
+    print('assuming errors for base rtp, rtp,  sd ', err_base_rtp, err_rtp, err_sdnew)
+
+    index_list = [0] + index_list
+
+    for index in index_list:
+        print('TRYING POINT', roots[index].freeFrequency,
+              ' value is ', roots[index].value,
+              'base_rtp, rtp, sdnew, hitrate :',
+              roots[index].base_rtp, roots[index].rtp, roots[index].sdnew, roots[index].hitrate)
+        root = roots[index]
+
+        min_is_found = False
+        currentScale = 0
+        while not min_is_found and currentScale < scaleLimit:
+            number_of_groups = len(game.free.wildlist) + len(game.free.ewildlist) + \
+                               len(game.free.scatterlist) + 1
+            max_number_of_groups = len(game.base.symbol)
+            while number_of_groups <= max_number_of_groups:
+                temp_group = Group(game, 'free', root, number_of_groups, params)
+                print('группы ', temp_group.split.groups)
+
+                temp_group.printGroup('free')
+
+                findedMin = temp_group.findMin()
+                if findedMin != -1:
+                    if findedMin.value < 1:
+                        min_is_found = True
+                        print('ending with ', findedMin.value)
+                        print('base ', findedMin.base_rtp)
+                        print('rtp ', findedMin.rtp)
+                        print('sdnew ', findedMin.sdnew)
+                        print('hitrate ', findedMin.hitrate)
+                        root = copy.deepcopy(findedMin)
+                        print(root.freeFrequency)
+                        # findedMin.printBaseReel(file_name)
+                        break
+                    else:
+                        print('path ', findedMin.value)
+                        root = copy.deepcopy(findedMin)
+                else:
+                    if number_of_groups > 0.5 * max_number_of_groups and number_of_groups < max_number_of_groups:
+                        number_of_groups = max_number_of_groups
+                    else:
+                        number_of_groups += 1
+            if not min_is_found:
+                root.scaling()
+                currentScale += 1
+                print('SCALING ', currentScale)
+            else:
+                break
+        if min_is_found:
+            break
+
+    print('Free done')
+
+    return findedMin
 #_____________________________________________________________________________

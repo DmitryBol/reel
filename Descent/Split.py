@@ -9,6 +9,7 @@ from simple_functions_for_fit import notice_positions
 Inf = 0.05
 wildInf = 0.025
 ewildInf = 0.015
+scatterInf = 0.005
 
 
 def sortSymbols(gametype):
@@ -38,6 +39,8 @@ class Split:
         for scatter_id in gametype.scatterlist:
             if max(gametype.symbol[scatter_id].scatter) > 0:
                 blocked_scatters.append(scatter_id)
+        if gametype.name == 'free':
+            blocked_scatters = []
 
         for i in range(len(gametype.symbol)):
             if gametype.symbol[i].wild != False:
@@ -105,12 +108,14 @@ class Split:
         if gametype.check(new_frequency):
             return Split(gametype, self.number, new_frequency)
         return None
-
+    '''
     def groupTransfer(self, gametype ,sourceGroup, destinationGroup):
 
         new_frequency = copy.deepcopy(self.frequency)
         k = len(self.groups[destinationGroup]) // len(self.groups[sourceGroup])
         ost = len(self.groups[destinationGroup]) % len(self.groups[sourceGroup])
+        source_count = 0
+        destination_count = 0
         totals = [sum(self.frequency[reel_id]) for reel_id in range(len(self.frequency))]
         for reel_id in range(len(new_frequency)):
             for i in range(len(self.groups[sourceGroup])):
@@ -118,16 +123,19 @@ class Split:
                 statement1 =  new_frequency[reel_id][source] - 1 < 0
                 statement3 = False
                 statement4 = False
+                statement5 = False
                 if source in gametype.wildlist:
                     statement3 = new_frequency[reel_id][source] - 1 < wildInf*totals[reel_id]
                 if source in gametype.ewildlist:
                     statement4 = new_frequency[reel_id][source] - 1 < ewildInf*totals[reel_id]
-                statement5 = new_frequency[reel_id][source] - 1 < Inf*totals[reel_id]
+                if source not in gametype.wildlist and source not in gametype.ewildlist and source not in gametype.scatterlist:
+                    statement5 = new_frequency[reel_id][source] - 1 < Inf*totals[reel_id]
 
                 if statement1 or statement3 or statement4 or statement5:
                     continue
 
-                new_frequency[reel_id][self.groups[sourceGroup][i]] = -1
+                #new_frequency[reel_id][self.groups[sourceGroup][i]] = -1
+                source_count += 1
             for i in range(len(self.groups[destinationGroup])):
 
                 destination = self.groups[destinationGroup][i]
@@ -136,7 +144,9 @@ class Split:
 
                 if   statement2 or  statement6:
                     continue
-                new_frequency[reel_id][self.groups[destinationGroup][i]] = +k
+                #new_frequency[reel_id][self.groups[destinationGroup][i]] = +k
+                destination_count += 1
+
             for i in range(ost):
                 destination = self.groups[destinationGroup][len(self.groups[destinationGroup]) - i - 1]
                 statement2 = new_frequency[reel_id][destination] + 1 > 0 and reel_id not in gametype.symbol[destination].position
@@ -148,6 +158,61 @@ class Split:
         new_split = Split(gametype, self.number, new_frequency)
         new_split.balance(gametype)
         if gametype.check(new_split.frequency):
+            return new_split
+        else:
+            return None
+    '''
+    def groupTransfer(self, gametype, sourceGroup, destinationGroup):
+
+        new_frequency = copy.deepcopy(self.frequency)
+
+        totals = [sum(self.frequency[reel_id]) for reel_id in range(len(self.frequency))]
+        moving_count = []
+        for reel_id in range(len(new_frequency)):
+            source_position = []
+            for i in range(len(self.groups[sourceGroup])):
+                source = self.groups[sourceGroup][i]
+                statement1 =  new_frequency[reel_id][source] - 1 < 0
+                statement3 = False
+                statement4 = False
+                statement5 = False
+                statement7 = False
+                if source in gametype.wildlist:
+                    statement3 = new_frequency[reel_id][source] - 1 < wildInf*totals[reel_id]
+                if source in gametype.ewildlist:
+                    statement4 = new_frequency[reel_id][source] - 1 < ewildInf*totals[reel_id]
+                if source not in gametype.wildlist and source not in gametype.ewildlist and source not in gametype.scatterlist:
+                    statement5 = new_frequency[reel_id][source] - 1 < Inf*totals[reel_id]
+                if source in gametype.scatterlist:
+                    statement7 = new_frequency[reel_id][source] - 1 < scatterInf*totals[reel_id]
+
+                if statement1 or statement3 or statement4 or statement5 or statement7:
+                    continue
+                source_position.append(source)
+
+            destination_position = []
+            for i in range(len(self.groups[destinationGroup])):
+
+                destination = self.groups[destinationGroup][i]
+                statement2 = new_frequency[reel_id][destination] + 1 > 0 and reel_id not in gametype.symbol[destination].position
+                statement6 = new_frequency[reel_id][destination] + 1 > gametype.max_border*totals[reel_id]
+
+                if   statement2 or  statement6:
+                    continue
+                destination_position.append(destination)
+
+            moving_count.append(min(len(destination_position), len(source_position)))
+
+            for i in range(moving_count[reel_id]):
+                new_frequency[reel_id][source_position[i]] -= 1
+                new_frequency[reel_id][destination_position[i]] += 1
+
+        if max(moving_count) == 0:
+            return None
+        new_split = Split(gametype, self.number, new_frequency)
+        new_split.balance(gametype)
+        if gametype.check(new_split.frequency):
+            #print('new_split: ', new_split.frequency, new_split.groups)
             return new_split
         else:
             return None

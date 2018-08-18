@@ -231,6 +231,7 @@ def fill_count_killed(self, window_width):
     for reel_id in range(window_width):
         reel_len = len(self.reels[reel_id])
         for symbol_position in range(reel_len):
+
             if self.symbol.index(self.reels[reel_id][symbol_position]) in self.ewildlist:
                 for line_id in range(n_lines):
 

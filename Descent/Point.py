@@ -39,7 +39,7 @@ class Point:
         return max(t)
 
     def fillVal(self, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=True, sd_flag=False):
-        self.value = self.F(base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
+        self.value = self.F(base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=base, sd_flag=sd_flag)
 
     def scaling(self, scale=2, base=True):
         if base:
@@ -55,10 +55,14 @@ class Point:
     def fillPoint(self, obj, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=True, sd_flag=False):
         if base:
             obj.base.reel_generator(self.baseFrequency, obj.window[0], obj.window[1])
+            self.baseReel = obj.base.reels
             obj.base.fill_frequency(self.baseFrequency)
             obj.base.fill_count_killed(obj.window[0])
             obj.base.fill_simple_num_comb(obj.window, obj.line)
             obj.base.fill_scatter_num_comb(obj.window)
+
+        #print('11111: ', obj.count_parameters(base, sd_flag)['base_rtp'])
+
 
         obj.free.reel_generator(self.freeFrequency, obj.window[0], obj.window[1])
         obj.free.fill_frequency(self.freeFrequency)
@@ -67,10 +71,10 @@ class Point:
         obj.free.fill_simple_num_comb(obj.window, obj.line)
         obj.free.fill_scatter_num_comb(obj.window)
 
-        self.baseReel = obj.base.reels
         self.freeReel = obj.free.reels
 
         params = obj.count_parameters(base, sd_flag)
+
 
         self.base_rtp, self.rtp, self.sdnew, self.hitrate = params['base_rtp'], params['rtp'], params['sdnew'], params['hitrate']
 

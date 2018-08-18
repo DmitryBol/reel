@@ -79,6 +79,7 @@ class Symbol:
 
 class Gametype:
     def __init__(self, interim, type, w, lines, height):
+        self.name = type
         if sought(interim, 'symbol'):
             self.symbol = [None] * len(sought(interim, 'symbol'))
             for i in range(len(sought(interim, 'symbol'))):
@@ -454,18 +455,19 @@ class Game:
             self.parameters = {'base_rtp': base_rtp, 'freemean': -1, 'rtp': -1,  'sdnew': -1, 'hitrate': hitrate}
 
         elif not sd_flag:
-            #base_rtp = self.count_base_RTP2('base')
+            base_rtp = self.count_base_RTP2('base')
             freemean = self.freemean2()
-            rtp = self.count_RTP2(freemean, self.base_rtp)
+            rtp = self.count_RTP2(freemean, base_rtp)
             hitrate = self.count_hitrate2()
-            self.parameters = {'base_rtp': self.baseRTP, 'freemean': freemean, 'rtp': rtp,  'sdnew': -1, 'hitrate': hitrate}
+            self.parameters = {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp,  'sdnew': -1, 'hitrate': hitrate}
 
         else:
+            base_rtp = self.count_base_RTP2('base')
             freemean = self.freemean2()
-            rtp = self.count_RTP2(freemean, self.base_rtp)
+            rtp = self.count_RTP2(freemean, base_rtp)
             sdalpha = self.count_volatility_alpha(freemean)
             hitrate = self.count_hitrate2()
-            self.parameters = {'base_rtp': self.baseRTP, 'freemean': freemean, 'rtp': rtp,  'sdnew': sdalpha, 'hitrate': hitrate}
+            self.parameters = {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp,  'sdnew': sdalpha, 'hitrate': hitrate}
 
         return self.parameters
 
