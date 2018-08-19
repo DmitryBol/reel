@@ -161,7 +161,6 @@ class SwitchButtons(QtWidgets.QWidget):
     def toggle(self, pressed):
         sender = self.sender()
         if pressed:
-
             sender.setStyleSheet("QPushButton {background-color: #EB6C6C; border: none;}"
                                  "QPushButton:pressed { background-color: #EB4848 }"
                                  "QPushButton:focus { background-color: #EB6C6C }"
