@@ -1,7 +1,6 @@
 # coding=utf-8
 import copy
 import numpy as np
-import math
 import time
 import random
 from . import support as support
@@ -42,7 +41,7 @@ def get_element(array, seniors, last_symbols, senior_coef, power):
 
 
 def generate_one_reel(symbols, array, distance, seniors):
-    s = sum(array)
+    s = int(sum(array))
     res = []
     for j in range(10000):
         array_copy = copy.deepcopy(array)
@@ -66,7 +65,7 @@ def generate_one_reel(symbols, array, distance, seniors):
                 for_compare = []
                 for index in range(distance - 1):
                     for_compare.append(res[i - distance + 1 + index])
-                #print(res[i], for_compare, seniors, isComparable(res[i], for_compare, seniors))
+                # print(res[i], for_compare, seniors, isComparable(res[i], for_compare, seniors))
                 if not isComparable(res[i], for_compare, seniors):
                     good_shuffle = False
         if good_shuffle:
@@ -75,11 +74,11 @@ def generate_one_reel(symbols, array, distance, seniors):
             res = []
             continue
 
-    #print(res)
+    # print(res)
     result = []
     for index in res:
         result.append(symbols[index])
-    return result
+    return res
 
 
 def reel_generator(self, array, width, distance):
@@ -232,25 +231,25 @@ def fill_count_killed(self, window_width):
         reel_len = len(self.reels[reel_id])
         for symbol_position in range(reel_len):
 
-            if self.symbol.index(self.reels[reel_id][symbol_position]) in self.ewildlist:
+            if self.reels[reel_id][symbol_position] in self.ewildlist:
                 for line_id in range(n_lines):
 
                     if self.lines[line_id][reel_id] == 1:
-                        #print(line_id, reel_id)
-                        #print(self.count_killed[line_id])
-                        #print((symbol_position + 1) % reel_len)
-                        #print(self.reels[reel_id][(symbol_position + 1) % reel_len])
-                        self.count_killed[line_id][self.symbol.index(self.reels[reel_id][(symbol_position + 1) % reel_len])][reel_id] += 1
-                        self.count_killed[line_id][self.symbol.index(self.reels[reel_id][(symbol_position + 2) % reel_len])][reel_id] += 1
+                        # print(line_id, reel_id)
+                        # print(self.count_killed[line_id])
+                        # print((symbol_position + 1) % reel_len)
+                        # print(self.reels[reel_id][(symbol_position + 1) % reel_len])
+                        self.count_killed[line_id][self.reels[reel_id][(symbol_position + 1) % reel_len]][reel_id] += 1
+                        self.count_killed[line_id][self.reels[reel_id][(symbol_position + 2) % reel_len]][reel_id] += 1
 
                     if self.lines[line_id][reel_id] == 2:
-                        self.count_killed[line_id][self.symbol.index(self.reels[reel_id][symbol_position - 1])][reel_id] += 1
-                        self.count_killed[line_id][self.symbol.index(self.reels[reel_id][(symbol_position + 1) % reel_len])][reel_id] += 1
+                        self.count_killed[line_id][self.reels[reel_id][symbol_position - 1]][reel_id] += 1
+                        self.count_killed[line_id][self.reels[reel_id][(symbol_position + 1) % reel_len]][reel_id] += 1
                     if self.lines[line_id][reel_id] == 3:
-                        self.count_killed[line_id][self.symbol.index(self.reels[reel_id][symbol_position - 2])][reel_id] += 1
-                        self.count_killed[line_id][self.symbol.index(self.reels[reel_id][symbol_position - 1])][reel_id] += 1
-    #print(self.count_killed)
-    #support.print_game(self)
+                        self.count_killed[line_id][self.reels[reel_id][symbol_position - 2]][reel_id] += 1
+                        self.count_killed[line_id][self.reels[reel_id][symbol_position - 1]][reel_id] += 1
+    # print(self.count_killed)
+    # support.print_game(self)
 
 
 def fill_scatter_num_comb(self, window):

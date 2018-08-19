@@ -58,6 +58,7 @@ class Point:
             self.baseReel = obj.base.reels
             obj.base.fill_frequency(self.baseFrequency)
             obj.base.fill_count_killed(obj.window[0])
+
             obj.base.fill_simple_num_comb(obj.window, obj.line)
             obj.base.fill_scatter_num_comb(obj.window)
 

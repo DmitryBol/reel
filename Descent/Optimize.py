@@ -12,6 +12,7 @@ from simple_functions_for_fit import notice_positions
 Inf = 0.05
 wildInf = 0.025
 ewildInf = 0.015
+scatterInf = 0.005
 
 scaleLimit = 5
 
@@ -25,7 +26,6 @@ def double_bouble(a, b):
 
 
 def initialDistributions(obj, out, params):
-
     base_rtp = params['base_rtp']
     rtp = params['rtp']
     sdnew = params['sdnew']
@@ -79,8 +79,10 @@ def initialDistributions(obj, out, params):
             continue
         for reel_id in range(obj.window[0]):
             baseFrequency[reel_id][i] = int(obj.base.max_border * total)
-            k = (total - numb_of_scatters[reel_id] - baseFrequency[reel_id][i]) // (n_symbols - len(blocked_symbols[reel_id]))
-            ost = (total - numb_of_scatters[reel_id] - baseFrequency[reel_id][i]) % (n_symbols - len(blocked_symbols[reel_id]))
+            k = (total - numb_of_scatters[reel_id] - baseFrequency[reel_id][i]) // (
+                        n_symbols - len(blocked_symbols[reel_id]))
+            ost = (total - numb_of_scatters[reel_id] - baseFrequency[reel_id][i]) % (
+                        n_symbols - len(blocked_symbols[reel_id]))
             for symbol_id in range(len(obj.base.symbol)):
                 if symbol_id not in blocked_scatters + blocked_symbols[reel_id] + [i]:
                     baseFrequency[reel_id][symbol_id] = k
@@ -95,8 +97,10 @@ def initialDistributions(obj, out, params):
 
         for reel_id in range(obj.window[0]):
             baseFrequency[reel_id][i] = int(obj.base.infPart(i) * total) + 1
-            k = (total - numb_of_scatters[reel_id] - baseFrequency[reel_id][i]) // (n_symbols - len(blocked_symbols[reel_id]))
-            ost = (total - numb_of_scatters[reel_id] - baseFrequency[reel_id][i]) % (n_symbols - len(blocked_symbols[reel_id]))
+            k = (total - numb_of_scatters[reel_id] - baseFrequency[reel_id][i]) // (
+                        n_symbols - len(blocked_symbols[reel_id]))
+            ost = (total - numb_of_scatters[reel_id] - baseFrequency[reel_id][i]) % (
+                        n_symbols - len(blocked_symbols[reel_id]))
             for symbol_id in range(len(obj.base.symbol)):
                 if symbol_id not in blocked_scatters + blocked_symbols[reel_id] + [i]:
                     baseFrequency[reel_id][symbol_id] = k
@@ -119,7 +123,6 @@ def initialDistributions(obj, out, params):
 
 
 def initialFreeDistributions(obj, baseFrequency, params):
-
     base_rtp = params['base_rtp']
     rtp = params['rtp']
     sdnew = params['sdnew']
@@ -128,7 +131,14 @@ def initialFreeDistributions(obj, baseFrequency, params):
     err_sdnew = params['err_sdnew']
 
     initial = []
-    freeFrequency = [[int(300/len(obj.free.symbol)) for _ in range(len(obj.free.symbol))] for _ in range(obj.window[0])]
+    freeFrequency = [[int(300 / len(obj.free.symbol)) for _ in range(len(obj.free.symbol))] for _ in
+                     range(obj.window[0])]
+
+    for scatter_id in obj.free.scatterlist:
+        if max(obj.free.symbol[scatter_id].scatter) > 0:
+            for reel_id in range(obj.window[0]):
+                freeFrequency[reel_id][scatter_id] = max(1, int(scatterInf * 300))
+
     freeFrequency = sm.notice_positions(freeFrequency, obj.free)
     initial.append(Point(baseFrequency, freeFrequency, obj))
     for p in initial:
@@ -166,18 +176,19 @@ def Descent_base(params, file_name):
         if max(game.base.symbol[scatter_id].scatter) > 0:
             blocked_scatters.append(scatter_id)
 
+
     print('started')
     game.base.create_simple_num_comb(game.window, game.line)
     game.free.create_simple_num_comb(game.window, game.line)
     print('created_num_comb')
 
     roots = initialDistributions(game, out, params)
-
+    findedMin = Point(frequency_base=roots[0].baseFrequency, frequency_free=roots[0].freeFrequency, game=game)
     print('INITIAL POINTS, THEIR DISTRIBUTIONS, VALUES AND PARAMETRES:')
 
     value_list = []
     for root in roots:
-        #root.fillVal(base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
+        # root.fillVal(base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
         print(root.baseFrequency, ' value is ', root.value, 'base_rtp, rtp, sdnew, hitrate :',
               root.base_rtp, root.rtp, root.sdnew, root.hitrate)
         value_list = value_list + [root.value]
@@ -186,7 +197,7 @@ def Descent_base(params, file_name):
     print('assuming base rtp, rtp, sd ', base_rtp, rtp, sdnew)
     print('assuming errors for base rtp, rtp,  sd ', err_base_rtp, err_rtp, err_sdnew)
 
-    #print(value_list)
+    # print(value_list)
     index_list = [0] + index_list
 
     for index in index_list:
@@ -200,7 +211,7 @@ def Descent_base(params, file_name):
         currentScale = 0
         while not min_is_found and currentScale < scaleLimit:
             number_of_groups = len(game.base.wildlist) + len(game.base.ewildlist) + \
-                len(game.base.scatterlist) - len(blocked_scatters) + 1
+                               len(game.base.scatterlist) - len(blocked_scatters) + 1
             max_number_of_groups = len(game.base.symbol) - len(blocked_scatters)
             while number_of_groups <= max_number_of_groups:
                 temp_group = Group(game, 'base', root, number_of_groups, params)
@@ -230,7 +241,6 @@ def Descent_base(params, file_name):
                         number_of_groups = max_number_of_groups
                     else:
                         number_of_groups += 1
-
 
             if not min_is_found:
                 root.scaling()
@@ -262,6 +272,7 @@ def Descent_free(params, start_point, game):
     print('started_free')
 
     roots = initialFreeDistributions(game, start_point.baseFrequency, params)
+    findedMin = Point(frequency_base=roots[0].baseFrequency, frequency_free=roots[0].freeFrequency, game=game)
 
     value_list = []
     for root in roots:
@@ -306,7 +317,6 @@ def Descent_free(params, start_point, game):
                         print('hitrate ', findedMin.hitrate)
                         root = copy.deepcopy(findedMin)
                         print(root.freeFrequency)
-                        # findedMin.printBaseReel(file_name)
                         break
                     else:
                         print('path ', findedMin.value)
@@ -327,5 +337,6 @@ def Descent_free(params, start_point, game):
 
     print('Free done')
 
-    return findedMin
-#_____________________________________________________________________________
+    findedMin.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False)
+
+    return [findedMin, game]

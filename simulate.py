@@ -18,18 +18,18 @@ def scatter_payment(obj, gametype, matrix):
 
         if gametype.symbol[scat].scatter[cnt] > 0:
             for _ in range(gametype.symbol[scat].scatter[cnt]):
-                res += make_spin('free')
+                res += make_spin(obj, 'free')
     return res
 
 
-def make_spin(type):
+def make_spin(obj, type):
+    matrix = np.zeros((obj.window[1], obj.window[0]))
     res = 0
     if type == 'base':
         for i in range(obj.window[0]):
             temp = random.randint(0, len(obj.base.reels[i]))
             for j1 in range(obj.window[1]):
-                matrix[obj.window[1] - 1 - j1, i] = obj.base.symbol.index(
-                    obj.base.reels[i][(temp - j1) % len(obj.base.reels[i])])
+                matrix[obj.window[1] - 1 - j1, i] = obj.base.reels[i][(temp - j1) % len(obj.base.reels[i])]
 
         for i in range(obj.window[1]):
             for j1 in range(obj.window[0]):
@@ -49,8 +49,7 @@ def make_spin(type):
         for i in range(obj.window[0]):
             temp = random.randint(0, len(obj.free.reels[i]))
             for j1 in range(obj.window[1]):
-                matrix[obj.window[1] - 1 - j1, i] = obj.free.symbol.index(
-                    obj.free.reels[i][(temp - j1) % len(obj.free.reels[i])])
+                matrix[obj.window[1] - 1 - j1, i] = obj.free.reels[i][(temp - j1) % len(obj.free.reels[i])]
 
         for i in range(obj.window[1]):
             for j1 in range(obj.window[0]):
@@ -69,46 +68,54 @@ def make_spin(type):
     return res
 
 
-frequency_1 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
-frequency_2 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
-frequency_3 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
-frequency_4 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
-frequency_5 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
-# [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
-frequency = [frequency_1, frequency_2, frequency_3, frequency_4, frequency_5]
+def make_spins(game, count=100000):
+    payments_sum = 0
+    payments_square_sum = 0
 
-REPEAT_CNT = 100000
-FILES = ['Games\HappyBrauer.txt']
+    for cnt in range(count):
+        spin_result = make_spin(game, 'base')
+        payments_sum += spin_result / len(game.line)
+        payments_square_sum += (spin_result / len(game.line)) ** 2
+        if (cnt + 1) % int(count/100) == 0:
+            print(str(round((cnt + 1) / count * 100)) + '%')
 
-for sees in FILES:
-    for i in range(1):
-        file = open(sees, 'r')
-        j = file.read()
+    _rtp = payments_sum / count
+    _sd = (1 / (count - 1) * (payments_square_sum - 1 / count * payments_sum ** 2)) ** 0.5
 
-        interim = json.loads(j)
+    return {'rtp': _rtp, 'sd': _sd}
 
-        obj = Q.Game(interim)
-        obj.deleteline(i)
-        matrix = np.zeros((obj.window[1], obj.window[0]))
 
-        obj.base.reel_generator(frequency, obj.window[0], obj.distance)
-        obj.free.reel_generator(frequency, obj.window[0], obj.distance)
-        obj.base.fill_frequency(frequency)
-        obj.free.fill_frequency(frequency)
+def main_process(FILES):
+    frequency_1 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
+    frequency_2 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
+    frequency_3 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
+    frequency_4 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
+    frequency_5 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
+    # [5, 6, 6, 6, 6, 6, 14, 16, 16, 16, 16, 4]
+    frequency = [frequency_1, frequency_2, frequency_3, frequency_4, frequency_5]
 
-        payments_sum = 0
-        payments_square_sum = 0
-        for cnt in range(REPEAT_CNT):
-            spin_result = make_spin('base')
-            payments_sum += spin_result / len(obj.line)
-            payments_square_sum += (spin_result / len(obj.line))**2
-            #if (cnt + 1) % int(REPEAT_CNT/100) == 0:
-                #print(str(round((cnt + 1) / REPEAT_CNT * 100)) + '%')
+    REPEAT_CNT = 100000
+    #FILES = ['Games\HappyBrauer.txt']
 
-        rtp = payments_sum / REPEAT_CNT
-        sd = (1/(REPEAT_CNT - 1) * (payments_square_sum - 1/REPEAT_CNT * payments_sum**2))**0.5
-        print('FILE: ', sees, 10 - i, 'lines')
-        print('simulation rtp = ', rtp)
-        print('simulation sd = ', sd)
-        file.close()
+    for sees in FILES:
+        for i in range(1):
+            file = open(sees, 'r')
+            j = file.read()
 
+            interim = json.loads(j)
+
+            obj = Q.Game(interim)
+            obj.deleteline(i)
+
+            obj.base.reel_generator(frequency, obj.window[0], obj.distance)
+            obj.free.reel_generator(frequency, obj.window[0], obj.distance)
+            obj.base.fill_frequency(frequency)
+            obj.free.fill_frequency(frequency)
+
+            simulate_result = make_spins(obj, REPEAT_CNT)
+            rtp, sd = simulate_result['rtp'], simulate_result['sd']
+
+            print('FILE: ', sees, 10 - i, 'lines')
+            print('simulation rtp = ', rtp)
+            print('simulation sd = ', sd)
+            file.close()

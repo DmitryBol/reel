@@ -1,28 +1,28 @@
-import Descent.Optimize as descent
-import random
+from Descent.Optimize import Descent_free, Descent_base
+import simulate
 
-all_games = ['Games\Shining_Crown.txt']
-
+all_games = ['Games\HappyBrauer.txt']
 
 L = len(all_games)
 
-if None:
-    print('Diman prav')
 
-params = {'base_rtp': 0.95,
+params = {'base_rtp': 0.65,
           'rtp': 0.95,
           'sdnew': 4,
-          'hitrate': -1,
+          'hitrate': 160,
           'err_base_rtp': 0.01,
           'err_rtp': 0.01,
           'err_sdnew': 0.5,
           'err_hitrate': 1}
 
 for index in range(L):
-    basePoint, game = descent.Descent_base(file_name=all_games[index],
-                                     params=params)
+    basePoint, game = Descent_base(file_name=all_games[index],
+                                   params=params)
     if params['hitrate'] > 0:
-        freePoint = descent.Descent_free(game=game,
-                                     params=params,
-                                     start_point=basePoint)
+        freePoint, game = Descent_free(game=game,
+                                       params=params,
+                                       start_point=basePoint)
+
     print(all_games[index] + ' done\n\n\n')
+    simulate_result = simulate.make_spins(game, count=1_000_000)
+    print('simulate rtp: ', simulate_result['rtp'], '\tsimulate sd: ', simulate_result['sd'])
