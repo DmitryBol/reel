@@ -45,6 +45,12 @@ def get_scatter_frequency(gameFileName, HR, ERROR):
 
     res = OutResult(game.base.scatterlist)
 
+    if HR == -1:
+        for scatter_id in game.base.scatterlist:
+            if max(game.base.symbol[scatter_id].scatter) > 0:
+                res[scatter_id] = 0
+        return res
+
     reel = [0]*len(game.base.symbol)
     for scat in game.base.scatterlist:
         reel[scat] = res.scatter_index_with_frequency[scat]
