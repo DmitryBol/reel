@@ -291,6 +291,8 @@ class Gametype(QtWidgets.QWidget):
 
         self.frame = QtWidgets.QFrame()
 
+        self.height = 480
+
         self.init_ui()
 
     def init_ui(self):
@@ -347,27 +349,21 @@ class Gametype(QtWidgets.QWidget):
             self.wild = None
 
     def change_colour(self):
+        self.frame.setAutoFillBackground(True)
+        p = self.frame.palette()
         if self.checkbox_wild.checkState() == QtCore.Qt.Checked and self.checkbox_scatter.checkState() == QtCore.Qt.Checked:
-            self.frame.setAutoFillBackground(True)
-            p = self.frame.palette()
             p.setColor(self.frame.backgroundRole(), QtGui.QColor(221, 172, 225))
             self.frame.setPalette(p)
 
         elif self.checkbox_wild.checkState() == QtCore.Qt.Checked:
-            self.frame.setAutoFillBackground(True)
-            p = self.frame.palette()
             p.setColor(self.frame.backgroundRole(), QtGui.QColor(255, 229, 100))
             self.frame.setPalette(p)
 
         elif self.checkbox_scatter.checkState() == QtCore.Qt.Checked:
-            self.frame.setAutoFillBackground(True)
-            p = self.frame.palette()
             p.setColor(self.frame.backgroundRole(), QtGui.QColor(120, 237, 255))
             self.frame.setPalette(p)
 
         else:
-            self.frame.setAutoFillBackground(True)
-            p = self.frame.palette()
             p.setColor(self.frame.backgroundRole(), QtGui.QColor(220, 220, 220))
             self.frame.setPalette(p)
 
@@ -690,6 +686,10 @@ class Window(QtWidgets.QWidget):
         self.setLayout(self.fon_scroll)
 
     def click_add_symbol(self):
+        y = 14
+        if len(self.symbols) > 0:
+            y = self.symbols[-1].pos().y() + self.symbols[-1].height() + 9
+
         symbol = Symbol(self.count_symbols, self.width)
         self.symbols.append(symbol)
 
@@ -699,14 +699,33 @@ class Window(QtWidgets.QWidget):
         button_delete.setFixedSize(28, 28)
         self.deleteButtons.append(button_delete)
         self.deleteButtons[-1].clicked.connect(self.click_delete_symbol)
-
-        self.grid_symbols.addWidget(self.symbols[-1], self.count_symbols, 0)
-
         self.symbols[-1].fon_name.addWidget(self.deleteButtons[-1])
+        self.grid_symbols.addWidget(self.symbols[-1], self.count_symbols, 0)
 
         self.count_symbols += 1
 
         self.line_distance.textChanged.emit(self.line_distance.text())
+
+        QtWidgets.QApplication.processEvents()
+
+        width = self.symbols[-1].geometry().width()
+        self.add_symbol_anim = QtCore.QPropertyAnimation(self.symbols[-1], b"geometry")
+        self.add_symbol_button_anim = QtCore.QPropertyAnimation(self.add_symbol, b"geometry")
+        self.add_symbol_anim.setDuration(160)
+        self.add_symbol_button_anim.setDuration(160)
+        self.add_symbol_anim.setStartValue(QtCore.QRect(14, y, width, 0))
+        self.add_symbol_button_anim.setStartValue(self.add_symbol.geometry())
+        self.add_symbol_anim.setEndValue(QtCore.QRect(14, y, width, 480))
+        self.add_symbol_button_anim.setEndValue(QtCore.QRect(14, y + 480, self.add_symbol.width(), self.add_symbol.height()))
+        self.add_symbol_anim.start()
+        self.add_symbol_button_anim.start()
+
+        dist = 137 - self.geometry().height() + (y + 480) + self.widget.pos().y()
+        if dist > 0:
+            scroll = self.scroll.verticalScrollBar()
+            scroll.setSingleStep(10)
+            for i in range(dist):
+                QtCore.QTimer.singleShot(10 * i, lambda: scroll.triggerAction(QtWidgets.QAbstractSlider.SliderSingleStepAdd))
 
     def click_delete_symbol(self):
         sender = self.sender()

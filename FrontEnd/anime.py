@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
-import json
+import time
 import ntpath
 from PyQt5 import QtWidgets, QtGui, QtCore, sip
 
@@ -9,59 +9,49 @@ class Window(QtWidgets.QWidget):
     def __init__(self):
         super(Window, self).__init__()
 
-        self.grid = QtWidgets.QGridLayout()
         self.fon = QtWidgets.QVBoxLayout()
-        self.count = 0
-
-        self.label1 = QtWidgets.QLabel('1')
-        self.label2 = QtWidgets.QLabel('2')
-        self.label3 = QtWidgets.QLabel('3')
-        self.label4 = QtWidgets.QLabel('4')
-        self.labels = []
-        self.button = QtWidgets.QPushButton('jojo')
-        self.seizure = QtWidgets.QPushButton('4ek')
+        self.button = QtWidgets.QPushButton('joske')
+        self.frame = QtWidgets.QFrame()
+        self.fon_scroll = QtWidgets.QVBoxLayout()
+        self.widget = QtWidgets.QWidget()
+        self.scroll = QtWidgets.QScrollArea()
 
         self.init_ui()
 
     def init_ui(self):
-        self.fon.addLayout(self.grid)
-
         self.fon.addWidget(self.button)
-        self.fon.addWidget(self.seizure)
+        self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame.setFrameShape(QtWidgets.QFrame.WinPanel)
+        self.fon.addWidget(self.frame)
+        for i in range(40):
+            label = QtWidgets.QLabel(str(i))
+            self.fon.addWidget(label)
+        self.button.clicked.connect(self.click)
 
-        self.button.clicked.connect(self.click1)
-        self.seizure.clicked.connect(self.pecha)
-
-        self.setLayout(self.fon)
+        self.widget.setLayout(self.fon)
+        self.scroll.setWidget(self.widget)
+        self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.scroll.setWidgetResizable(True)
+        self.fon_scroll.addWidget(self.scroll)
+        self.setLayout(self.fon_scroll)
 
     def click(self):
-        label = QtWidgets.QLabel(str(self.count))
-        #self.labels.append(label)
-        self.grid.addWidget(label, self.count, 0)
-        self.count += 1
-        QtWidgets.QApplication.processEvents()
-        print(label.pos())
+        self.anime_frame = QtCore.QPropertyAnimation(self.frame, b'geometry')
+        self.anime_frame.setDuration(1600)
+        self.anime_frame.setStartValue(self.frame.geometry())
+        self.anime_frame.setEndValue(
+            QtCore.QRect(self.frame.pos().x(), self.frame.pos().y(), self.frame.width(), self.frame.height() + 200))
+        self.anime_frame.start()
 
-    def pecha(self):
-        for label in self.labels:
-            print(label.pos())
+        scroll = self.scroll.verticalScrollBar()
+        scroll.setSingleStep(1)
+        for i in range(40):
+            QtCore.QTimer.singleShot(10*i, lambda: scroll.triggerAction(QtWidgets.QAbstractSlider.SliderSingleStepAdd))
+            print(scroll.value())
+        QtCore.QTimer.singleShot(1000, self.func)
 
-    def click1(self):
-        label = QtWidgets.QLabel('ABABABABABA')
-        self.grid.addWidget(label, self.count, 0)
-        self.count += 1
-        QtWidgets.QApplication.processEvents()
-        pos = label.pos()
-        print(pos.x(), pos.y())
-        height = label.height()
-
-        self.hideAnimation = QtCore.QPropertyAnimation(label, b"geometry")
-        self.hideAnimation.setDuration(40)
-        startGeometry = QtCore.QRect(pos.x(), pos.y(), label.width(), 0)
-        endGeometry = QtCore.QRect(pos.x(), pos.y(), label.width(), height)
-        self.hideAnimation.setStartValue(startGeometry)
-        self.hideAnimation.setEndValue(endGeometry)
-        self.hideAnimation.start()
+    def func(self):
+        self.frame.setStyleSheet('QFrame {color: red; background-color: #EB6C6C;}')
 
 
 app = QtWidgets.QApplication(sys.argv)
