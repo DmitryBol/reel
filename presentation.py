@@ -1,13 +1,14 @@
 from Descent.Optimize import Descent_free, Descent_base
 import simulate
+from rebalance import rebalance
 
 all_games = ['Games\HappyBrauer.txt']
 
 L = len(all_games)
 
 
-params = {'base_rtp': 0.65,
-          'rtp': 0.95,
+params = {'base_rtp': 1.6,
+          'rtp': 1.9,
           'sdnew': 4,
           'hitrate': 160,
           'err_base_rtp': 0.01,
@@ -22,7 +23,8 @@ for index in range(L):
         freePoint, game = Descent_free(game=game,
                                        params=params,
                                        start_point=basePoint)
+        rebalance(freePoint, game, params=params)
 
     print(all_games[index] + ' done\n\n\n')
-    simulate_result = simulate.make_spins(game, count=1_000_000)
-    print('simulate rtp: ', simulate_result['rtp'], '\tsimulate sd: ', simulate_result['sd'])
+    #simulate_result = simulate.make_spins(game, count=1_000_000)
+    #print('simulate rtp: ', simulate_result['rtp'], '\tsimulate sd: ', simulate_result['sd'])
