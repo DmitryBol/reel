@@ -724,20 +724,42 @@ class Window(QtWidgets.QWidget):
         if dist > 0:
             scroll = self.scroll.verticalScrollBar()
             scroll.setSingleStep(10)
-            for i in range(dist):
+            for i in range(int(dist/10)):
                 QtCore.QTimer.singleShot(10 * i, lambda: scroll.triggerAction(QtWidgets.QAbstractSlider.SliderSingleStepAdd))
 
     def click_delete_symbol(self):
         sender = self.sender()
         num = self.deleteButtons.index(sender)
+        height = self.symbols[num].geometry().height()
+        self.del_symbol_anim = QtCore.QPropertyAnimation(self.symbols[num], b'geometry')
+        self.del_symbol_anim.setDuration(1600)
+        self.del_symbol_anim.setStartValue(self.symbols[num].geometry())
+        self.del_symbol_anim.setEndValue(
+            QtCore.QRect(self.symbols[num].pos().x(), self.symbols[num].pos().y(), self.symbols[num].geometry().width(), 0))
+        self.del_symbol_anim.start()
 
-        self.grid_symbols.removeWidget(self.symbols[num])
-        sip.delete(self.symbols[num])
-        del self.symbols[num]
+        for symbol in self.symbols[num + 1:]:
+            self.rest_symbols = QtCore.QPropertyAnimation(symbol, b'geometry')
+            self.rest_symbols.setDuration(1600)
+            self.rest_symbols.setStartValue(symbol.geometry())
+            self.rest_symbols.setEndValue(
+                QtCore.QRect(symbol.pos().x(), symbol.pos().y() - height - 9,
+                             symbol.geometry().width(), symbol.geometry().height()))
+            self.rest_symbols.start()
+        QtCore.QTimer.singleShot(2000, lambda: self.sub_del_symbol(num))
+
+        #self.grid_symbols.removeWidget(self.symbols[num])
+        #sip.delete(self.symbols[num])
+        #del self.symbols[num]
 
         del self.deleteButtons[num]
 
         self.line_distance.textChanged.emit(self.line_distance.text())
+
+    def sub_del_symbol(self, num):
+        self.grid_symbols.removeWidget(self.symbols[num])
+        sip.delete(self.symbols[num])
+        del self.symbols[num]
 
     def click_add_line(self):
         line = LineEdits(self.width, 28, 1, self.height, 24, 0)

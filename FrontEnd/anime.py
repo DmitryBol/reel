@@ -11,7 +11,7 @@ class Window(QtWidgets.QWidget):
 
         self.fon = QtWidgets.QVBoxLayout()
         self.button = QtWidgets.QPushButton('joske')
-        self.frame = QtWidgets.QFrame()
+        self.frame = QtWidgets.QLabel('A\nB\nV\nG\n')
         self.fon_scroll = QtWidgets.QVBoxLayout()
         self.widget = QtWidgets.QWidget()
         self.scroll = QtWidgets.QScrollArea()
@@ -20,8 +20,6 @@ class Window(QtWidgets.QWidget):
 
     def init_ui(self):
         self.fon.addWidget(self.button)
-        self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.frame.setFrameShape(QtWidgets.QFrame.WinPanel)
         self.fon.addWidget(self.frame)
         for i in range(40):
             label = QtWidgets.QLabel(str(i))
@@ -37,21 +35,25 @@ class Window(QtWidgets.QWidget):
 
     def click(self):
         self.anime_frame = QtCore.QPropertyAnimation(self.frame, b'geometry')
-        self.anime_frame.setDuration(1600)
+        self.anime_frame.setDuration(160)
         self.anime_frame.setStartValue(self.frame.geometry())
         self.anime_frame.setEndValue(
-            QtCore.QRect(self.frame.pos().x(), self.frame.pos().y(), self.frame.width(), self.frame.height() + 200))
+            QtCore.QRect(self.frame.pos().x(), self.frame.pos().y(), self.frame.width(), 0))
         self.anime_frame.start()
 
-        scroll = self.scroll.verticalScrollBar()
+        QtCore.QTimer.singleShot(2000 , self.func)
+
+        '''scroll = self.scroll.verticalScrollBar()
         scroll.setSingleStep(1)
         for i in range(40):
             QtCore.QTimer.singleShot(10*i, lambda: scroll.triggerAction(QtWidgets.QAbstractSlider.SliderSingleStepAdd))
             print(scroll.value())
-        QtCore.QTimer.singleShot(1000, self.func)
+        QtCore.QTimer.singleShot(1000, self.func)'''
 
     def func(self):
-        self.frame.setStyleSheet('QFrame {color: red; background-color: #EB6C6C;}')
+        self.fon.removeWidget(self.frame)
+        sip.delete(self.frame)
+        del self.frame
 
 
 app = QtWidgets.QApplication(sys.argv)
