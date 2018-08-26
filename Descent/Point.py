@@ -62,8 +62,6 @@ class Point:
             obj.base.fill_simple_num_comb(obj.window, obj.line)
             obj.base.fill_scatter_num_comb(obj.window)
 
-        #print('11111: ', obj.count_parameters(base, sd_flag)['base_rtp'])
-
 
         obj.free.reel_generator(self.freeFrequency, obj.window[0], obj.window[1])
         obj.free.fill_frequency(self.freeFrequency)

@@ -14,11 +14,32 @@ def scatter_payment(obj, gametype, matrix):
             for j in range(obj.window[0]):
                 if matrix[i, j] == scat:
                     cnt += 1
+        #print('scat:', scat, 'cnt:', cnt)
         res += gametype.symbol[scat].payment[cnt] * len(obj.line)
+        #print('payment:', gametype.symbol[scat].payment[cnt] * len(obj.line))
+        #print('len:', len(obj.line))
 
         if gametype.symbol[scat].scatter[cnt] > 0:
             for _ in range(gametype.symbol[scat].scatter[cnt]):
                 res += make_spin(obj, 'free')
+    return res
+
+
+def take_win(game, gametype, matrix):
+    res = scatter_payment(game, gametype, matrix)
+
+    for i in range(gametype.window[1]):
+        for j1 in range(gametype.window[0]):
+            if matrix[i, j1] in gametype.ewildlist:
+                for k in range(gametype.window[1]):
+                    matrix[k, j1] = matrix[i, j1]
+
+    for line in game.line:
+        string = np.array([matrix[line[i] - 1, i] for i in range(game.window[0])])
+        width = game.window[0]
+        line_combination = gametype.get_combination(string, width)
+        for comb in line_combination:
+            res += gametype.symbol[comb[0]].payment[comb[1]]
     return res
 
 
@@ -37,13 +58,7 @@ def make_spin(obj, type):
                     for k in range(obj.window[1]):
                         matrix[k, j1] = matrix[i, j1]
 
-        res += scatter_payment(obj, obj.base, matrix)
-        for line in obj.line:
-            string = np.array([matrix[line[i] - 1, i] for i in range(obj.window[0])])
-            width = obj.window[0]
-            line_combination = obj.base.get_combination(string, width)
-            for comb in line_combination:
-                res += obj.base.symbol[comb[0]].payment[comb[1]]
+        res += take_win(game=obj, gametype=obj.base, matrix=matrix)
 
     if type == 'free':
         for i in range(obj.window[0]):
@@ -57,13 +72,7 @@ def make_spin(obj, type):
                     for k in range(obj.window[1]):
                         matrix[k, j1] = matrix[i, j1]
 
-        res += scatter_payment(obj, obj.free, matrix)
-        for line in obj.line:
-            string = np.array([matrix[line[i] - 1, i] for i in range(obj.window[0])])
-            width = obj.window[0]
-            line_combination = obj.free.get_combination(string, width)
-            for comb in line_combination:
-                res += obj.free.symbol[comb[0]].payment[comb[1]] * obj.free_multiplier
+        res += take_win(game=obj, gametype=obj.free, matrix=matrix)
 
     return res
 
@@ -71,9 +80,12 @@ def make_spin(obj, type):
 def make_spins(game, count=100000):
     payments_sum = 0
     payments_square_sum = 0
+    count_with_win = 0
 
     for cnt in range(count):
         spin_result = make_spin(game, 'base')
+        if spin_result > 0:
+            count_with_win += 1
         payments_sum += spin_result / len(game.line)
         payments_square_sum += (spin_result / len(game.line)) ** 2
         if (cnt + 1) % int(count/100) == 0:
@@ -82,7 +94,7 @@ def make_spins(game, count=100000):
     _rtp = payments_sum / count
     _sd = (1 / (count - 1) * (payments_square_sum - 1 / count * payments_sum ** 2)) ** 0.5
 
-    return {'rtp': _rtp, 'sd': _sd}
+    return {'rtp': _rtp, 'sd': _sd, 'wins': count_with_win / count}
 
 
 def main_process(FILES):
@@ -119,3 +131,44 @@ def main_process(FILES):
             print('simulation rtp = ', rtp)
             print('simulation sd = ', sd)
             file.close()
+
+
+def fillMatrix(gametype, matrix, reels, indexes, height):
+    if len(indexes) != len(reels):
+        exit('error')
+    for row_id in range(height):
+        for reel_id in range(len(reels)):
+            matrix[row_id, reel_id] = reels[reel_id][(indexes[reel_id] + row_id) % len(reels[reel_id])]
+
+
+def greedy_simulate(game, gametype, reels):
+    print('\n\nstarted greedy simulation')
+    for reel in reels:
+        if len(reel) > 70:
+            exit('too much symbols for greedy simulation')
+
+    if gametype.window[0] != len(reels):
+        exit('window width != reels cnt')
+
+    total_cnt = 1
+    for reel in reels:
+        total_cnt = total_cnt * len(reel)
+
+    total_sum = 0
+    counter = 0
+    matrix = np.zeros((3, 5))
+    lens = [len(reels[i]) for i in range(len(reels))]
+    for index0 in range(lens[0]):
+        for index1 in range(lens[1]):
+            for index2 in range(lens[2]):
+                for index3 in range(lens[3]):
+                    for index4 in range(lens[4]):
+                        indexes = [index0, index1, index2, index3, index4]
+                        fillMatrix(gametype, matrix, reels, indexes, 3)
+                        win = take_win(game, gametype, matrix)
+                        total_sum += win
+                        counter += 1
+                print('{0}% done, current rtp: {1}%'.format(str(round(counter / total_cnt * 100, 4)),
+                                                            str(round(total_sum / counter / len(game.line) * 100, 2))))
+
+    return {'rtp': total_sum / counter / len(game.line), 'cnt': counter}
