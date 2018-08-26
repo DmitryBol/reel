@@ -5,7 +5,7 @@ import re
 import copy
 
 from FrontEnd import moments
-#import moments
+# import moments
 import FrontEnd.reelWork.reel_generator_alpha as rg
 
 Inf = 0.05
@@ -40,7 +40,7 @@ class Symbol:
         self.payment = [0] * (w + 1)
         for j in range(len(sought(sought(interim, 'symbol')[i], 'payment'))):
             self.payment[sought(sought(interim, 'symbol')[i], 'payment')[j][0]] = \
-            sought(sought(interim, 'symbol')[i], 'payment')[j][1]
+                sought(sought(interim, 'symbol')[i], 'payment')[j][1]
 
         self.substituted_by = []
         self.substituted_by_e = []
@@ -62,7 +62,7 @@ class Symbol:
                     self.scatter = [0] * (w + 1)
                     for j in range(len(sought(sought(sought(interim, 'symbol')[i], type), 'scatter'))):
                         self.scatter[sought(sought(sought(interim, 'symbol')[i], type), 'scatter')[j][0]] = \
-                        sought(sought(sought(interim, 'symbol')[i], type), 'scatter')[j][1]
+                            sought(sought(sought(interim, 'symbol')[i], type), 'scatter')[j][1]
                 else:
                     self.scatter = sought(sought(sought(interim, 'symbol')[i], type), 'scatter')
 
@@ -103,11 +103,13 @@ class Gametype:
 
         self.scatter_num_comb = []
         self.simple_num_comb = []
+        self.simple_num_comb_first = []
 
         self.lines = lines
         # (line_id, symbol_id, count_killed for every reel from 0 to window_width)
         self.count_killed = {line_id: {symbol_id: [0 for _ in range(w)] for symbol_id in range(len(self.symbol))} for
                              line_id in range(len(self.lines))}
+
         self.window = [w, height]
         self.max_border = 0.9 * (1 / height)
 
@@ -130,7 +132,8 @@ class Gametype:
                 self.symbol[i].wild.substitute.append(i)
                 for j in range(len(sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute'))):
                     for k in range(len(sought(interim, 'symbol'))):
-                        if sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute')[j] == sought(sought(interim, 'symbol')[k], 'name'):
+                        if sought(sought(sought(sought(interim, 'symbol')[i], type), 'wild'), 'substitute')[
+                            j] == sought(sought(interim, 'symbol')[k], 'name'):
                             self.symbol[i].wild.substitute.append(k)
             else:
                 for j in range(len(self.symbol)):
@@ -194,9 +197,9 @@ class Gametype:
     def fill_reels(self, in_reels):
         self.reels = copy.deepcopy(in_reels)
 
-    def count_base_RTP_gametype(self, window, lines):
+    def count_base_RTP_gametype(self, window, lines, simple_num_comb):
         s = 0
-        for str_with_count in self.simple_num_comb:
+        for str_with_count in simple_num_comb:
             string = str_with_count[0]
             payment = str_with_count[2]
             s += str_with_count[1] / self.all_combinations2() * payment
@@ -206,7 +209,7 @@ class Gametype:
             counts = scatter_comb[1]
             for cnt in range(window[0] + 1):
                 s += self.symbol[scat].payment[cnt] * len(lines) * counts[
-                        cnt] / self.all_combinations2()
+                    cnt] / self.all_combinations2()
         return s / len(lines)
 
     def check(self, frequency):
@@ -233,6 +236,7 @@ class Gametype:
             return wildInf
         else:
             return Inf
+
 
 # noinspection PyArgumentList
 class Game:
@@ -268,7 +272,7 @@ class Game:
         self.borders = sought(interim, 'border')
         self.weights = sought(interim, 'weight')
 
-        self.parameters = {'base_rtp': -1, 'freemean': -1, 'rtp': -1,  'sdnew': -1, 'hitrate': -1}
+        self.parameters = {'base_rtp': -1, 'freemean': -1, 'rtp': -1, 'sdnew': -1, 'hitrate': -1}
 
         self.base.wildlists()
         self.base.scatterlists()
@@ -304,15 +308,19 @@ class Game:
             self.line.pop()
 
     # noinspection PyPep8Naming,SpellCheckingInspection
-    def count_base_RTP2(self, game):
+    def count_base_RTP2(self, game, lines):
+        simple_num_comb = [self.base.simple_num_comb, self.free.simple_num_comb]
+        if len(lines) == 1:
+            simple_num_comb = [self.base.simple_num_comb_first, self.free.simple_num_comb_first]
+
         if game == 'base':
-            return self.base.count_base_RTP_gametype(self.window, self.line)
+            return self.base.count_base_RTP_gametype(self.window, lines, simple_num_comb[0])
         elif game == 'free':
-            return self.free.count_base_RTP_gametype(self.window, self.line)
+            return self.free.count_base_RTP_gametype(self.window, lines, simple_num_comb[1])
 
     # noinspection SpellCheckingInspection
-    def freemean2(self):
-        s = self.count_base_RTP2('free')
+    def freemean2(self, lines):
+        s = self.count_base_RTP2('free', lines)
         v = 0
         for scatter_comb in self.base.scatter_num_comb:
             scat = scatter_comb[0]
@@ -350,7 +358,7 @@ class Game:
         Ezeta2 = (Efree_xi2 + 2 * Ezeta * Efree_xieta) / (1 - Efree_eta2)
         l = len(self.line)
         epta = (Exi2 + 2 * Ezeta * Exieta + Eeta * (Ezeta2 - Ezeta ** 2) + Eeta2 * (Ezeta ** 2)) / l
-        s = np.sqrt((epta - (RTP ** 2)) * (l + 1) / (2*l))
+        s = np.sqrt((epta - (RTP ** 2)) * (l + 1) / (2 * l))
         return s
 
     # noinspection PyPep8Naming
@@ -358,7 +366,7 @@ class Game:
         s = 0
         for str_with_count in self.base.simple_num_comb:
             string = str_with_count[0]
-            #payment = self.base.get_simple_payment(string)
+            # payment = self.base.get_simple_payment(string)
             payment = str_with_count[2]
             s += str_with_count[1] / self.base.all_combinations2() * payment ** 2
 
@@ -383,17 +391,19 @@ class Game:
         else:
             return 0
 
-    #payment = base_payment + xi + eta * zeta
-    #zeta = bonus_payment + xi_free + eta_free * zeta
-    def count_volatility_alpha(self, FreeMean):
+    # payment = base_payment + xi + eta * zeta
+    # zeta = bonus_payment + xi_free + eta_free * zeta
+    def count_volatility_alpha(self, FreeMean, lines, simple_num_comb):
         res = 0
         s2 = 0
         s = 0
-        for str_with_count in self.base.simple_num_comb:
+        base_simple_num_comb = simple_num_comb[0]
+        free_simple_num_comb = simple_num_comb[1]
+        for str_with_count in base_simple_num_comb:
             payment = str_with_count[2]
-            s2 += str_with_count[1] / self.base.all_combinations2() * payment**2
+            s2 += str_with_count[1] / self.base.all_combinations2() * payment ** 2
             s += str_with_count[1] / self.base.all_combinations2() * payment
-        res += s2 - s**2
+        res += s2 - s ** 2
 
         xi = 0
         xi2 = 0
@@ -401,10 +411,10 @@ class Game:
             scat = scatter_comb[0]
             counts = scatter_comb[1]
             for cnt in range(self.window[0] + 1):
-                payment = self.base.symbol[scat].payment[cnt] * len(self.line)
+                payment = self.base.symbol[scat].payment[cnt] * len(lines)
                 xi += payment / self.base.all_combinations2() * counts[cnt]
-                xi2 += payment**2 / self.base.all_combinations2() * counts[cnt]
-        res += xi2 - xi**2
+                xi2 += payment ** 2 / self.base.all_combinations2() * counts[cnt]
+        res += xi2 - xi ** 2
 
         xi_eta = 0
         eta = 0
@@ -414,12 +424,12 @@ class Game:
             counts = scatter_comb[1]
             for cnt in range(self.window[0] + 1):
                 eta += self.base.symbol[scat].scatter[cnt] * counts[cnt] / self.base.all_combinations2()
-                eta2 += self.base.symbol[scat].scatter[cnt]**2 * counts[cnt] / self.base.all_combinations2()
-                xi_eta += self.base.symbol[scat].payment[cnt] * len(self.line) * self.base.symbol[scat].scatter[cnt] \
+                eta2 += self.base.symbol[scat].scatter[cnt] ** 2 * counts[cnt] / self.base.all_combinations2()
+                xi_eta += self.base.symbol[scat].payment[cnt] * len(lines) * self.base.symbol[scat].scatter[cnt] \
                           * counts[cnt] / self.base.all_combinations2()
         res += 2 * FreeMean * (xi_eta - xi * eta)
 
-        res -= eta**2 * FreeMean**2
+        res -= eta ** 2 * FreeMean ** 2
 
         eta_free2 = 0
         xi_free2 = 0
@@ -429,46 +439,53 @@ class Game:
             scat = scatter_comb[0]
             counts = scatter_comb[1]
             for cnt in range(self.window[0] + 1):
-                payment = self.free.symbol[scat].payment[cnt] * len(self.line)
-                eta_free2 += self.free.symbol[scat].scatter[cnt]**2 * counts[cnt] / self.free.all_combinations2()
-                xi_free2 += payment**2 / self.free.all_combinations2() * counts[cnt]
+                payment = self.free.symbol[scat].payment[cnt] * len(lines)
+                eta_free2 += self.free.symbol[scat].scatter[cnt] ** 2 * counts[cnt] / self.free.all_combinations2()
+                xi_free2 += payment ** 2 / self.free.all_combinations2() * counts[cnt]
                 xi_free += payment / self.free.all_combinations2() * counts[cnt]
                 eta_free += self.free.symbol[scat].scatter[cnt] * counts[cnt] / self.free.all_combinations2()
         s_free = 0
         s_free2 = 0
-        for str_with_count in self.free.simple_num_comb:
+        for str_with_count in free_simple_num_comb:
             payment = str_with_count[2]
-            s_free2 += str_with_count[1] / self.free.all_combinations2() * payment**2
+            s_free2 += str_with_count[1] / self.free.all_combinations2() * payment ** 2
             s_free += str_with_count[1] / self.free.all_combinations2() * payment
         if eta_free >= 1:
             print('Many than 1 retrigger free spin per free spin in average')
             return 0
-        zeta2 = 1 / (1 - 2*eta_free + eta_free2) * (s_free2 + 2*s_free*xi_free + xi_free2)
+        zeta2 = 1 / (1 - 2 * eta_free + eta_free2) * (s_free2 + 2 * s_free * xi_free + xi_free2)
 
         res += eta2 * zeta2
-        return res**0.5 / len(self.line)
+        return res ** 0.5 / len(lines)
 
     def count_parameters(self, base=True, sd_flag=False):
         if base:
             base_rtp = self.count_base_RTP2('base')
             hitrate = self.count_hitrate2()
-            self.parameters = {'base_rtp': base_rtp, 'freemean': -1, 'rtp': -1,  'sdnew': -1, 'hitrate': hitrate}
+            self.parameters = {'base_rtp': base_rtp, 'freemean': -1, 'rtp': -1, 'sdnew': -1, 'hitrate': hitrate}
 
         elif not sd_flag:
             base_rtp = self.count_base_RTP2('base')
             freemean = self.freemean2()
             rtp = self.count_RTP2(freemean, base_rtp)
             hitrate = self.count_hitrate2()
-            self.parameters = {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp,  'sdnew': -1, 'hitrate': hitrate}
+            self.parameters = {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sdnew': -1, 'hitrate': hitrate}
 
         else:
-            base_rtp = self.count_base_RTP2('base')
-            freemean = self.freemean2()
+            base_rtp = self.count_base_RTP2('base', self.line)
+            freemean = self.freemean2(self.line)
             rtp = self.count_RTP2(freemean, base_rtp)
-            sdalpha = self.count_volatility_alpha(freemean)
+            sdalpha = self.count_volatility_alpha(freemean, self.line, [self.base.simple_num_comb, self.free.simple_num_comb])
             hitrate = self.count_hitrate2()
-            self.parameters = {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp,  'sdnew': sdalpha, 'hitrate': hitrate}
+
+            freemean_first = self.freemean2(self.line[0:1])
+            sdalpha_first = self.count_volatility_alpha(freemean_first, self.line[0:1], [self.base.simple_num_comb_first, self.free.simple_num_comb_first])
+
+            #print('fm: ', freemean, 'fm1: ', freemean_first)
+
+            self.parameters = {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sdold': sdalpha,
+                               'hitrate': hitrate, 'sdnew': sdalpha_first}
 
         return self.parameters
 
-        #return {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sd': sd, 'sdnew': sdnew, 'sdalpha': sdalpha, 'hitrate': hitrate}
+        # return {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sd': sd, 'sdnew': sdnew, 'sdalpha': sdalpha, 'hitrate': hitrate}

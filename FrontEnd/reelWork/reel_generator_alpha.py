@@ -283,6 +283,7 @@ def fill_simple_num_comb(self, window, lines):
         count = 0
         for line in lines:
             count += count_num_comb(self, string, line, window)
+        self.simple_num_comb_first[i][1] = count_num_comb(self, string, lines[0], window)
         self.simple_num_comb[i][1] = count
 
 
@@ -322,3 +323,4 @@ def create_simple_num_comb(self, window, lines):
     for string in all_strings:
         result.append([string, 0, self.get_simple_payment(string)])
     self.simple_num_comb = copy.deepcopy(result)
+    self.simple_num_comb_first = copy.deepcopy(result)
