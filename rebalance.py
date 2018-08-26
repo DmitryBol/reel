@@ -5,7 +5,7 @@ from Descent.Point import Point
 from Descent.Split import Split
 
 
-Inf = 0.05
+Inf = 0.025
 wildInf = 0.025
 ewildInf = 0.015
 scatterInf = 0.005
@@ -57,8 +57,8 @@ def Chess(frequency, i, j, game, k = 1, base=True):
         #проверка на то, что символы можно положить
         while tmp_k_2 > 0:
 
-            statement2 = new_frequency[reelID][destination] + k > 0 and reelID not in gametype.symbol[destination].position
-            statement6 = new_frequency[reelID][destination] + k > gametype.max_border*totals[reelID]
+            statement2 = new_frequency[reelID][destination] + tmp_k_2 > 0 and reelID not in gametype.symbol[destination].position
+            statement6 = new_frequency[reelID][destination] + tmp_k_2 > gametype.max_border*totals[reelID]
             if statement2 or statement6:
                 tmp_k_2 -= 1
                 continue
@@ -66,8 +66,8 @@ def Chess(frequency, i, j, game, k = 1, base=True):
                 break
 
         #если можно, то делаем
-        new_frequency[reelID][source] -= tmp_k_1
-        new_frequency[reelID][destination] += tmp_k_2
+        new_frequency[reelID][source] -= min(tmp_k_1, tmp_k_2)
+        new_frequency[reelID][destination] += min(tmp_k_1, tmp_k_2)
     if new_frequency == frequency:
         print("CAN'T MAKE CHESS ORDER WITH ", i, " AND ", j)
         return None
@@ -78,11 +78,8 @@ def Chess(frequency, i, j, game, k = 1, base=True):
 
 
 
-def rebalance(start_point, game, params):
-
+def rebalance(start_point, game,  gametype, params):
     print('REBALANCE')
-
-
     base_rtp = params['base_rtp']
     rtp = params['rtp']
     sdnew = params['sdnew']
@@ -100,27 +97,44 @@ def rebalance(start_point, game, params):
     print('value: ', start_point.value)
     print(start_point.baseFrequency)
 
+    prev_val = abs(start_point.sdnew - sdnew)/err_sdnew
+    new_val = copy.deepcopy(prev_val)
+
 
     blocked_scatters = []
-    for scatter_id in game.base.scatterlist:
-        if max(game.base.symbol[scatter_id].scatter) > 0:
-            blocked_scatters.append(scatter_id)
+    if gametype.name == 'base':
+        for scatter_id in gametype.scatterlist:
+            if max(gametype.symbol[scatter_id].scatter) > 0:
+                blocked_scatters.append(scatter_id)
     sortedSymbols = []
     val = []
-    for i in range(len(game.base.symbol)):
-        if i not in blocked_scatters:
+    for i in range(len(gametype.symbol)):
+        if i not in blocked_scatters and i not in gametype.wildlist and i not in gametype.ewildlist:
             sortedSymbols.append(i)
-            val.append(game.base.symbol[i].payment[game.window[0]])
+            val.append(gametype.symbol[i].payment[game.window[0]])
     double_bouble(val, sortedSymbols)
     print('sorted = ', sortedSymbols)
     SD = [0, 0, 0]
     for i in range(len(sortedSymbols) - 1):
         for j in range(i+1, len(sortedSymbols)):
-            new_base_frequency = Chess(start_point.baseFrequency, sortedSymbols[i],  sortedSymbols[j], game, k=12)
-            if new_base_frequency == None:
-                continue
+            if gametype.name == 'base':
+                list_k = [sum(start_point.baseFrequency[_]) for _ in range(len(start_point.baseFrequency))]
+                max_k = max(list_k)
+                new_frequency = Chess(start_point.baseFrequency, sortedSymbols[i],  sortedSymbols[j], game, k=max_k)
             else:
-                result_point = Point(new_base_frequency, start_point.freeFrequency, game)
+                list_k = [sum(start_point.freeFrequency[_]) for _ in range(len(start_point.freeFrequency))]
+                max_k = max(list_k)
+                new_frequency = Chess(start_point.freeFrequency, sortedSymbols[i],  sortedSymbols[j], game, k=max_k , base=False)
+
+            if new_frequency == None:
+                continue
+
+            else:
+                if gametype.name == 'base':
+                    result_point = Point(new_frequency, start_point.freeFrequency, game)
+                elif gametype.name =='free':
+                    result_point = Point(start_point.baseFrequency, new_frequency, game)
+
                 result_point.fillPoint(game, base_rtp,rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=True, sd_flag=False)
                 result_point.fillPoint(game, base_rtp,rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=True)
                 print('trying to change in ', sortedSymbols[i], ' and ', sortedSymbols[j], ' positions')
@@ -129,9 +143,14 @@ def rebalance(start_point, game, params):
                 print('sdnew: ', result_point.sdnew)
                 print('hitrate: ', result_point.hitrate)
                 print('val: ', result_point.value)
-                print(result_point.baseFrequency)
+                if gametype.name == 'base':
+                    print('total = ', sum(result_point.baseFrequency[0]), 'base ', result_point.baseFrequency)
+                elif gametype.name == 'free':
+                    print('total = ', sum(result_point.freeFrequency[0]), 'free ', result_point.freeFrequency)
                 print('\n')
-                if result_point.sdnew > SD[0]:
+                new_val = abs(result_point.sdnew - sdnew)/err_sdnew
+                if new_val < prev_val:
+                    prev_val = new_val
                     SD = [result_point.sdnew, result_point.base_rtp, result_point.rtp]
 
     print('BEST SD IS ', SD[0])

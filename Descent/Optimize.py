@@ -146,8 +146,9 @@ def initialFreeDistributions(obj, baseFrequency, params):
 
     return initial
 
+#параметр rebalance отвечает за сбаланировку групп псоле перекидываний элементов
 
-def Descent_base(params, file_name):
+def Descent_base(params, file_name, rebalance=True):
 
     base_rtp = params['base_rtp']
     rtp = params['rtp']
@@ -214,7 +215,7 @@ def Descent_base(params, file_name):
                                len(game.base.scatterlist) - len(blocked_scatters) + 1
             max_number_of_groups = len(game.base.symbol) - len(blocked_scatters)
             while number_of_groups <= max_number_of_groups:
-                temp_group = Group(game, 'base', root, number_of_groups, params)
+                temp_group = Group(game, 'base', root, number_of_groups, params, rebalance=rebalance)
                 print('группы ', temp_group.split.groups)
 
                 temp_group.printGroup()
@@ -258,7 +259,7 @@ def Descent_base(params, file_name):
     return [findedMin, game]
 
 
-def Descent_free(params, start_point, game):
+def Descent_free(params, start_point, game, rebalance=True):
 
     base_rtp = params['base_rtp']
     rtp = params['rtp']
@@ -301,7 +302,7 @@ def Descent_free(params, start_point, game):
                                len(game.free.scatterlist) + 1
             max_number_of_groups = len(game.base.symbol)
             while number_of_groups <= max_number_of_groups:
-                temp_group = Group(game, 'free', root, number_of_groups, params)
+                temp_group = Group(game, 'free', root, number_of_groups, params, rebalance=rebalance)
                 print('группы ', temp_group.split.groups)
 
                 temp_group.printGroup('free')

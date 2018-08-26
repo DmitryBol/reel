@@ -162,7 +162,8 @@ class Split:
         else:
             return None
     '''
-    def groupTransfer(self, gametype, sourceGroup, destinationGroup):
+
+    def groupTransfer(self, gametype, sourceGroup, destinationGroup, rebalance=True):
 
         new_frequency = copy.deepcopy(self.frequency)
 
@@ -210,7 +211,8 @@ class Split:
         if max(moving_count) == 0:
             return None
         new_split = Split(gametype, self.number, new_frequency)
-        new_split.balance(gametype)
+        if rebalance:
+            new_split.balance(gametype)
         if gametype.check(new_split.frequency):
             #print('new_split: ', new_split.frequency, new_split.groups)
             return new_split
