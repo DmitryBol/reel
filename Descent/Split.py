@@ -5,6 +5,7 @@ import simple_functions_for_fit as sm
 import copy
 import numpy as np
 from simple_functions_for_fit import notice_positions
+from random import shuffle
 
 Inf = 0.05
 wildInf = 0.025
@@ -204,6 +205,8 @@ class Split:
 
             moving_count.append(min(len(destination_position), len(source_position)))
 
+            shuffle(source_position)
+            shuffle(destination_position)
             for i in range(moving_count[reel_id]):
                 new_frequency[reel_id][source_position[i]] -= 1
                 new_frequency[reel_id][destination_position[i]] += 1
