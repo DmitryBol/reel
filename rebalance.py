@@ -31,32 +31,43 @@ def Chess(frequency, i, j, game, k = 1, base=True):
         else:
             source = j
             destination = i
+        tmp_k_1 = copy.deepcopy(k)
+        tmp_k_2 = copy.deepcopy(k)
         #проверка на то, что символы можно забрать
-        statement1 =  new_frequency[reelID][source] - k < 0
-        statement3 = False
-        statement4 = False
-        statement5 = False
-        statement7 = False
-        if source in gametype.wildlist:
-            statement3 = new_frequency[reelID][source] - k < wildInf*totals[reelID]
-        if source in gametype.ewildlist:
-            statement4 = new_frequency[reelID][source] - k < ewildInf*totals[reelID]
-        if source not in gametype.wildlist and source not in gametype.ewildlist and source not in gametype.scatterlist:
-            statement5 = new_frequency[reelID][source] - k < Inf*totals[reelID]
-        if source in gametype.scatterlist:
-            statement7 = new_frequency[reelID][source] - k < scatterInf*totals[reelID]
-        if statement1 or statement3 or statement4 or statement5 or statement7:
-            continue
+        while tmp_k_1 > 0:
+            statement1 =  new_frequency[reelID][source] - tmp_k_1 < 0
+            statement3 = False
+            statement4 = False
+            statement5 = False
+            statement7 = False
+            if source in gametype.wildlist:
+                statement3 = new_frequency[reelID][source] - tmp_k_1 < wildInf*totals[reelID]
+            if source in gametype.ewildlist:
+                statement4 = new_frequency[reelID][source] - tmp_k_1 < ewildInf*totals[reelID]
+            if source not in gametype.wildlist and source not in gametype.ewildlist and source not in gametype.scatterlist:
+                statement5 = new_frequency[reelID][source] - tmp_k_1 < Inf*totals[reelID]
+            if source in gametype.scatterlist:
+                statement7 = new_frequency[reelID][source] - tmp_k_1 < scatterInf*totals[reelID]
+            if statement1 or statement3 or statement4 or statement5 or statement7:
+                tmp_k_1 -= 1
+                continue
+            else:
+                break
 
         #проверка на то, что символы можно положить
-        statement2 = new_frequency[reelID][destination] + k > 0 and reelID not in gametype.symbol[destination].position
-        statement6 = new_frequency[reelID][destination] + k > gametype.max_border*totals[reelID]
-        if statement2 or statement6:
-            continue
+        while tmp_k_2 > 0:
+
+            statement2 = new_frequency[reelID][destination] + k > 0 and reelID not in gametype.symbol[destination].position
+            statement6 = new_frequency[reelID][destination] + k > gametype.max_border*totals[reelID]
+            if statement2 or statement6:
+                tmp_k_2 -= 1
+                continue
+            else:
+                break
 
         #если можно, то делаем
-        new_frequency[reelID][source] -= k
-        new_frequency[reelID][destination] += k
+        new_frequency[reelID][source] -= tmp_k_1
+        new_frequency[reelID][destination] += tmp_k_2
     if new_frequency == frequency:
         print("CAN'T MAKE CHESS ORDER WITH ", i, " AND ", j)
         return None
@@ -112,13 +123,14 @@ def rebalance(start_point, game, params):
                 result_point = Point(new_base_frequency, start_point.freeFrequency, game)
                 result_point.fillPoint(game, base_rtp,rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=True, sd_flag=False)
                 result_point.fillPoint(game, base_rtp,rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=True)
-                print('result point')
+                print('trying to change in ', sortedSymbols[i], ' and ', sortedSymbols[j], ' positions')
                 print('base rtp: ', result_point.base_rtp)
                 print('rtp: ', result_point.rtp)
                 print('sdnew: ', result_point.sdnew)
                 print('hitrate: ', result_point.hitrate)
                 print('val: ', result_point.value)
                 print(result_point.baseFrequency)
+                print('\n')
                 if result_point.sdnew > SD[0]:
                     SD = [result_point.sdnew, result_point.base_rtp, result_point.rtp]
 
