@@ -460,13 +460,13 @@ class Game:
 
     def count_parameters(self, base=True, sd_flag=False):
         if base:
-            base_rtp = self.count_base_RTP2('base')
+            base_rtp = self.count_base_RTP2('base', self.line)
             hitrate = self.count_hitrate2()
             self.parameters = {'base_rtp': base_rtp, 'freemean': -1, 'rtp': -1, 'sdnew': -1, 'hitrate': hitrate}
 
         elif not sd_flag:
-            base_rtp = self.count_base_RTP2('base')
-            freemean = self.freemean2()
+            base_rtp = self.count_base_RTP2('base', self.line)
+            freemean = self.freemean2(self.line)
             rtp = self.count_RTP2(freemean, base_rtp)
             hitrate = self.count_hitrate2()
             self.parameters = {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sdnew': -1, 'hitrate': hitrate}
@@ -480,8 +480,6 @@ class Game:
 
             freemean_first = self.freemean2(self.line[0:1])
             sdalpha_first = self.count_volatility_alpha(freemean_first, self.line[0:1], [self.base.simple_num_comb_first, self.free.simple_num_comb_first])
-
-            #print('fm: ', freemean, 'fm1: ', freemean_first)
 
             self.parameters = {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sdold': sdalpha,
                                'hitrate': hitrate, 'sdnew': sdalpha_first}
