@@ -148,7 +148,7 @@ def initialFreeDistributions(obj, baseFrequency, params):
 
 #параметр rebalance отвечает за сбаланировку групп псоле перекидываний элементов
 
-def Descent_base(params, file_name, rebalance=True):
+def Descent_base(params, file_name, rebalance=True, start_point=None):
 
     base_rtp = params['base_rtp']
     rtp = params['rtp']
@@ -183,7 +183,11 @@ def Descent_base(params, file_name, rebalance=True):
     game.free.create_simple_num_comb(game.window, game.line)
     print('created_num_comb')
 
-    roots = initialDistributions(game, out, params)
+    roots = []
+    if start_point == None:
+        roots = initialDistributions(game, out, params)
+    else:
+        roots.append(start_point)
     findedMin = Point(frequency_base=roots[0].baseFrequency, frequency_free=roots[0].freeFrequency, game=game)
     print('INITIAL POINTS, THEIR DISTRIBUTIONS, VALUES AND PARAMETRES:')
 

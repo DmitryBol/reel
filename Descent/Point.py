@@ -23,6 +23,9 @@ class Point:
         self.hitrate = '-1'
         self.value = '-1'
 
+    def getValue(self):
+        return self.value
+
     def check(self, game):
        return game.base.check(self.baseFrequency) and game.free.check(self.freeFrequency)
 
