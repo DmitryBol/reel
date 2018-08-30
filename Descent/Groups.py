@@ -14,7 +14,7 @@ ewildInf = 0.015
 
 
 class Group:
-    def __init__(self, game, type, root, number, params):
+    def __init__(self, game, type, root, number, params, rebalance=True):
         self.root = root
         base_rtp = params['base_rtp']
         rtp = params['rtp']
@@ -31,14 +31,14 @@ class Group:
             self.points = []
             for i in range(number - 1):
                 for j in range(i + 1, number):
-                    group1 = self.split.groupTransfer(gametype, i, j)
+                    group1 = self.split.groupTransfer(gametype, i, j, rebalance=rebalance)
                     if group1:
                         new_point = Point(group1.frequency, root.freeFrequency, game)
                         new_point.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
                         self.points.append(
                             new_point
                         )
-                    group2 = self.split.groupTransfer(gametype, j, i)
+                    group2 = self.split.groupTransfer(gametype, j, i, rebalance=rebalance)
                     if group2:
                         new_point = Point(group2.frequency, root.freeFrequency, game)
                         new_point.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
@@ -53,12 +53,12 @@ class Group:
             self.points = []
             for i in range(number - 1):
                 for j in range(i + 1, number):
-                    group1 = self.split.groupTransfer(gametype, i, j)
+                    group1 = self.split.groupTransfer(gametype, i, j, rebalance=rebalance)
                     if group1:
                         new_point = Point(root.baseFrequency, group1.frequency, game)
                         new_point.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=False)
                         self.points.append(new_point)
-                    group2 = self.split.groupTransfer(gametype, j, i)
+                    group2 = self.split.groupTransfer(gametype, j, i, rebalance=rebalance)
                     if group2:
                         new_point = Point(root.baseFrequency, group2.frequency, game)
                         new_point.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=False)

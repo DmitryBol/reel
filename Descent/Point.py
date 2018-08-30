@@ -23,6 +23,9 @@ class Point:
         self.hitrate = '-1'
         self.value = '-1'
 
+    def getValue(self):
+        return self.value
+
     def check(self, game):
        return game.base.check(self.baseFrequency) and game.free.check(self.freeFrequency)
 
@@ -61,8 +64,6 @@ class Point:
 
             obj.base.fill_simple_num_comb(obj.window, obj.line)
             obj.base.fill_scatter_num_comb(obj.window)
-
-        #print('11111: ', obj.count_parameters(base, sd_flag)['base_rtp'])
 
 
         obj.free.reel_generator(self.freeFrequency, obj.window[0], obj.window[1])
