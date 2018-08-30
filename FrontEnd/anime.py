@@ -4,9 +4,16 @@ import json
 import ntpath
 from PyQt5 import QtWidgets, QtGui, QtCore, sip
 
+# counts
 count = 0
 count_lines = 0
 count_tabs = 1
+
+# colors
+default_color = QtGui.QColor(220, 220, 220)
+wild_color = QtGui.QColor(255, 229, 100)
+scatter_color = QtGui.QColor(120, 237, 255)
+wildnscatter_color = QtGui.QColor(221, 172, 225)
 
 
 def path_leaf(path):
@@ -72,6 +79,31 @@ class Aesthetic(QtWidgets.QWidget):
         fon.addWidget(obj)
         fon.addStretch(40)
         self.setLayout(fon)
+
+
+class LabeledLine(QtWidgets.QWidget):
+    def __init__(self, name, color):
+        super(LabeledLine, self).__init__()
+
+        self.fon = QtWidgets.QHBoxLayout()
+        self.label = QtWidgets.QLabel(str(name))
+        self.line = QtWidgets.QLineEdit()
+
+        self.init_ui(color)
+
+    def init_ui(self, color):
+        self.fon.setSpacing(0)
+        self.fon.addWidget(self.label)
+        self.fon.addWidget(self.line)
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+
+        self.label.setStyleSheet('QLabel {border-left: 1px solid black; border-top: 1px solid black; border-right: none; border-bottom: 1px solid black}')
+        self.label.setAutoFillBackground(True)
+        p = self.label.palette()
+        p.setColor(self.label.backgroundRole(), color)
+        self.label.setPalette(p)
+
+        self.setLayout(self.fon)
 
 
 class LineEdits(QtWidgets.QWidget):
@@ -308,8 +340,7 @@ class Gametype(QtWidgets.QWidget):
         self.fon.addWidget(Aesthetic(self.checkbox_wild), 5, 1)
         self.checkbox_wild.stateChanged.connect(self.wild_check)
 
-        #self.frame.setLineWidth(2)
-        self.frame.setFrameShape(QtWidgets.QFrame.WinPanel)
+        self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.frame.setLayout(self.fon)
 
@@ -347,22 +378,23 @@ class Gametype(QtWidgets.QWidget):
             self.wild = None
 
     def change_colour(self):
+        global default_color, wild_color, scatter_color, wildnscatter_color
         self.frame.setAutoFillBackground(True)
         p = self.frame.palette()
         if self.checkbox_wild.checkState() == QtCore.Qt.Checked and self.checkbox_scatter.checkState() == QtCore.Qt.Checked:
-            p.setColor(self.frame.backgroundRole(), QtGui.QColor(221, 172, 225))
+            p.setColor(self.frame.backgroundRole(), wildnscatter_color)
             self.frame.setPalette(p)
 
         elif self.checkbox_wild.checkState() == QtCore.Qt.Checked:
-            p.setColor(self.frame.backgroundRole(), QtGui.QColor(255, 229, 100))
+            p.setColor(self.frame.backgroundRole(), wild_color)
             self.frame.setPalette(p)
 
         elif self.checkbox_scatter.checkState() == QtCore.Qt.Checked:
-            p.setColor(self.frame.backgroundRole(), QtGui.QColor(120, 237, 255))
+            p.setColor(self.frame.backgroundRole(), scatter_color)
             self.frame.setPalette(p)
 
         else:
-            p.setColor(self.frame.backgroundRole(), QtGui.QColor(220, 220, 220))
+            p.setColor(self.frame.backgroundRole(), default_color)
             self.frame.setPalette(p)
 
     def collect_info(self):
@@ -531,6 +563,22 @@ class Window(QtWidgets.QWidget):
         self.widget = QtWidgets.QWidget()
         self.fon = QtWidgets.QGridLayout()
 
+        self.box_rules = QtWidgets.QGroupBox('Rules')
+        self.fon_rules = QtWidgets.QGridLayout()
+
+        self.box_param = QtWidgets.QGroupBox('Parameters')
+        self.fon_param = QtWidgets.QGridLayout()
+
+        self.box_frequency = QtWidgets.QGroupBox('Frequency')
+        self.fon_frequency = QtWidgets.QGridLayout()
+
+        self.button_switch = QtWidgets.QPushButton()
+        self.button_switch.setIcon(QtGui.QIcon('icons/switch.png'))
+        self.button_switch.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        self.button_switch.setFixedWidth(28)
+
+        self.param_mode = True
+
         self.label_window = QtWidgets.QLabel('window')
         self.line_width = QtWidgets.QLineEdit('5')
         self.line_height = QtWidgets.QLineEdit('3')
@@ -571,7 +619,7 @@ class Window(QtWidgets.QWidget):
         self.line_rtp = QtWidgets.QLineEdit()
         self.line_rtp_error = QtWidgets.QLineEdit()
 
-        self.label_volatility = QtWidgets.QLabel('volatility')
+        self.label_volatility = QtWidgets.QLabel('volatility        ')
         self.line_volatility = QtWidgets.QLineEdit()
         self.line_volatility_error = QtWidgets.QLineEdit()
 
@@ -583,21 +631,28 @@ class Window(QtWidgets.QWidget):
         self.line_baseRTP = QtWidgets.QLineEdit()
         self.line_baseRTP_error = QtWidgets.QLineEdit()
 
+        self.frequency = []
+
         self.init_ui()
 
     def init_ui(self):
-        self.fon.setRowStretch(2, 40)
-        self.fon.setRowStretch(4, 40)
+        #self.fon.setColumnStretch(0, 4)
+        #self.fon.setColumnStretch(1, 4)
+        self.fon.setRowStretch(0, 4)
 
-        self.fon.setColumnStretch(4, 4)
-        self.fon.setColumnStretch(5, 4)
-        # bylo 400
+        self.fon_rules.setRowStretch(2, 40)
+        self.fon_rules.setRowStretch(4, 40)
 
-        self.fon.addWidget(self.label_window, 0, 0)
+        self.fon_rules.setColumnStretch(4, 4)
+        self.fon_rules.setColumnStretch(5, 4)
 
-        self.fon.addWidget(self.line_width, 0, 1)
+        self.fon_param.setColumnStretch(3, 4)
+
+        self.fon_rules.addWidget(self.label_window, 0, 0)
+
+        self.fon_rules.addWidget(self.line_width, 0, 1)
         self.line_width.setFixedWidth(80)
-        self.fon.addWidget(self.line_height, 0, 2)
+        self.fon_rules.addWidget(self.line_height, 0, 2)
         self.line_height.setFixedWidth(80)
 
         self.line_width.textChanged.connect(self.width_changed)
@@ -608,8 +663,8 @@ class Window(QtWidgets.QWidget):
         # symbols
         self.grid_symbols.setHorizontalSpacing(0)
 
-        self.fon.addWidget(self.label_symbol, 1, 0)
-        self.fon.addWidget(self.frame_symbols, 1, 1, 2, 4)
+        self.fon_rules.addWidget(self.label_symbol, 1, 0)
+        self.fon_rules.addWidget(self.frame_symbols, 1, 1, 2, 4)
         self.frame_symbols.setLayout(self.fon_symbols)
         self.frame_symbols.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_symbols.setFrameShadow(QtWidgets.QFrame.Plain)
@@ -619,13 +674,13 @@ class Window(QtWidgets.QWidget):
         self.fon_symbols.setStretchFactor(self.grid_symbols, 40)
         self.fon_symbols.addWidget(self.add_symbol)
 
-        self.add_symbol.clicked.connect(self.click_add_symbol)
+        self.add_symbol.clicked.connect(lambda: self.click_add_symbol())
 
         # lines
         self.grid_lines.setHorizontalSpacing(0)
 
-        self.fon.addWidget(self.label_lines, 3, 0)
-        self.fon.addWidget(self.frame_lines, 3, 1, 2, 3)
+        self.fon_rules.addWidget(self.label_lines, 3, 0)
+        self.fon_rules.addWidget(self.frame_lines, 3, 1, 2, 3)
         self.frame_lines.setLayout(self.fon_lines)
         self.frame_lines.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_lines.setFrameShadow(QtWidgets.QFrame.Plain)
@@ -636,45 +691,56 @@ class Window(QtWidgets.QWidget):
 
         self.add_line.clicked.connect(self.click_add_line)
 
-        self.fon.addWidget(self.label_freemultiplier, 5, 0)
-        self.fon.addWidget(self.line_freemultiplier, 5, 1, 1, 2)
+        self.fon_rules.addWidget(self.label_freemultiplier, 5, 0)
+        self.fon_rules.addWidget(self.line_freemultiplier, 5, 1, 1, 2)
         self.line_freemultiplier.textChanged.connect(lambda: self.float_validate(0, sys.maxsize))
 
-        self.fon.addWidget(self.label_distance, 6, 0)
-        self.fon.addWidget(self.line_distance, 6, 1, 1, 2)
+        self.fon_rules.addWidget(self.label_distance, 6, 0)
+        self.fon_rules.addWidget(self.line_distance, 6, 1, 1, 2)
         self.line_distance.textChanged.connect(lambda: self.int_validate(0, len(self.symbols)))
 
-        self.fon.addWidget(self.label_rtp, 7, 0)
-        self.fon.addWidget(self.line_rtp, 7, 1)
+        self.fon_param.addWidget(self.label_rtp, 7, 0)
+        self.fon_param.addWidget(self.line_rtp, 7, 1)
         self.line_rtp.setFixedWidth(80)
-        self.fon.addWidget(self.line_rtp_error, 7, 2)
+        self.fon_param.addWidget(self.line_rtp_error, 7, 2)
         self.line_rtp_error.setFixedWidth(80)
         self.line_rtp.textChanged.connect(lambda: self.float_validate(0, sys.maxsize))
         self.line_rtp_error.textChanged.connect(lambda: self.float_validate(0, sys.maxsize))
 
-        self.fon.addWidget(self.label_volatility, 8, 0)
-        self.fon.addWidget(self.line_volatility, 8, 1)
+        self.fon_param.addWidget(self.label_volatility, 8, 0)
+        self.fon_param.addWidget(self.line_volatility, 8, 1)
         self.line_volatility.setFixedWidth(80)
-        self.fon.addWidget(self.line_volatility_error, 8, 2)
+        self.fon_param.addWidget(self.line_volatility_error, 8, 2)
         self.line_volatility_error.setFixedWidth(80)
         self.line_volatility.textChanged.connect(lambda: self.float_validate(0, sys.maxsize))
         self.line_volatility_error.textChanged.connect(lambda: self.float_validate(0, sys.maxsize))
 
-        self.fon.addWidget(self.label_hitrate, 9, 0)
-        self.fon.addWidget(self.line_hitrate, 9, 1)
+        self.fon_param.addWidget(self.label_hitrate, 9, 0)
+        self.fon_param.addWidget(self.line_hitrate, 9, 1)
         self.line_hitrate.setFixedWidth(80)
-        self.fon.addWidget(self.line_hitrate_error, 9, 2)
+        self.fon_param.addWidget(self.line_hitrate_error, 9, 2)
         self.line_hitrate_error.setFixedWidth(80)
         self.line_hitrate.textChanged.connect(lambda: self.float_validate(0, sys.maxsize))
         self.line_hitrate_error.textChanged.connect(lambda: self.float_validate(0, sys.maxsize))
 
-        self.fon.addWidget(self.label_baseRTP, 10, 0)
-        self.fon.addWidget(self.line_baseRTP, 10, 1)
+        self.fon_param.addWidget(self.label_baseRTP, 10, 0)
+        self.fon_param.addWidget(self.line_baseRTP, 10, 1)
         self.line_baseRTP.setFixedWidth(80)
-        self.fon.addWidget(self.line_baseRTP_error, 10, 2)
+        self.fon_param.addWidget(self.line_baseRTP_error, 10, 2)
         self.line_baseRTP_error.setFixedWidth(80)
         self.line_baseRTP.textChanged.connect(lambda: self.float_validate(0, sys.maxsize))
         self.line_baseRTP_error.textChanged.connect(lambda: self.float_validate(0, sys.maxsize))
+
+        self.button_switch.clicked.connect(self.switch_mode)
+
+        self.box_rules.setLayout(self.fon_rules)
+        self.box_param.setLayout(self.fon_param)
+        self.box_frequency.setLayout(self.fon_frequency)
+
+        self.fon.addWidget(self.box_rules, 0, 0, 1, 3)
+        self.fon.addWidget(self.box_param, 1, 0)
+
+        self.fon.addWidget(self.button_switch, 1, 2)
 
         self.widget.setLayout(self.fon)
         self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
@@ -683,7 +749,8 @@ class Window(QtWidgets.QWidget):
         self.fon_scroll.addWidget(self.scroll)
         self.setLayout(self.fon_scroll)
 
-    def click_add_symbol(self):
+    def click_add_symbol(self, opened=None):
+        global default_color
         symbol = Symbol(self.count_symbols, self.width)
         self.symbols.append(symbol)
 
@@ -700,9 +767,13 @@ class Window(QtWidgets.QWidget):
 
         self.line_distance.textChanged.emit(self.line_distance.text())
 
-        QtWidgets.QApplication.processEvents()
+        freq = LabeledLine(str(self.symbols[-1].line_name.text()), default_color)
+        self.frequency.append(freq)
+        self.fon_frequency.addWidget(self.frequency[-1], 0, self.count_symbols)
 
-        QtCore.QTimer.singleShot(0, self.sup_add_symbol)
+        if opened is None:
+            QtWidgets.QApplication.processEvents()
+            QtCore.QTimer.singleShot(0, self.sup_add_symbol)
 
     def sup_add_symbol(self):
         x = self.symbols[-1].x()
@@ -727,10 +798,6 @@ class Window(QtWidgets.QWidget):
             scroll.setSingleStep(10)
             for i in range(int(dist/10)):
                 QtCore.QTimer.singleShot(10 * i, lambda: scroll.triggerAction(QtWidgets.QAbstractSlider.SliderSingleStepAdd))
-
-    def sup_sup_add(self, val):
-        h = val.height()
-        self.symbols[-1].setFixedHeight(h)
 
     def click_delete_symbol(self):
         sender = self.sender()
@@ -780,6 +847,40 @@ class Window(QtWidgets.QWidget):
         self.grid_lines.removeWidget(self.deleteLines[num])
         sip.delete(self.deleteLines[num])
         del self.deleteLines[num]
+
+    def switch_mode(self):
+        if self.param_mode is False:
+            width = self.box_frequency.width()
+            self.freq_anim = QtCore.QPropertyAnimation(self.box_frequency, b'maximumWidth')
+            self.param_anim = QtCore.QPropertyAnimation(self.box_param, b'maximumWidth')
+            self.freq_anim.setEasingCurve(QtCore.QEasingCurve.InQuad)
+            self.param_anim.setEasingCurve(QtCore.QEasingCurve.InQuad)
+            self.freq_anim.setDuration(320)
+            self.param_anim.setDuration(320)
+            self.freq_anim.setStartValue(width)
+            self.param_anim.setStartValue(0)
+            self.freq_anim.setEndValue(0)
+            self.param_anim.setEndValue(width)
+            self.freq_anim.start()
+            self.param_anim.start()
+            self.param_mode = True
+
+        else:
+            self.fon.addWidget(self.box_frequency, 1, 1)
+            width = self.box_param.width()
+            self.freq_anim = QtCore.QPropertyAnimation(self.box_frequency, b'maximumWidth')
+            self.param_anim = QtCore.QPropertyAnimation(self.box_param, b'maximumWidth')
+            self.freq_anim.setEasingCurve(QtCore.QEasingCurve.InQuad)
+            self.param_anim.setEasingCurve(QtCore.QEasingCurve.InQuad)
+            self.freq_anim.setDuration(320)
+            self.param_anim.setDuration(320)
+            self.freq_anim.setStartValue(0)
+            self.param_anim.setStartValue(width)
+            self.freq_anim.setEndValue(width)
+            self.param_anim.setEndValue(0)
+            self.freq_anim.start()
+            self.param_anim.start()
+            self.param_mode = False
 
     def width_changed(self):
         if isint(str(self.line_width.text())) > 0:
@@ -885,7 +986,7 @@ class Window(QtWidgets.QWidget):
             self.height = interim['window'][1]
 
         for i in range(len(interim['symbols'])):
-            self.click_add_symbol()
+            self.click_add_symbol(True)
             self.symbols[i].set_info(interim['symbols'][i])
 
         for i in range(len(interim['lines'])):
