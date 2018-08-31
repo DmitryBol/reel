@@ -36,6 +36,7 @@ class Wild:
 
 class Symbol:
     def __init__(self, interim, type, i, w):
+        self.group_by = [1]
         self.name = sought(sought(interim, 'symbol')[i], 'name')
         self.payment = [0] * (w + 1)
         for j in range(len(sought(sought(interim, 'symbol')[i], 'payment'))):
@@ -70,11 +71,17 @@ class Symbol:
                 self.wild = Wild(interim, type, i)
             else:
                 self.wild = False
+            if sought(sought(sought(interim, 'symbol')[i], type), 'group_by'):
+                self.group_by = sought(sought(sought(interim, 'symbol')[i], type), 'group_by')
+            else:
+                self.group_by = [1]
         else:
             self.direction = "left"
             self.position = np.arange(0, w, 1)
             self.scatter = False
             self.wild = False
+            if sought(sought(interim, 'symbol')[i], 'group_by'):
+                self.group_by = sought(sought(interim, 'symbol')[i], 'group_by')
 
 
 class Gametype:
