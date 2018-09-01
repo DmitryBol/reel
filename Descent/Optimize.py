@@ -33,6 +33,16 @@ def initialDistributions(obj, out, params):
     err_rtp = params['err_rtp']
     err_sdnew = params['err_sdnew']
 
+    freeFrequency = [[int(300 / len(obj.free.symbol)) for _ in range(len(obj.free.symbol))] for _ in
+                     range(obj.window[0])]
+
+    for scatter_id in obj.free.scatterlist:
+        if max(obj.free.symbol[scatter_id].scatter) > 0:
+            for reel_id in range(obj.window[0]):
+                freeFrequency[reel_id][scatter_id] = max(1, int(scatterInf * 300))
+
+
+
     baseFrequency = [[0 for _ in range(len(obj.base.symbol))] for _ in range(obj.window[0])]
     numb_of_scatters = []
     for reel_id in range(obj.window[0]):
@@ -71,7 +81,7 @@ def initialDistributions(obj, out, params):
                 counter += 1
             symbol_id += 1
 
-    initial.append(Point(baseFrequency, baseFrequency, obj))
+    initial.append(Point(baseFrequency, freeFrequency, obj))
 
     n_symbols -= 1
     for i in range(len(obj.base.symbol)):
@@ -93,7 +103,7 @@ def initialDistributions(obj, out, params):
                     baseFrequency[reel_id][symbol_id] += 1
                     counter += 1
                 symbol_id += 1
-        initial.append(Point(baseFrequency, baseFrequency, obj))
+        initial.append(Point(baseFrequency, freeFrequency, obj))
 
         for reel_id in range(obj.window[0]):
             baseFrequency[reel_id][i] = int(obj.base.infPart(i) * total) + 1
@@ -122,7 +132,7 @@ def initialDistributions(obj, out, params):
     return initial[:1]
 
 
-def initialFreeDistributions(obj, baseFrequency, params):
+def initialFreeDistributions(obj, baseFrequency, freeFrequency, params):
     base_rtp = params['base_rtp']
     rtp = params['rtp']
     sdnew = params['sdnew']
@@ -131,16 +141,10 @@ def initialFreeDistributions(obj, baseFrequency, params):
     err_sdnew = params['err_sdnew']
 
     initial = []
-    freeFrequency = [[int(300 / len(obj.free.symbol)) for _ in range(len(obj.free.symbol))] for _ in
-                     range(obj.window[0])]
 
-    for scatter_id in obj.free.scatterlist:
-        if max(obj.free.symbol[scatter_id].scatter) > 0:
-            for reel_id in range(obj.window[0]):
-                freeFrequency[reel_id][scatter_id] = max(1, int(scatterInf * 300))
-
-    freeFrequency = sm.notice_positions(freeFrequency, obj.free)
-    initial.append(Point(baseFrequency, freeFrequency, obj))
+    freeFrequencyCopy = sm.notice_positions(freeFrequency, obj.free)
+    baseFrequencyCopy = sm.notice_positions(baseFrequency, obj.base)
+    initial.append(Point(baseFrequencyCopy, freeFrequencyCopy, obj))
     for p in initial:
         p.fillPoint(obj, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=False)
 
@@ -276,7 +280,7 @@ def Descent_free(params, start_point, game, rebalance=True):
 
     print('started_free')
 
-    roots = initialFreeDistributions(game, start_point.baseFrequency, params)
+    roots = initialFreeDistributions(game, start_point.baseFrequency, start_point.freeFrequency, params)
     findedMin = Point(frequency_base=roots[0].baseFrequency, frequency_free=roots[0].freeFrequency, game=game)
 
     value_list = []
