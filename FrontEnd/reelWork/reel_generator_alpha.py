@@ -58,10 +58,12 @@ def generate_one_reel(symbols, array, distance, seniors):
                 break
             else:
                 list_of_candidates = [x for x in symbols[new_index].group_by if x <= array_copy[new_index]]
+                if len(list_of_candidates) < 1:
+                    exit("can't insert any group of symbol " + symbols[new_index].name)
                 probability_distribution = [1 / x for x in list_of_candidates]
-                s = sum(probability_distribution)
+                prob_s = sum(probability_distribution)
                 for i in range(len(probability_distribution)):
-                    probability_distribution[i] = probability_distribution[i] / s
+                    probability_distribution[i] = probability_distribution[i] / prob_s
                 cnt = np_rnd.choice(list_of_candidates, 1, p=probability_distribution)[0]
 
             for k in range(distance - 1 - cnt):
