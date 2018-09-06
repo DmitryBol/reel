@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 import sys
+import os
 import json
 import ntpath
+import numpy as np
+import FrontEnd.structure_alpha as Q
+from Descent.Point import Point
 from PyQt5 import QtWidgets, QtGui, QtCore, sip
 
 # counts
@@ -9,8 +13,8 @@ count_tabs = 1
 
 # colors
 default_color = QtGui.QColor(220, 220, 220)
-wild_color = QtGui.QColor(255, 229, 100)
-scatter_color = QtGui.QColor(120, 237, 255)
+wild_color = QtGui.QColor(255, 247, 165)
+scatter_color = QtGui.QColor(192, 236, 249)
 wildnscatter_color = QtGui.QColor(221, 172, 225)
 
 
@@ -63,7 +67,7 @@ def int_validate(self, bot, top):
 
 def string_validate(self):
     sender = self.sender()
-    if str(sender.text()) == '':
+    if str(sender.text()) == '' or ';' in str(sender.text()):
         sender.setStyleSheet('QLineEdit {background-color: #f6989d;}')
     else:
         sender.setStyleSheet('')
@@ -77,6 +81,23 @@ class Aesthetic(QtWidgets.QWidget):
         fon.addWidget(obj)
         fon.addStretch(40)
         self.setLayout(fon)
+
+
+class MyFrame(QtWidgets.QFrame):
+    def __init__(self):
+        super(MyFrame, self).__init__()
+
+        self.setLineWidth(2)
+        self.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.setAutoFillBackground(True)
+
+    def _set_color(self, col):
+        p = self.palette()
+        p.setColor(self.backgroundRole(), col)
+        self.setPalette(p)
+
+    color = QtCore.pyqtProperty(QtGui.QColor, fset=_set_color)
 
 
 class LabeledLine(QtWidgets.QWidget):
@@ -219,6 +240,118 @@ class SwitchButtons(QtWidgets.QWidget):
                 self.buttons[i].click()
 
 
+class Output(QtWidgets.QFrame):
+    def __init__(self, path):
+        super(Output, self).__init__()
+
+        self.fon = QtWidgets.QVBoxLayout()
+
+        self.widget_reels = QtWidgets.QWidget()
+        self.fon_reels = QtWidgets.QGridLayout()
+        self.label = QtWidgets.QLabel('Alexa play despacito                     ')
+        self.line_path = QtWidgets.QLineEdit()
+        self.line_path.setReadOnly(True)
+        self.button_open = QtWidgets.QPushButton('open')
+        self.button_simulate = QtWidgets.QPushButton('Check results on simulation')
+
+        self.table_param = QtWidgets.QTableWidget()
+        self.button_simparam = QtWidgets.QPushButton('Check results\non simulation')
+
+        if path is not None:
+            self.set_path(path)
+
+        self.init_ui()
+
+    def init_ui(self):
+        self.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.fon.addWidget(self.table_param)
+        self.fon.addWidget(self.widget_reels)
+        self.fon.setContentsMargins(0, 0, 0, 0)
+
+        self.fon_reels.addWidget(self.label, 0, 0, 1, 3)
+        self.fon_reels.setRowStretch(4, 4)
+        self.widget_reels.setLayout(self.fon_reels)
+
+        self.table_param.hide()
+
+        self.table_param.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.table_param.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.table_param.setColumnCount(2)
+        self.table_param.setRowCount(9)
+        hheader = self.table_param.horizontalHeader()
+        hheader.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        vheader = self.table_param.verticalHeader()
+        vheader.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
+        self.table_param.setSpan(4, 0, 1, 2)
+        self.table_param.setCellWidget(4, 0, self.button_simparam)
+        self.button_simparam.clicked.connect(self.set_simparam)
+
+        self.setLayout(self.fon)
+
+    def set_path(self, path):
+        self.fon_reels.addWidget(self.line_path, 1, 0, 1, 2)
+        self.fon_reels.addWidget(self.button_open, 1, 2)
+        self.fon_reels.addWidget(self.button_simulate, 2, 0, 1, 3)
+
+        directory = os.path.dirname(path)
+        leaf = str(path_leaf(path))
+        name = leaf.split('.')[0]
+        reels_path = directory + '/' + name + '_reels.txt'
+        self.line_path.setText(reels_path)
+        if os.path.exists(reels_path) is True:
+            self.label.setText('Reels for this game are ready and saved in this file:')
+        else:
+            self.label.setText('Reels for this game will be saved in this file:')
+            self.button_open.setEnabled(False)
+            self.button_simulate.setEnabled(False)
+
+    def set_mode1(self):
+        self.table_param.hide()
+        self.widget_reels.show()
+
+    def set_mode2(self, parameters):
+        self.table_param.setItem(0, 0, QtWidgets.QTableWidgetItem('RTP'))
+        self.table_param.setItem(0, 1, QtWidgets.QTableWidgetItem(str(parameters['rtp'])))
+
+        self.table_param.setItem(1, 0, QtWidgets.QTableWidgetItem('volatility'))
+        self.table_param.setItem(1, 1, QtWidgets.QTableWidgetItem(str(parameters['sdnew'])))
+
+        self.table_param.setItem(2, 0, QtWidgets.QTableWidgetItem('hitrate'))
+        self.table_param.setItem(2, 1, QtWidgets.QTableWidgetItem(str(parameters['hitrate'])))
+
+        self.table_param.setItem(3, 0, QtWidgets.QTableWidgetItem('base RTP'))
+        self.table_param.setItem(3, 1, QtWidgets.QTableWidgetItem(str(parameters['base_rtp'])))
+
+        self.table_param.setItem(5, 0, QtWidgets.QTableWidgetItem(''))
+        self.table_param.setItem(5, 1, QtWidgets.QTableWidgetItem(''))
+
+        self.table_param.setItem(6, 0, QtWidgets.QTableWidgetItem(''))
+        self.table_param.setItem(6, 1, QtWidgets.QTableWidgetItem(''))
+
+        self.table_param.setItem(7, 0, QtWidgets.QTableWidgetItem(''))
+        self.table_param.setItem(7, 1, QtWidgets.QTableWidgetItem(''))
+
+        self.table_param.setItem(8, 0, QtWidgets.QTableWidgetItem(''))
+        self.table_param.setItem(8, 1, QtWidgets.QTableWidgetItem(''))
+
+        self.table_param.show()
+        self.widget_reels.hide()
+
+    def set_simparam(self):
+        self.table_param.setItem(5, 0, QtWidgets.QTableWidgetItem('СДО'))
+        self.table_param.setItem(5, 1, QtWidgets.QTableWidgetItem('ХНИ'))
+
+        self.table_param.setItem(6, 0, QtWidgets.QTableWidgetItem('ЁБА'))
+        self.table_param.setItem(6, 1, QtWidgets.QTableWidgetItem('НЫЙ'))
+
+        self.table_param.setItem(7, 0, QtWidgets.QTableWidgetItem('ФАШ'))
+        self.table_param.setItem(7, 1, QtWidgets.QTableWidgetItem('ИСТ'))
+
+        self.table_param.setItem(8, 0, QtWidgets.QTableWidgetItem('ФАК'))
+        self.table_param.setItem(8, 1, QtWidgets.QTableWidgetItem('Ю'))
+
+
 class Wild(QtWidgets.QWidget):
     def __init__(self):
         super(Wild, self).__init__()
@@ -324,9 +457,9 @@ class Gametype(QtWidgets.QWidget):
 
         self.frame_frequency = QtWidgets.QFrame()
         self.label_frequency = QtWidgets.QLabel('frequency')
-        self.line_frequency = LineEdits(self.width, 40, 0, sys.maxsize, None, None, True)
+        self.line_frequency = None
 
-        self.frame = QtWidgets.QFrame()
+        self.frame = MyFrame()
 
         self.init_ui(self.mode)
 
@@ -350,14 +483,17 @@ class Gametype(QtWidgets.QWidget):
         self.frame_frequency.setFrameShadow(QtWidgets.QFrame.Plain)
         self.fon.addWidget(self.frame_frequency, 5, 0, 1, 2)
         self.fon.addWidget(self.label_frequency, 6, 0)
-        self.fon.addWidget(self.line_frequency, 6, 1)
+
         if mode is True:
             self.frame_frequency.hide()
             self.label_frequency.hide()
-            self.line_frequency.hide()
 
-        self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.frame.setFrameShadow(QtWidgets.QFrame.Sunken)
+        if mode is False:
+            self.line_frequency = LineEdits(self.width, 40, 0, sys.maxsize, None, None, True)
+            self.fon.addWidget(self.line_frequency, 6, 1)
+
+        #self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        #self.frame.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.frame.setLayout(self.fon)
 
         self.fon_back.addWidget(self.frame)
@@ -375,6 +511,8 @@ class Gametype(QtWidgets.QWidget):
             self.fon_scatter.addWidget(self.label_freespins)
             self.line_freespins = LineEdits(self.width, 40, 0, sys.maxsize, None, None, True)
             self.fon_scatter.addWidget(self.line_freespins)
+
+            self.line_direction.setCurrentIndex(3)
         else:
             self.fon_scatter.removeWidget(self.label_freespins)
             sip.delete(self.label_freespins)
@@ -383,6 +521,8 @@ class Gametype(QtWidgets.QWidget):
             self.fon_scatter.removeWidget(self.line_freespins)
             sip.delete(self.line_freespins)
             self.line_freespins = None
+
+            self.line_direction.setCurrentIndex(0)
 
     def wild_check(self, checked):
         if checked is True:
@@ -395,36 +535,35 @@ class Gametype(QtWidgets.QWidget):
 
     def change_colour(self):
         global default_color, wild_color, scatter_color, wildnscatter_color
-        self.frame.setAutoFillBackground(True)
-        p = self.frame.palette()
+        self.anim = QtCore.QPropertyAnimation(self.frame, b'color')
+        self.anim.setDuration(160)
+        self.anim.setStartValue(QtGui.QColor(self.frame.palette().color(QtGui.QPalette.Background).name()))
         if self.box_wild.isChecked() is True and self.box_scatter.isChecked() is True:
-            p.setColor(self.frame.backgroundRole(), wildnscatter_color)
-            self.frame.setPalette(p)
-
+            color = wildnscatter_color
         elif self.box_wild.isChecked() is True:
-            p.setColor(self.frame.backgroundRole(), wild_color)
-            self.frame.setPalette(p)
-
+            color = wild_color
         elif self.box_scatter.isChecked() is True:
-            p.setColor(self.frame.backgroundRole(), scatter_color)
-            self.frame.setPalette(p)
-
+            color = scatter_color
         else:
-            p.setColor(self.frame.backgroundRole(), default_color)
-            self.frame.setPalette(p)
+            color = default_color
+        self.anim.setEndValue(color)
+        self.anim.start()
 
     def switch_mode(self):
         if self.mode is True:
             self.mode = False
             self.frame_frequency.show()
             self.label_frequency.show()
-            self.line_frequency.show()
+            self.line_frequency = LineEdits(self.width, 40, 0, sys.maxsize, None, None, True)
+            self.fon.addWidget(self.line_frequency, 6, 1)
 
         else:
             self.mode = True
             self.frame_frequency.hide()
             self.label_frequency.hide()
-            self.line_frequency.hide()
+            self.fon.removeWidget(self.line_frequency)
+            sip.delete(self.line_frequency)
+            self.line_frequency = None
 
     def collect_info(self):
         d = {}
@@ -568,7 +707,12 @@ class Symbol(QtWidgets.QWidget):
 
     def collect_info(self):
         d = {}
-        d.update({'name': str(self.line_name.text())})
+        if str(self.line_name.text()) == '':
+            raise Exception('symbol name should not be empty')
+        if ';' in str(self.line_name.text()):
+            raise Exception('symbol name should not contain ";" in it')
+        else:
+            d.update({'name': str(self.line_name.text())})
         d.update({'payment': self.line_payment.collect_info()})
         d.update({'base': self.base.collect_info()})
         if self.free is not None:
@@ -586,20 +730,21 @@ class Symbol(QtWidgets.QWidget):
 
 
 class Window(QtWidgets.QWidget):
-    def __init__(self):
+    def __init__(self, path=None):
         super(Window, self).__init__()
 
         # mode
         self.mode = True
 
-        self.fon_scroll = QtWidgets.QVBoxLayout()
+        self.path = path
+
+        self.fon_scroll = QtWidgets.QGridLayout()
         self.scroll = QtWidgets.QScrollArea()
         self.widget = QtWidgets.QWidget()
         self.fon = QtWidgets.QGridLayout()
 
         self.fon_mode = QtWidgets.QHBoxLayout()
         self.label_mode1 = QtWidgets.QLabel('REEL GENERATOR MODE')
-
         self.label_mode2 = QtWidgets.QLabel('COUNTING PARAMETERS MODE')
 
         self.box_rules = QtWidgets.QGroupBox('Rules')
@@ -659,6 +804,14 @@ class Window(QtWidgets.QWidget):
         self.label_baseRTP = QtWidgets.QLabel('base RTP')
         self.line_baseRTP = QtWidgets.QLineEdit()
         self.line_baseRTP_error = QtWidgets.QLineEdit()
+
+        self.splitter = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
+        self.widget_output = Output(path)
+        self.fon_output = QtWidgets.QVBoxLayout()
+
+        self.fon_log = QtWidgets.QHBoxLayout()
+        self.label_log = QtWidgets.QLabel('Log: ')
+        self.line_log = QtWidgets.QLineEdit()
 
         self.init_ui()
 
@@ -763,15 +916,30 @@ class Window(QtWidgets.QWidget):
         self.fon.addWidget(self.box_param, 1, 0)
 
         self.label_mode1.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_mode1.setFixedHeight(20)
+        self.label_mode1.setFont(QtGui.QFont("Courier New", 10, QtGui.QFont.Bold))
         self.label_mode2.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_mode2.setFixedHeight(20)
+        self.label_mode2.setFont(QtGui.QFont("Courier New", 10, QtGui.QFont.Bold))
         self.fon_mode.setSpacing(0)
         self.fon_mode.addWidget(self.label_mode1)
+
+        self.line_log.setReadOnly(True)
+        self.line_log.setStyleSheet('QLineEdit {border: none}')
+        self.fon_log.addWidget(self.label_log)
+        self.fon_log.addWidget(self.line_log)
+
+        self.fon_scroll.setHorizontalSpacing(0)
 
         self.widget.setLayout(self.fon)
         self.scroll.setWidgetResizable(True)
         self.scroll.setWidget(self.widget)
-        self.fon_scroll.addLayout(self.fon_mode)
-        self.fon_scroll.addWidget(self.scroll)
+        self.fon_scroll.addLayout(self.fon_mode, 0, 0)
+        self.splitter.addWidget(self.widget_output)
+        self.splitter.addWidget(self.scroll)
+        self.splitter.setStretchFactor(self.splitter.indexOf(self.scroll), 4)
+        self.fon_scroll.addWidget(self.splitter, 1, 0)
+        self.fon_scroll.addLayout(self.fon_log, 2, 0)
         self.setLayout(self.fon_scroll)
 
     def click_add_symbol(self, opened=None):
@@ -815,7 +983,7 @@ class Window(QtWidgets.QWidget):
         self.add_symbol_anim.start()
         self.add_symbol_button_anim.start()
 
-        dist = 137 - self.geometry().height() + (y + height) + self.widget.pos().y()
+        dist = 200 - self.geometry().height() + (y + height) + self.widget.pos().y()
         if dist > 0:
             scroll = self.scroll.verticalScrollBar()
             scroll.setSingleStep(10)
@@ -833,7 +1001,7 @@ class Window(QtWidgets.QWidget):
         self.del_symbol_anim.setEndValue(0)
         self.del_symbol_anim.start()
 
-        QtCore.QTimer.singleShot(160, lambda: self.sub_del_symbol(num))
+        self.del_symbol_anim.finished.connect(lambda: self.sub_del_symbol(num))
 
         self.line_distance.textChanged.emit(self.line_distance.text())
 
@@ -890,25 +1058,37 @@ class Window(QtWidgets.QWidget):
                 self.symbols[i].base.buttons_position = SwitchButtons(self.width, 40)
                 self.symbols[i].base.fon.addWidget(self.symbols[i].base.buttons_position, 2, 1)
 
-                if self.symbols[i].base.checkbox_scatter.checkState() == QtCore.Qt.Checked:
-                    self.symbols[i].base.fon.removeWidget(self.symbols[i].base.line_freespins)
+                if self.symbols[i].base.box_scatter.isChecked() is True:
+                    self.symbols[i].base.fon_scatter.removeWidget(self.symbols[i].base.line_freespins)
                     sip.delete(self.symbols[i].base.line_freespins)
-                    self.symbols[i].base.line_freespins = LineEdits(self.width, 28, 0, sys.maxsize, None, None, True)
-                    self.symbols[i].base.fon.addWidget(self.symbols[i].base.line_freespins, 4, 1)
+                    self.symbols[i].base.line_freespins = LineEdits(self.width, 40, 0, sys.maxsize, None, None, True)
+                    self.symbols[i].base.fon_scatter.addWidget(self.symbols[i].base.line_freespins)
 
                 if self.symbols[i].free is not None:
                     self.symbols[i].free.width = self.width
 
                     self.symbols[i].free.fon.removeWidget(self.symbols[i].free.buttons_position)
                     sip.delete(self.symbols[i].free.buttons_position)
-                    self.symbols[i].free.buttons_position = SwitchButtons(self.width, 28)
+                    self.symbols[i].free.buttons_position = SwitchButtons(self.width, 40)
                     self.symbols[i].free.fon.addWidget(self.symbols[i].free.buttons_position, 2, 1)
 
-                    if self.symbols[i].free.checkbox_scatter.checkState() == QtCore.Qt.Checked:
-                        self.symbols[i].free.fon.removeWidget(self.symbols[i].free.line_freespins)
+                    if self.symbols[i].free.box_scatter.isChecked() is True:
+                        self.symbols[i].free.fon_scatter.removeWidget(self.symbols[i].free.line_freespins)
                         sip.delete(self.symbols[i].free.line_freespins)
-                        self.symbols[i].free.line_freespins = LineEdits(self.width, 28, 0, sys.maxsize, None, None, True)
-                        self.symbols[i].free.fon.addWidget(self.symbols[i].free.line_freespins, 4, 1)
+                        self.symbols[i].free.line_freespins = LineEdits(self.width, 40, 0, sys.maxsize, None, None, True)
+                        self.symbols[i].free.fon_scatter.addWidget(self.symbols[i].free.line_freespins)
+
+                if self.mode is False:
+                    self.symbols[i].base.fon.removeWidget(self.symbols[i].base.line_frequency)
+                    sip.delete(self.symbols[i].base.line_frequency)
+                    self.symbols[i].base.line_frequency = LineEdits(self.width, 40, 0, sys.maxsize, None, None, True)
+                    self.symbols[i].base.fon.addWidget(self.symbols[i].base.line_frequency, 6, 1)
+
+                    if self.symbols[i].free is not None:
+                        self.symbols[i].free.fon.removeWidget(self.symbols[i].free.line_frequency)
+                        sip.delete(self.symbols[i].free.line_frequency)
+                        self.symbols[i].free.line_frequency = LineEdits(self.width, 40, 0, sys.maxsize, None, None, True)
+                        self.symbols[i].free.fon.addWidget(self.symbols[i].free.line_frequency, 6, 1)
 
             for i in range(len(self.lines)):
                 pos = self.grid_lines.getItemPosition(self.grid_lines.indexOf(self.lines[i]))
@@ -981,6 +1161,20 @@ class Window(QtWidgets.QWidget):
         self.label_mode1.setMaximumWidth(4000)
         self.label_mode2.setMaximumWidth(4000)
 
+    def answer(self):
+        parameters = self.run()
+        self.widget_output.setItem(0, 0, QtWidgets.QTableWidgetItem('RTP'))
+        self.widget_output.setItem(0, 1, QtWidgets.QTableWidgetItem(str(parameters['rtp'])))
+
+        self.widget_output.setItem(1, 0, QtWidgets.QTableWidgetItem('volatility'))
+        self.widget_output.setItem(1, 1, QtWidgets.QTableWidgetItem(str(parameters['sdnew'])))
+
+        self.widget_output.setItem(2, 0, QtWidgets.QTableWidgetItem('hitrate'))
+        self.widget_output.setItem(2, 1, QtWidgets.QTableWidgetItem(str(parameters['hitrate'])))
+
+        self.widget_output.setItem(3, 0, QtWidgets.QTableWidgetItem('base RTP'))
+        self.widget_output.setItem(3, 1, QtWidgets.QTableWidgetItem(str(parameters['base_rtp'])))
+
     def collect_info(self):
         d = {}
         d.update({'window': [self.width, self.height]})
@@ -1001,17 +1195,18 @@ class Window(QtWidgets.QWidget):
         if isint(str(self.line_distance.text())) >= 0:
             d.update({'distance': int(str(self.line_distance.text()))})
 
-        if isfloat(str(self.line_rtp.text())) and isfloat(str(self.line_rtp_error.text())):
-            d.update({'RTP': [float(str(self.line_rtp.text())), float(str(self.line_rtp_error.text()))]})
+        if self.mode is True:
+            if isfloat(str(self.line_rtp.text())) and isfloat(str(self.line_rtp_error.text())):
+                d.update({'RTP': [float(str(self.line_rtp.text())), float(str(self.line_rtp_error.text()))]})
 
-        if isfloat(str(self.line_volatility.text())) and isfloat(str(self.line_volatility_error.text())):
-            d.update({'volatility': [float(str(self.line_volatility.text())), float(str(self.line_volatility_error.text()))]})
+            if isfloat(str(self.line_volatility.text())) and isfloat(str(self.line_volatility_error.text())):
+                d.update({'volatility': [float(str(self.line_volatility.text())), float(str(self.line_volatility_error.text()))]})
 
-        if isfloat(str(self.line_hitrate.text())) and isfloat(str(self.line_hitrate_error.text())):
-            d.update({'hitrate': [float(str(self.line_hitrate.text())), float(str(self.line_hitrate_error.text()))]})
+            if isfloat(str(self.line_hitrate.text())) and isfloat(str(self.line_hitrate_error.text())):
+                d.update({'hitrate': [float(str(self.line_hitrate.text())), float(str(self.line_hitrate_error.text()))]})
 
-        if isfloat(str(self.line_baseRTP.text())) and isfloat(str(self.line_baseRTP_error.text())):
-            d.update({'baseRTP': [float(str(self.line_baseRTP.text())), float(str(self.line_baseRTP_error.text()))]})
+            if isfloat(str(self.line_baseRTP.text())) and isfloat(str(self.line_baseRTP_error.text())):
+                d.update({'baseRTP': [float(str(self.line_baseRTP.text())), float(str(self.line_baseRTP_error.text()))]})
         return d
 
     def set_info(self, interim):
@@ -1051,6 +1246,47 @@ class Window(QtWidgets.QWidget):
             self.line_baseRTP.setText(str(interim['baseRTP'][0]))
             self.line_baseRTP_error.setText(str(interim['baseRTP'][1]))
 
+    def run(self):
+        info = self.collect_info()
+        game = Q.Game(info)
+
+        if self.mode is True:
+            self.widget_output.set_mode1()
+
+        if self.mode is False:
+            base_frequency = []
+            free_frequency = []
+            for symbol in self.symbols:
+                if symbol.base.line_frequency.arrange_info() is None:
+                    i = self.symbols.index(symbol) + 1
+                    raise Exception('Frequency of symbol ' + str(i) + ' was not set correctly')
+                else:
+                    base_frequency.append(symbol.base.line_frequency.arrange_info())
+
+                if symbol.free is None:
+                    free_frequency.append(symbol.base.line_frequency.arrange_info())
+                else:
+                    if symbol.free.line_frequency.arrange_info() is None:
+                        i = self.symbols.index(symbol) + 1
+                        raise Exception('Frequency of symbol ' + str(i) + ' was not set correctly')
+                    else:
+                        free_frequency.append(symbol.free.line_frequency.arrange_info())
+
+            game.base.fill_frequency(np.array(base_frequency).T.tolist())
+            game.free.fill_frequency(np.array(free_frequency).T.tolist())
+
+            game.base.create_simple_num_comb(game.window, game.line)
+            game.free.create_simple_num_comb(game.window, game.line)
+
+            point = Point(np.array(base_frequency).T.tolist(), np.array(free_frequency).T.tolist(), game)
+
+            point.fillPoint(game, 1, 1, 1, 1, 1, 1)
+            point.fillPoint(game, 1, 1, 1, 1, 1, 1, base=False, sd_flag=True)
+
+            parameters = game.count_parameters(base=False, sd_flag=True)
+
+            self.widget_output.set_mode2(parameters)
+
 
 class Main(QtWidgets.QMainWindow):
     def __init__(self):
@@ -1082,6 +1318,7 @@ class Main(QtWidgets.QMainWindow):
         self.action_saveas = QtWidgets.QAction(QtGui.QIcon('icons/saveas.png'), 'Save as', self)
         self.action_saveas.setShortcut('Ctrl+Alt+S')
         self.action_saveas.triggered.connect(self.trigger_saveas)
+        self.action_saveas.setEnabled(False)
 
         self.action_settings = QtWidgets.QAction(QtGui.QIcon('icons/settings.png'), 'Settings', self)
 
@@ -1089,18 +1326,16 @@ class Main(QtWidgets.QMainWindow):
         self.action_quit.setShortcut('Ctrl+Q')
         self.action_quit.triggered.connect(self.trigger_quit)
 
-        self.action_run = QtWidgets.QAction(QtGui.QIcon('icons/run1.png'), 'Run', self)
+        self.action_run = QtWidgets.QAction(QtGui.QIcon('icons/run2.png'), 'Run', self)
         self.action_run.setShortcut('Ctrl+R')
         self.action_run.triggered.connect(self.trigger_run)
         self.action_run.setEnabled(False)
 
-        self.action_switch = QtWidgets.QAction(QtGui.QIcon('icons/switch.png'), 'Switch', self)
+        self.action_switch = QtWidgets.QAction(QtGui.QIcon('icons/switch2.png'), 'Switch mode', self)
         self.action_switch.triggered.connect(self.trigger_switch)
         self.action_switch.setEnabled(False)
 
         self.info = None
-
-        self.json_path = None
 
         self.init_ui()
 
@@ -1141,10 +1376,25 @@ class Main(QtWidgets.QMainWindow):
             self.action_switch.setEnabled(False)
 
     def trigger_run(self):
+        self.action_run.setIcon(QtGui.QIcon('icons/stop.png'))
+        self.tab.setDisabled(True)
         current = self.tab.currentWidget()
-        self.info = current.collect_info()
-        print(self.info)
-        self.action_saveas.setEnabled(True)
+        current.line_log.setStyleSheet('QLineEdit {border: none}')
+        current.line_log.setText('process started')
+        QtWidgets.QApplication.processEvents()
+        try:
+            current.run()
+
+        except Exception as error:
+            current.line_log.setStyleSheet('QLineEdit {color: red; border: none}')
+            current.line_log.setText("%s" % error)
+
+        else:
+            current.line_log.setStyleSheet('QLineEdit {color: green; border: none}')
+            current.line_log.setText("process finished")
+
+        self.tab.setEnabled(True)
+        self.action_run.setIcon(QtGui.QIcon('icons/run2.png'))
 
     def trigger_switch(self):
         current = self.tab.currentWidget()
@@ -1156,6 +1406,7 @@ class Main(QtWidgets.QMainWindow):
         self.tab.addTab(new_tab, 'untitled' + str(count_tabs))
         self.tab.setCurrentWidget(new_tab)
         count_tabs += 1
+        self.action_saveas.setEnabled(True)
         self.action_run.setEnabled(True)
         self.action_switch.setEnabled(True)
 
@@ -1167,34 +1418,36 @@ class Main(QtWidgets.QMainWindow):
     def trigger_save(self):
         current = self.tab.currentWidget()
         self.info = current.collect_info()
-        file = open(self.json_path, 'w')
+        file = open(current.path, 'w')
         json.dump(self.info, file)
         file.close()
 
     def trigger_saveas(self):
-        self.json_path, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File', '', 'All Files (*);;Json Files (*.json)')
-        if self.json_path:
-            file = open(self.json_path, 'w')
+        path, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File', '', 'All Files (*.txt *.json);;Txt Files (*.txt);;Json Files (*.json)')
+        if path:
+            file = open(path, 'w')
             current = self.tab.currentWidget()
+            current.path = path
+            current.widget_output.set_path(path)
             self.info = current.collect_info()
             json.dump(self.info, file)
             file.close()
             self.action_save.setEnabled(True)
             i = self.tab.currentIndex()
-            self.tab.setTabText(i, str(path_leaf(self.json_path)))
+            self.tab.setTabText(i, str(path_leaf(path)))
 
     def trigger_open(self):
-        self.json_path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File', '', 'All Files (*);;Json Files (*.json)')
-        if self.json_path:
-            file = open(self.json_path, 'r')
+        path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File', '', 'All Files (*.txt *.json);;Txt Files (*.txt);;Json Files (*.json)')
+        if path:
+            file = open(path, 'r')
             j = file.read()
             self.info = json.loads(j)
             file.close()
 
-            new_tab = Window()
+            new_tab = Window(path)
             new_tab.set_info(self.info)
 
-            self.tab.addTab(new_tab, str(path_leaf(self.json_path)))
+            self.tab.addTab(new_tab, str(path_leaf(path)))
             self.tab.setCurrentWidget(new_tab)
 
             self.action_save.setEnabled(True)
