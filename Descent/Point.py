@@ -54,7 +54,6 @@ class Point:
                 for j in range(len(self.freeFrequency[i])):
                     self.freeFrequency[i][j] = scale*self.freeFrequency[i][j]
 
-
     def fillPoint(self, obj, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=True, sd_flag=False):
         if base:
             obj.base.reel_generator(self.baseFrequency, obj.window[0], obj.window[1])
@@ -64,7 +63,6 @@ class Point:
 
             obj.base.fill_simple_num_comb(obj.window, obj.line)
             obj.base.fill_scatter_num_comb(obj.window)
-
 
         obj.free.reel_generator(self.freeFrequency, obj.window[0], obj.window[1])
         obj.free.fill_frequency(self.freeFrequency)

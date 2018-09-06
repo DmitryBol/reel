@@ -95,7 +95,7 @@ def rebalance(start_point, game, gametype, params):
     print('value: ', start_point.value)
     print(start_point.baseFrequency)
 
-    prev_val = abs(start_point.sdnew - sdnew) / err_sdnew
+    prev_val = abs(start_point.sdnew - sdnew) / err_sdnew / abs(start_point.rtp - rtp) * err_rtp
     new_val = copy.deepcopy(prev_val)
 
     blocked_scatters = []
@@ -155,7 +155,7 @@ def rebalance(start_point, game, gametype, params):
                 elif gametype.name == 'free':
                     print('total = ', sum(result_point.freeFrequency[0]), 'free ', result_point.freeFrequency)
                 print('\n')
-                new_val = abs(result_point.sdnew - sdnew) / err_sdnew
+                new_val = abs(result_point.sdnew - sdnew) / err_sdnew / abs(result_point.rtp - rtp) * err_rtp
                 if new_val < prev_val:
                     prev_val = new_val
                     SD = [result_point.sdnew, result_point.base_rtp, result_point.rtp]

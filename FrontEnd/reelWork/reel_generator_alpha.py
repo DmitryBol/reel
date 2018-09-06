@@ -4,6 +4,7 @@ import numpy as np
 import time
 import random
 from . import support as support
+import numpy.random as np_rnd
 
 
 def isComparable(new_symbol, array, seniors):
@@ -55,11 +56,23 @@ def generate_one_reel(symbols, array, distance, seniors):
             if new_index == -1:
                 good_shuffle = False
                 break
-            for k in range(distance - 2):
+            else:
+                list_of_candidates = [x for x in symbols[new_index].group_by if x <= array_copy[new_index]]
+                if len(list_of_candidates) < 1:
+                    exit("can't insert any group of symbol " + symbols[new_index].name)
+                probability_distribution = [1 / x for x in list_of_candidates]
+                prob_s = sum(probability_distribution)
+                for i in range(len(probability_distribution)):
+                    probability_distribution[i] = probability_distribution[i] / prob_s
+                cnt = np_rnd.choice(list_of_candidates, 1, p=probability_distribution)[0]
+
+            for k in range(distance - 1 - cnt):
                 last_symbols[distance - k - 2] = last_symbols[distance - k - 3]
-            last_symbols[0] = new_index
-            array_copy[new_index] -= 1
-            res.append(new_index)
+            for k in range(cnt):
+                last_symbols[k] = new_index
+            array_copy[new_index] -= cnt
+            for _ in range(cnt):
+                res.append(new_index)
         if good_shuffle:
             for i in range(distance - 1):
                 for_compare = []
