@@ -492,8 +492,6 @@ class Gametype(QtWidgets.QWidget):
             self.line_frequency = LineEdits(self.width, 40, 0, sys.maxsize, None, None, True)
             self.fon.addWidget(self.line_frequency, 6, 1)
 
-        #self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        #self.frame.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.frame.setLayout(self.fon)
 
         self.fon_back.addWidget(self.frame)
@@ -1335,8 +1333,6 @@ class Main(QtWidgets.QMainWindow):
         self.action_switch.triggered.connect(self.trigger_switch)
         self.action_switch.setEnabled(False)
 
-        self.info = None
-
         self.init_ui()
 
     def init_ui(self):
@@ -1344,6 +1340,7 @@ class Main(QtWidgets.QMainWindow):
 
         self.tab.setTabsClosable(True)
         self.tab.tabCloseRequested.connect(self.close_tab)
+        self.tab.currentChanged.connect(self.change_tab)
         self.tab.setMovable(True)
 
         file = self.bar.addMenu('File')
@@ -1371,9 +1368,22 @@ class Main(QtWidgets.QMainWindow):
         current_widget = self.tab.widget(current_index)
         current_widget.deleteLater()
         self.tab.removeTab(current_index)
-        if self.tab.__len__() == 0:
+
+    def change_tab(self, index):
+        if index == -1:
             self.action_run.setEnabled(False)
             self.action_switch.setEnabled(False)
+            self.action_saveas.setEnabled(False)
+            self.action_save.setEnabled(False)
+        else:
+            self.action_run.setEnabled(True)
+            self.action_switch.setEnabled(True)
+            self.action_saveas.setEnabled(True)
+            current = self.tab.currentWidget()
+            if current.path is None:
+                self.action_save.setEnabled(False)
+            else:
+                self.action_save.setEnabled(True)
 
     def trigger_run(self):
         self.action_run.setIcon(QtGui.QIcon('icons/stop.png'))
@@ -1406,9 +1416,6 @@ class Main(QtWidgets.QMainWindow):
         self.tab.addTab(new_tab, 'untitled' + str(count_tabs))
         self.tab.setCurrentWidget(new_tab)
         count_tabs += 1
-        self.action_saveas.setEnabled(True)
-        self.action_run.setEnabled(True)
-        self.action_switch.setEnabled(True)
 
         #button = QtWidgets.QPushButton('x')
 
@@ -1417,9 +1424,9 @@ class Main(QtWidgets.QMainWindow):
 
     def trigger_save(self):
         current = self.tab.currentWidget()
-        self.info = current.collect_info()
+        info = current.collect_info()
         file = open(current.path, 'w')
-        json.dump(self.info, file)
+        json.dump(info, file)
         file.close()
 
     def trigger_saveas(self):
@@ -1429,8 +1436,8 @@ class Main(QtWidgets.QMainWindow):
             current = self.tab.currentWidget()
             current.path = path
             current.widget_output.set_path(path)
-            self.info = current.collect_info()
-            json.dump(self.info, file)
+            info = current.collect_info()
+            json.dump(info, file)
             file.close()
             self.action_save.setEnabled(True)
             i = self.tab.currentIndex()
@@ -1441,19 +1448,14 @@ class Main(QtWidgets.QMainWindow):
         if path:
             file = open(path, 'r')
             j = file.read()
-            self.info = json.loads(j)
+            info = json.loads(j)
             file.close()
 
             new_tab = Window(path)
-            new_tab.set_info(self.info)
+            new_tab.set_info(info)
 
             self.tab.addTab(new_tab, str(path_leaf(path)))
             self.tab.setCurrentWidget(new_tab)
-
-            self.action_save.setEnabled(True)
-            self.action_saveas.setEnabled(True)
-            self.action_run.setEnabled(True)
-            self.action_switch.setEnabled(True)
 
     def trigger_quit(self):
         QtWidgets.qApp.quit()
