@@ -17,7 +17,7 @@ scatterInf = 0.005
 scaleLimit = 5
 
 
-def double_bouble(a, b):
+def double_bubble(a, b):
     for i in range(len(a) - 1):
         for j in range(i + 1, len(a)):
             if a[i] > a[j]:
@@ -40,8 +40,6 @@ def initialDistributions(obj, out, params):
         if max(obj.free.symbol[scatter_id].scatter) > 0:
             for reel_id in range(obj.window[0]):
                 freeFrequency[reel_id][scatter_id] = max(1, int(scatterInf * 300))
-
-
 
     baseFrequency = [[0 for _ in range(len(obj.base.symbol))] for _ in range(obj.window[0])]
     numb_of_scatters = []
@@ -202,7 +200,7 @@ def Descent_base(params, file_name, rebalance=True, start_point=None):
               root.base_rtp, root.rtp, root.sdnew, root.hitrate)
         value_list = value_list + [root.value]
     index_list = list(range(len(value_list)))
-    double_bouble(value_list, index_list)
+    double_bubble(value_list, index_list)
     print('assuming base rtp, rtp, sd ', base_rtp, rtp, sdnew)
     print('assuming errors for base rtp, rtp,  sd ', err_base_rtp, err_rtp, err_sdnew)
 
@@ -290,7 +288,7 @@ def Descent_free(params, start_point, game, rebalance=True):
         value_list = value_list + [root.value]
 
     index_list = list(range(len(value_list)))
-    double_bouble(value_list, index_list)
+    double_bubble(value_list, index_list)
     print('assuming base rtp, rtp, sd ', base_rtp, rtp, sdnew)
     print('assuming errors for base rtp, rtp,  sd ', err_base_rtp, err_rtp, err_sdnew)
 
