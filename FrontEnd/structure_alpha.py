@@ -494,3 +494,15 @@ class Game:
         return self.parameters
 
         # return {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sd': sd, 'sdnew': sdnew, 'sdalpha': sdalpha, 'hitrate': hitrate}
+
+    def standalone_count_parameters(self):
+        self.base.create_simple_num_comb(self.window, self.line)
+        self.free.create_simple_num_comb(self.window, self.line)
+
+        self.base.fill_scatter_num_comb(self.window)
+        self.free.fill_scatter_num_comb(self.window)
+
+        self.base.create_simple_num_comb(self.window, self.line)
+        self.free.fill_simple_num_comb(self.window, self.line)
+
+        return self.count_parameters(base=False, sd_flag=True)
