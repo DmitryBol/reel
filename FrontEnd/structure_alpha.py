@@ -458,7 +458,7 @@ class Game:
             s_free2 += str_with_count[1] / self.free.all_combinations2() * payment ** 2
             s_free += str_with_count[1] / self.free.all_combinations2() * payment
         if eta_free >= 1:
-            print('Many than 1 retrigger free spin per free spin in average')
+            print('More than 1 retrigger free spin per free spin in average')
             return 0
         zeta2 = 1 / (1 - 2 * eta_free + eta_free2) * (s_free2 + 2 * s_free * xi_free + xi_free2)
 
