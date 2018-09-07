@@ -495,9 +495,13 @@ class Game:
 
         # return {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sd': sd, 'sdnew': sdnew, 'sdalpha': sdalpha, 'hitrate': hitrate}
 
-    def standalone_count_parameters(self):
+    def standalone_count_parameters(self, shuffle=True):
         self.base.create_simple_num_comb(self.window, self.line)
         self.free.create_simple_num_comb(self.window, self.line)
+
+        if shuffle:
+            self.base.reel_generator(self.base.frequency, self.window[0], self.distance, validate=True)
+            self.free.reel_generator(self.free.frequency, self.window[0], self.distance, validate=True)
 
         self.base.fill_scatter_num_comb(self.window)
         self.free.fill_scatter_num_comb(self.window)

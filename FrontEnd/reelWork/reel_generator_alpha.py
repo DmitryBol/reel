@@ -186,7 +186,7 @@ def generate_one_reel(symbols, array, distance, seniors):
     return res
 
 
-def reel_generator(self, array, width, distance):
+def reel_generator(self, array, width, distance, validate=False):
     seniors = []
     res = []
     total_symbols = len(self.symbol)
@@ -202,10 +202,11 @@ def reel_generator(self, array, width, distance):
 
     self.reels = res
 
-    if simple_validate_reels(distance, self, res) == 0:
-        return
-    else:
-        raise Exception("Can't validate reels")
+    if validate:
+        if simple_validate_reels(distance, self, res) == 0:
+            return
+        else:
+            raise Exception("Can't validate reels")
 
 
 # noinspection PySimplifyBooleanCheck
