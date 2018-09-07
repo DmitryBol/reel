@@ -142,7 +142,7 @@ def rebalance(start_point, game, gametype, params):
                 elif gametype.name == 'free':
                     result_point = Point(start_point.baseFrequency, new_frequency, game)
                 else:
-                    exit('no such gametype')
+                    raise Exception('No such gametype in rebalance')
 
                 result_point.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=True,
                                        sd_flag=False)
@@ -165,7 +165,7 @@ def rebalance(start_point, game, gametype, params):
                     SD = [result_point.sdnew, result_point.base_rtp, result_point.rtp]
                     out_point = copy.deepcopy(result_point)
                     out_game = copy.deepcopy(game)
-                    print('\n\n\nМеняется\n\n\n')
+                    print('\nChanging result\n')
 
     print('BEST SD IS ', SD[0])
     print('with base_rtp: ', SD[1], 'rtp: ', SD[2])

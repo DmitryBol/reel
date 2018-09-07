@@ -135,7 +135,7 @@ def main_process(FILES):
 
 def fillMatrix(gametype, matrix, reels, indexes, height):
     if len(indexes) != len(reels):
-        exit('error')
+        raise Exception('reels have wrong dimension')
     for row_id in range(height):
         for reel_id in range(len(reels)):
             matrix[row_id, reel_id] = reels[reel_id][(indexes[reel_id] + row_id) % len(reels[reel_id])]
@@ -145,10 +145,10 @@ def greedy_simulate(game, gametype, reels):
     print('\n\nstarted greedy simulation')
     for reel in reels:
         if len(reel) > 70:
-            exit('too much symbols for greedy simulation')
+            raise Exception('Too much symbols for greedy simulation')
 
     if gametype.window[0] != len(reels):
-        exit('window width != reels cnt')
+        raise Exception('reels have wrong dimension')
 
     total_cnt = 1
     for reel in reels:
