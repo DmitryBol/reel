@@ -171,7 +171,7 @@ def Descent_base(params, file_name, rebalance=True, start_point=None):
 
     out = sm.get_scatter_frequency(file_name, hitrate, err_hitrate)
     if out == -1 and hitrate != -1:
-        exit('no free spins')
+        raise Exception('Game rules not contain freespins, but you try to fit HitRate. Please, set it -1')
     elif out == -1:
 
         out = sm.OutResult(game.base.scatterlist)
@@ -224,7 +224,7 @@ def Descent_base(params, file_name, rebalance=True, start_point=None):
             max_number_of_groups = len(game.base.symbol) - len(blocked_scatters)
             while number_of_groups <= max_number_of_groups:
                 temp_group = Group(game, 'base', root, number_of_groups, params, rebalance=rebalance)
-                print('группы ', temp_group.split.groups)
+                print('groups ', temp_group.split.groups)
 
                 temp_group.printGroup()
 
@@ -311,7 +311,7 @@ def Descent_free(params, start_point, game, rebalance=True):
             max_number_of_groups = len(game.base.symbol)
             while number_of_groups <= max_number_of_groups:
                 temp_group = Group(game, 'free', root, number_of_groups, params, rebalance=rebalance)
-                print('группы ', temp_group.split.groups)
+                print('groups ', temp_group.split.groups)
 
                 temp_group.printGroup('free')
 
