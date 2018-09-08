@@ -36,6 +36,7 @@ class Wild:
 
 class Symbol:
     def __init__(self, interim, type, i, w):
+        self.group_by = [1]
         self.name = sought(sought(interim, 'symbol')[i], 'name')
         self.payment = [0] * (w + 1)
         for j in range(len(sought(sought(interim, 'symbol')[i], 'payment'))):
@@ -70,11 +71,17 @@ class Symbol:
                 self.wild = Wild(interim, type, i)
             else:
                 self.wild = False
+            if sought(sought(sought(interim, 'symbol')[i], type), 'group_by'):
+                self.group_by = sought(sought(sought(interim, 'symbol')[i], type), 'group_by')
+            else:
+                self.group_by = [1]
         else:
             self.direction = "left"
             self.position = np.arange(0, w, 1)
             self.scatter = False
             self.wild = False
+            if sought(sought(interim, 'symbol')[i], 'group_by'):
+                self.group_by = sought(sought(interim, 'symbol')[i], 'group_by')
 
 
 class Gametype:
@@ -451,7 +458,7 @@ class Game:
             s_free2 += str_with_count[1] / self.free.all_combinations2() * payment ** 2
             s_free += str_with_count[1] / self.free.all_combinations2() * payment
         if eta_free >= 1:
-            print('Many than 1 retrigger free spin per free spin in average')
+            print('More than 1 retrigger free spin per free spin in average')
             return 0
         zeta2 = 1 / (1 - 2 * eta_free + eta_free2) * (s_free2 + 2 * s_free * xi_free + xi_free2)
 
@@ -487,3 +494,19 @@ class Game:
         return self.parameters
 
         # return {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sd': sd, 'sdnew': sdnew, 'sdalpha': sdalpha, 'hitrate': hitrate}
+
+    def standalone_count_parameters(self, shuffle=True):
+        self.base.create_simple_num_comb(self.window, self.line)
+        self.free.create_simple_num_comb(self.window, self.line)
+
+        if shuffle:
+            self.base.reel_generator(self.base.frequency, self.window[0], self.distance, validate=True)
+            self.free.reel_generator(self.free.frequency, self.window[0], self.distance, validate=True)
+
+        self.base.fill_scatter_num_comb(self.window)
+        self.free.fill_scatter_num_comb(self.window)
+
+        self.base.create_simple_num_comb(self.window, self.line)
+        self.free.fill_simple_num_comb(self.window, self.line)
+
+        return self.count_parameters(base=False, sd_flag=True)

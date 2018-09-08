@@ -6,7 +6,6 @@ all_games = ['Games/HappyBrauer.txt']
 
 L = len(all_games)
 
-
 params = {'base_rtp': 0.65,
           'rtp': 0.95,
           'sdnew': 25,
@@ -37,13 +36,14 @@ for index in range(L):
     current_value = current_point.getValue()
 
     while rebalance_count < MAX_REBALANCE_COUNT:
-        current_point, game = Descent_base(file_name=all_games[index], params=params, rebalance=False, start_point=current_point)
+        current_point, game = Descent_base(file_name=all_games[index], params=params, rebalance=False,
+                                           start_point=current_point)
 
         if free_mode:
             current_point, game = Descent_free(game=game, params=params, start_point=current_point, rebalance=False)
 
-        print('\n\n\n\n\n\nCurrent frequency:\n', current_point.freeFrequency)
-        exit('printed')
+        # print('\n\n\n\n\n\nCurrent frequency:\n', current_point.freeFrequency)
+        # exit('printed')
 
         current_point, game = rebalance(current_point, game, game.base, params=params)
         if free_mode:
@@ -59,6 +59,16 @@ for index in range(L):
             # TODO сделать сообщение о невозможности зафититься
             break
 
+    current_point, game = Descent_base(file_name=all_games[index], params=params, rebalance=False,
+                                       start_point=current_point)
+
+    if free_mode:
+        current_point, game = Descent_free(game=game, params=params, start_point=current_point, rebalance=False)
+
+    current_point.fillPoint(game, params['base_rtp'], params['rtp'], params['sdnew'], params['err_base_rtp'], params['err_rtp'], params['err_sdnew'], base=False, sd_flag=True)
+
+    print('Base RTP:', current_point.base_rtp, 'RTP:', current_point.rtp, 'SD:', current_point.sdnew)
+
     print(all_games[index] + ' done\n\n\n')
-    #simulate_result = simulate.make_spins(game, count=1_000_000)
-    #print('simulate rtp: ', simulate_result['rtp'], '\tsimulate sd: ', simulate_result['sd'])
+    # simulate_result = simulate.make_spins(game, count=1_000_000)
+    # print('simulate rtp: ', simulate_result['rtp'], '\tsimulate sd: ', simulate_result['sd'])

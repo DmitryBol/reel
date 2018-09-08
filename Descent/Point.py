@@ -54,7 +54,6 @@ class Point:
                 for j in range(len(self.freeFrequency[i])):
                     self.freeFrequency[i][j] = scale*self.freeFrequency[i][j]
 
-
     def fillPoint(self, obj, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=True, sd_flag=False):
         if base:
             obj.base.reel_generator(self.baseFrequency, obj.window[0], obj.window[1])
@@ -64,7 +63,6 @@ class Point:
 
             obj.base.fill_simple_num_comb(obj.window, obj.line)
             obj.base.fill_scatter_num_comb(obj.window)
-
 
         obj.free.reel_generator(self.freeFrequency, obj.window[0], obj.window[1])
         obj.free.fill_frequency(self.freeFrequency)
@@ -77,11 +75,9 @@ class Point:
 
         params = obj.count_parameters(base, sd_flag)
 
-
         self.base_rtp, self.rtp, self.sdnew, self.hitrate = params['base_rtp'], params['rtp'], params['sdnew'], params['hitrate']
 
         self.fillVal(base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base, sd_flag)
-
 
     def printReel(self, file):
         max_length = 0
@@ -102,9 +98,6 @@ class Point:
                     s = 15*' '
             f.write(s + '\n')
             f.write('\n')
-            #print('\n')
-            #print(s)
-
 
         for l in range(len(self.freeReel)):
             if len(self.freeReel[l]) > max_length:
@@ -119,8 +112,6 @@ class Point:
                     s = 15*' '
             f1.write(s + '\n')
             f1.write('\n')
-            #print('\n')
-            #print(s)
         f.close()
         f1.close()
 
