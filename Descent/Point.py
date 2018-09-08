@@ -75,11 +75,9 @@ class Point:
 
         params = obj.count_parameters(base, sd_flag)
 
-
         self.base_rtp, self.rtp, self.sdnew, self.hitrate = params['base_rtp'], params['rtp'], params['sdnew'], params['hitrate']
 
         self.fillVal(base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base, sd_flag)
-
 
     def printReel(self, file):
         max_length = 0
@@ -100,9 +98,6 @@ class Point:
                     s = 15*' '
             f.write(s + '\n')
             f.write('\n')
-            #print('\n')
-            #print(s)
-
 
         for l in range(len(self.freeReel)):
             if len(self.freeReel[l]) > max_length:
@@ -117,8 +112,6 @@ class Point:
                     s = 15*' '
             f1.write(s + '\n')
             f1.write('\n')
-            #print('\n')
-            #print(s)
         f.close()
         f1.close()
 

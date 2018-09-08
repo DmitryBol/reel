@@ -7,7 +7,97 @@ from . import support as support
 import numpy.random as np_rnd
 
 
-def isComparable(new_symbol, array, seniors):
+def index_by_name(symbols, name):
+    index = 0
+    for symbol in symbols:
+        if symbol.name == name:
+            return index
+        else:
+            index += 1
+    raise Exception('No such symbol in rules')
+
+
+def names_to_indexes(symbols, reels):
+    res = []
+    reel_id = 0
+    for reel in reels:
+        res.append([])
+        for symbol_name in reel:
+            res[reel_id].append(index_by_name(symbols, symbol_name))
+        reel_id += 1
+    return res
+
+
+def remove_groups(gametype, reels):
+    res = []
+    reel_id = 0
+    for reel in reels:
+        res.append([])
+        prev_id = reel[len(reel) - 1]
+        group_len = 1
+        start_index = 0
+        while reel[start_index] == prev_id:
+            start_index += 1
+        for symbol_id in reel[start_index:]:
+            if symbol_id == prev_id:
+                group_len += 1
+            else:
+                if group_len not in gametype.symbol[symbol_id].group_by:
+                    raise Exception('Reels have group of symbol ' + gametype.symbol[symbol_id].name + "which length "
+                                                                                                      "not in rules")
+                else:
+                    res[reel_id].append(prev_id)
+                    group_len = 1
+            prev_id = symbol_id
+        group_len += start_index
+        symbol_id = reel[len(reel) - 1]
+        if group_len not in gametype.symbol[symbol_id].group_by:
+            raise Exception('Reels have group of symbol ' + gametype.symbol[symbol_id].name + " which length not in "
+                                                                                              "rules")
+        reel_id += 1
+    return res
+
+
+# Для лент из имен символов
+def validate_reels(distance, gametype, reels):
+    if len(reels) != gametype.window[0]:
+        raise Exception('Reels have wrong dimension')
+    reels_copy = names_to_indexes(gametype.symbol, reels)
+    if simple_validate_reels(distance, gametype, reels_copy) == 0:
+        return 0
+    else:
+        raise Exception("Can't validate reels")
+
+
+# Для лент из индексов
+def simple_validate_reels(distance, gametype, reels):
+    reels_copy = remove_groups(gametype, reels)
+
+    seniors = []
+    total_symbols = len(gametype.symbol)
+    for i in range(total_symbols):
+        if gametype.symbol[i].scatter:
+            seniors.append(i)
+        if gametype.symbol[i].wild:
+            if gametype.symbol[i].wild.expand:
+                seniors.append(i)
+
+    reel_id = 0
+    for reel in reels_copy:
+        L = len(reel)
+        for index in range(L):
+            if reel_id not in gametype.symbol[reel[index]].position:
+                raise Exception('Reels have symbol ' + gametype.symbol[reel[index]].name + ' on ' + str(reel_id + 1) + ' reel')
+            array = []
+            for i in range(distance - 1):
+                array.append(reel[(index + i + 1) % L])
+            if not is_comparable(reel[index], array, seniors):
+                raise Exception('Not valid reels')
+        reel_id += 1
+    return 0
+
+
+def is_comparable(new_symbol, array, seniors):
     for symbol in array:
         if new_symbol == symbol or (new_symbol in seniors and symbol in seniors):
             return False
@@ -30,7 +120,7 @@ def get_element(array, seniors, last_symbols, senior_coef, power):
     len_ = len(array)
     weights = [0] * len_
     for i in range(len_):
-        if isComparable(i, last_symbols, seniors):
+        if is_comparable(i, last_symbols, seniors):
             weights[i] = (array[i]) ** power
         else:
             weights[i] = 0
@@ -59,7 +149,9 @@ def generate_one_reel(symbols, array, distance, seniors):
             else:
                 list_of_candidates = [x for x in symbols[new_index].group_by if x <= array_copy[new_index]]
                 if len(list_of_candidates) < 1:
-                    exit("can't insert any group of symbol " + symbols[new_index].name)
+                    raise Exception('Reel frequency for symbol ' + symbols[new_index].name + "can't be divided by "
+                                                                                             "minimal group length")
+
                 probability_distribution = [1 / x for x in list_of_candidates]
                 prob_s = sum(probability_distribution)
                 for i in range(len(probability_distribution)):
@@ -79,7 +171,7 @@ def generate_one_reel(symbols, array, distance, seniors):
                 for index in range(distance - 1):
                     for_compare.append(res[i - distance + 1 + index])
                 # print(res[i], for_compare, seniors, isComparable(res[i], for_compare, seniors))
-                if not isComparable(res[i], for_compare, seniors):
+                if not is_comparable(res[i], for_compare, seniors):
                     good_shuffle = False
         if good_shuffle:
             break
@@ -94,7 +186,7 @@ def generate_one_reel(symbols, array, distance, seniors):
     return res
 
 
-def reel_generator(self, array, width, distance):
+def reel_generator(self, array, width, distance, validate=False):
     seniors = []
     res = []
     total_symbols = len(self.symbol)
@@ -109,6 +201,12 @@ def reel_generator(self, array, width, distance):
         res.append(generate_one_reel(self.symbol, array[i], distance, seniors))
 
     self.reels = res
+
+    if validate:
+        if simple_validate_reels(distance, self, res) == 0:
+            return
+        else:
+            raise Exception("Can't validate reels")
 
 
 # noinspection PySimplifyBooleanCheck
