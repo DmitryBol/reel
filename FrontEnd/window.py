@@ -248,19 +248,22 @@ class Output(QtWidgets.QFrame):
 
         self.widget_reels = QtWidgets.QWidget()
         self.fon_reels = QtWidgets.QGridLayout()
-        self.label = QtWidgets.QLabel('Alexa play despacito                     ')
+        self.label = QtWidgets.QLabel('Choose file where reels will be saved:')
         self.line_path = QtWidgets.QLineEdit()
-        self.line_path.setReadOnly(True)
         self.button_open = QtWidgets.QPushButton('open')
         self.button_simulate = QtWidgets.QPushButton('Check results on simulation')
 
         self.table_param = QtWidgets.QTableWidget()
         self.button_simparam = QtWidgets.QPushButton('Check results\non simulation')
 
+        self.path_reels = None
+
         if path is not None:
             self.set_path(path)
 
         self.init_ui()
+        self.init_widget()
+        self.init_table()
 
     def init_ui(self):
         self.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -269,12 +272,21 @@ class Output(QtWidgets.QFrame):
         self.fon.addWidget(self.widget_reels)
         self.fon.setContentsMargins(0, 0, 0, 0)
 
-        self.fon_reels.addWidget(self.label, 0, 0, 1, 3)
-        self.fon_reels.setRowStretch(4, 4)
-        self.widget_reels.setLayout(self.fon_reels)
-
         self.table_param.hide()
 
+        self.setLayout(self.fon)
+
+    def init_widget(self):
+        self.fon_reels.addWidget(self.label, 0, 0, 1, 2)
+        self.fon_reels.addWidget(self.line_path, 1, 0)
+        self.fon_reels.addWidget(self.button_open, 1, 1)
+        self.fon_reels.addWidget(self.button_simulate, 2, 0, 1, 2)
+        self.fon_reels.setRowStretch(4, 4)
+        self.fon_reels.setColumnStretch(0, 4)
+        self.widget_reels.setLayout(self.fon_reels)
+        self.button_open.clicked.connect(self.file_open)
+
+    def init_table(self):
         self.table_param.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.table_param.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.table_param.setColumnCount(2)
@@ -287,30 +299,22 @@ class Output(QtWidgets.QFrame):
         self.table_param.setCellWidget(4, 0, self.button_simparam)
         self.button_simparam.clicked.connect(self.set_simparam)
 
-        self.setLayout(self.fon)
-
     def set_path(self, path):
-        self.fon_reels.addWidget(self.line_path, 1, 0, 1, 2)
-        self.fon_reels.addWidget(self.button_open, 1, 2)
-        self.fon_reels.addWidget(self.button_simulate, 2, 0, 1, 3)
-
         directory = os.path.dirname(path)
         leaf = str(path_leaf(path))
         name = leaf.split('.')[0]
         reels_path = directory + '/' + name + '_reels.txt'
         self.line_path.setText(reels_path)
-        if os.path.exists(reels_path) is True:
-            self.label.setText('Reels for this game are ready and saved in this file:')
+
+    def switch_mode(self, mode):
+        if mode is True:
+            self.table_param.hide()
+            self.widget_reels.show()
         else:
-            self.label.setText('Reels for this game will be saved in this file:')
-            self.button_open.setEnabled(False)
-            self.button_simulate.setEnabled(False)
+            self.table_param.show()
+            self.widget_reels.hide()
 
-    def set_mode1(self):
-        self.table_param.hide()
-        self.widget_reels.show()
-
-    def set_mode2(self, parameters):
+    def set_param(self, parameters):
         self.table_param.setItem(0, 0, QtWidgets.QTableWidgetItem('RTP'))
         self.table_param.setItem(0, 1, QtWidgets.QTableWidgetItem(str(parameters['rtp'])))
 
@@ -335,8 +339,11 @@ class Output(QtWidgets.QFrame):
         self.table_param.setItem(8, 0, QtWidgets.QTableWidgetItem(''))
         self.table_param.setItem(8, 1, QtWidgets.QTableWidgetItem(''))
 
-        self.table_param.show()
-        self.widget_reels.hide()
+    def file_open(self):
+        path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File', '', 'All Files (*.txt *.json);;Txt Files (*.txt);;Json Files (*.json)')
+        if path:
+            self.line_path.setText(path)
+            self.path_reels = path
 
     def set_simparam(self):
         self.table_param.setItem(5, 0, QtWidgets.QTableWidgetItem('СДО'))
@@ -457,7 +464,7 @@ class Gametype(QtWidgets.QWidget):
 
         self.frame_frequency = QtWidgets.QFrame()
         self.label_frequency = QtWidgets.QLabel('frequency')
-        self.line_frequency = None
+        self.line_frequency = LineEdits(self.width, 40, 0, sys.maxsize, None, None, True)
 
         self.frame = MyFrame()
 
@@ -483,14 +490,12 @@ class Gametype(QtWidgets.QWidget):
         self.frame_frequency.setFrameShadow(QtWidgets.QFrame.Plain)
         self.fon.addWidget(self.frame_frequency, 5, 0, 1, 2)
         self.fon.addWidget(self.label_frequency, 6, 0)
+        self.fon.addWidget(self.line_frequency, 6, 1)
 
         if mode is True:
             self.frame_frequency.hide()
             self.label_frequency.hide()
-
-        if mode is False:
-            self.line_frequency = LineEdits(self.width, 40, 0, sys.maxsize, None, None, True)
-            self.fon.addWidget(self.line_frequency, 6, 1)
+            self.line_frequency.hide()
 
         self.frame.setLayout(self.fon)
 
@@ -552,16 +557,13 @@ class Gametype(QtWidgets.QWidget):
             self.mode = False
             self.frame_frequency.show()
             self.label_frequency.show()
-            self.line_frequency = LineEdits(self.width, 40, 0, sys.maxsize, None, None, True)
-            self.fon.addWidget(self.line_frequency, 6, 1)
+            self.line_frequency.show()
 
         else:
             self.mode = True
             self.frame_frequency.hide()
             self.label_frequency.hide()
-            self.fon.removeWidget(self.line_frequency)
-            sip.delete(self.line_frequency)
-            self.line_frequency = None
+            self.line_frequency.hide()
 
     def collect_info(self):
         d = {}
@@ -571,6 +573,8 @@ class Gametype(QtWidgets.QWidget):
             d.update({'scatter': self.line_freespins.collect_info()})
         if self.box_wild.isChecked() is True:
             d.update({'wild': self.wild.collect_info()})
+        if self.mode is False:
+            d.update({'frequency': self.line_frequency.arrange_info()})
         return d
 
     def set_info(self, interim_symbol_type):
@@ -589,6 +593,9 @@ class Gametype(QtWidgets.QWidget):
         if 'wild' in interim_symbol_type:
             self.box_wild.setChecked(True)
             self.wild.set_info(interim_symbol_type)
+
+        if 'frequency' in interim_symbol_type:
+            self.line_frequency.fill_info(interim_symbol_type['frequency'])
 
 
 class Symbol(QtWidgets.QWidget):
@@ -1149,6 +1156,7 @@ class Window(QtWidgets.QWidget):
             self.label1_anim.finished.connect(self.finished_anim)
 
         self.box_param.setEnabled(self.mode)
+        self.widget_output.switch_mode(self.mode)
         for symbol in self.symbols:
             symbol.mode = not symbol.mode
             symbol.base.switch_mode()
@@ -1249,7 +1257,7 @@ class Window(QtWidgets.QWidget):
         game = Q.Game(info)
 
         if self.mode is True:
-            self.widget_output.set_mode1()
+            pass
 
         if self.mode is False:
             base_frequency = []
@@ -1283,7 +1291,7 @@ class Window(QtWidgets.QWidget):
 
             parameters = game.count_parameters(base=False, sd_flag=True)
 
-            self.widget_output.set_mode2(parameters)
+            self.widget_output.set_param(parameters)
 
 
 class Main(QtWidgets.QMainWindow):
