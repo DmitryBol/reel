@@ -64,7 +64,7 @@ class Group:
                         new_point.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=False)
                         self.points.append(new_point)
         else:
-            exit('Not supported gametype')
+            raise Exception('Not supported gametype in creating Group object')
 
     def findMin(self):
         index = -1
@@ -86,4 +86,4 @@ class Group:
             elif type == 'free':
                 print('point value: ', point.value, 'rtp: ', point.rtp, 'base_rtp: ', point.base_rtp, point.baseFrequency, point.freeFrequency)
             else:
-                exit('no such gametype')
+                raise Exception('Not supported gametype in printing Group object')

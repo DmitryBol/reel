@@ -18,6 +18,10 @@ def double_bouble(a, b):
                 b[i], b[j] = b[j], b[i]
 
 
+def calc_val(params, point):
+    return abs(point.sdnew / point.rtp - params['sdnew'] / params['rtp'])
+
+
 # делает "шахматный" порядок с символами i, j
 def Chess(frequency, i, j, game, k=1, base=True):
     new_frequency = copy.deepcopy(frequency)
@@ -95,7 +99,7 @@ def rebalance(start_point, game, gametype, params):
     print('value: ', start_point.value)
     print(start_point.baseFrequency)
 
-    prev_val = abs(start_point.sdnew - sdnew) / err_sdnew / abs(start_point.rtp - rtp) * err_rtp
+    prev_val = calc_val(params, start_point)
     new_val = copy.deepcopy(prev_val)
 
     blocked_scatters = []
@@ -138,7 +142,7 @@ def rebalance(start_point, game, gametype, params):
                 elif gametype.name == 'free':
                     result_point = Point(start_point.baseFrequency, new_frequency, game)
                 else:
-                    exit('no such gametype')
+                    raise Exception('No such gametype in rebalance')
 
                 result_point.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=True,
                                        sd_flag=False)
@@ -155,13 +159,13 @@ def rebalance(start_point, game, gametype, params):
                 elif gametype.name == 'free':
                     print('total = ', sum(result_point.freeFrequency[0]), 'free ', result_point.freeFrequency)
                 print('\n')
-                new_val = abs(result_point.sdnew - sdnew) / err_sdnew / abs(result_point.rtp - rtp) * err_rtp
+                new_val = calc_val(params, result_point)
                 if new_val < prev_val:
                     prev_val = new_val
                     SD = [result_point.sdnew, result_point.base_rtp, result_point.rtp]
                     out_point = copy.deepcopy(result_point)
                     out_game = copy.deepcopy(game)
-                    print('\n\n\nМеняется\n\n\n')
+                    print('\nChanging result\n')
 
     print('BEST SD IS ', SD[0])
     print('with base_rtp: ', SD[1], 'rtp: ', SD[2])
