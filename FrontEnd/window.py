@@ -252,6 +252,7 @@ class Output(QtWidgets.QFrame):
         self.line_path = QtWidgets.QLineEdit()
         self.button_open = QtWidgets.QPushButton('open')
         self.button_simulate = QtWidgets.QPushButton('Check results on simulation')
+        self.table_simulate = QtWidgets.QTableWidget()
 
         self.table_param = QtWidgets.QTableWidget()
         self.button_simparam = QtWidgets.QPushButton('Check results\non simulation')
@@ -277,14 +278,26 @@ class Output(QtWidgets.QFrame):
         self.setLayout(self.fon)
 
     def init_widget(self):
-        self.fon_reels.addWidget(self.label, 0, 0, 1, 2)
-        self.fon_reels.addWidget(self.line_path, 1, 0)
-        self.fon_reels.addWidget(self.button_open, 1, 1)
-        self.fon_reels.addWidget(self.button_simulate, 2, 0, 1, 2)
         self.fon_reels.setRowStretch(4, 4)
         self.fon_reels.setColumnStretch(0, 4)
         self.widget_reels.setLayout(self.fon_reels)
         self.button_open.clicked.connect(self.file_open)
+        self.button_simulate.clicked.connect(self.set_simulate)
+
+        self.table_simulate.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.table_simulate.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.table_simulate.setColumnCount(2)
+        self.table_simulate.setRowCount(4)
+        hheader = self.table_simulate.horizontalHeader()
+        hheader.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+
+        self.fon_reels.addWidget(self.label, 0, 0, 1, 2)
+        self.fon_reels.addWidget(self.line_path, 1, 0)
+        self.fon_reels.addWidget(self.button_open, 1, 1)
+        self.fon_reels.addWidget(self.button_simulate, 2, 0, 1, 2)
+        self.fon_reels.addWidget(self.table_simulate, 3, 0, 1, 2)
+
+        self.table_simulate.hide()
 
     def init_table(self):
         self.table_param.setFrameShape(QtWidgets.QFrame.NoFrame)
@@ -313,6 +326,21 @@ class Output(QtWidgets.QFrame):
         else:
             self.table_param.show()
             self.widget_reels.hide()
+
+    def set_simulate(self):
+        self.table_simulate.setItem(0, 0, QtWidgets.QTableWidgetItem('СДО'))
+        self.table_simulate.setItem(0, 1, QtWidgets.QTableWidgetItem('ХНИ'))
+
+        self.table_simulate.setItem(1, 0, QtWidgets.QTableWidgetItem('ЁБА'))
+        self.table_simulate.setItem(1, 1, QtWidgets.QTableWidgetItem('НЫЙ'))
+
+        self.table_simulate.setItem(2, 0, QtWidgets.QTableWidgetItem('ФАШ'))
+        self.table_simulate.setItem(2, 1, QtWidgets.QTableWidgetItem('ИСТ'))
+
+        self.table_simulate.setItem(3, 0, QtWidgets.QTableWidgetItem('ФАК'))
+        self.table_simulate.setItem(3, 1, QtWidgets.QTableWidgetItem('Ю'))
+
+        self.table_simulate.show()
 
     def set_param(self, parameters):
         self.table_param.setItem(0, 0, QtWidgets.QTableWidgetItem('RTP'))
@@ -1281,15 +1309,15 @@ class Window(QtWidgets.QWidget):
             game.base.fill_frequency(np.array(base_frequency).T.tolist())
             game.free.fill_frequency(np.array(free_frequency).T.tolist())
 
-            game.base.create_simple_num_comb(game.window, game.line)
+            '''game.base.create_simple_num_comb(game.window, game.line)
             game.free.create_simple_num_comb(game.window, game.line)
 
             point = Point(np.array(base_frequency).T.tolist(), np.array(free_frequency).T.tolist(), game)
 
             point.fillPoint(game, 1, 1, 1, 1, 1, 1)
-            point.fillPoint(game, 1, 1, 1, 1, 1, 1, base=False, sd_flag=True)
+            point.fillPoint(game, 1, 1, 1, 1, 1, 1, base=False, sd_flag=True)'''
 
-            parameters = game.count_parameters(base=False, sd_flag=True)
+            parameters = game.standalone_count_parameters()
 
             self.widget_output.set_param(parameters)
 
