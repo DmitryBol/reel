@@ -97,6 +97,26 @@ def make_spins(game, count=100000):
     return {'rtp': _rtp, 'sd': _sd, 'wins': count_with_win / count}
 
 
+def make_spins_ui(ui, game, count=100000):
+    payments_sum = 0
+    payments_square_sum = 0
+    count_with_win = 0
+
+    for cnt in range(count):
+        spin_result = make_spin(game, 'base')
+        if spin_result > 0:
+            count_with_win += 1
+        payments_sum += spin_result / len(game.line)
+        payments_square_sum += (spin_result / len(game.line)) ** 2
+        if (cnt + 1) % int(count/100) == 0:
+            ui.progressbar.setValue(round((cnt + 1) / count * 100))
+
+    _rtp = payments_sum / count
+    _sd = (1 / (count - 1) * (payments_square_sum - 1 / count * payments_sum ** 2)) ** 0.5
+
+    return {'rtp': _rtp, 'sd': _sd, 'wins': count_with_win / count}
+
+
 def main_process(FILES):
     frequency_1 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
     frequency_2 = [24, 48, 48, 48, 47, 56, 56, 55, 54, 54, 52, 6]
