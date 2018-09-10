@@ -503,10 +503,14 @@ class Game:
             self.base.reel_generator(self.base.frequency, self.window[0], self.distance, validate=True)
             self.free.reel_generator(self.free.frequency, self.window[0], self.distance, validate=True)
 
-        self.base.fill_scatter_num_comb(self.window)
-        self.free.fill_scatter_num_comb(self.window)
-
         self.base.create_simple_num_comb(self.window, self.line)
+        self.base.fill_scatter_num_comb(self.window)
+        self.base.fill_count_killed(self.window[0])
+        self.base.fill_simple_num_comb(self.window, self.line)
+
+        self.free.create_simple_num_comb(self.window, self.line)
+        self.free.fill_scatter_num_comb(self.window)
+        self.free.fill_count_killed(self.window[0])
         self.free.fill_simple_num_comb(self.window, self.line)
 
         return self.count_parameters(base=False, sd_flag=True)

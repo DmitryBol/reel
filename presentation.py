@@ -2,6 +2,12 @@ from Descent.Optimize import Descent_free, Descent_base
 import simulate
 from rebalance import rebalance
 
+
+def print_res(out, point, game_name):
+    out.write('Game: ' + str(game_name) + '\n')
+    out.write('Base RTP:' + str(point.base_rtp) + ', RTP:' + str(point.rtp) + ', SD:' + str(point.sdnew))
+
+
 all_games = ['Games/HappyBrauer.txt']
 
 L = len(all_games)
@@ -12,11 +18,12 @@ params = {'base_rtp': 0.65,
           'hitrate': 160,
           'err_base_rtp': 0.01,
           'err_rtp': 0.01,
-          'err_sdnew': 1,
+          'err_sdnew': 3,
           'err_hitrate': 1}
 
 rebalance_count = 0
 MAX_REBALANCE_COUNT = 5
+out = open('out.txt', 'w')
 
 for index in range(L):
     prev_value = -1
@@ -25,12 +32,19 @@ for index in range(L):
     current_point, game = Descent_base(file_name=all_games[index], params=params)
     if free_mode:
         current_point, game = Descent_free(game=game, params=params, start_point=current_point)
+
     print('REBALANCE BASE')
     current_point, game = rebalance(current_point, game, game.base, params=params)
+    if current_point.getValue() < 1:
+        print_res(out, current_point, all_games[index])
+        continue
     if free_mode:
         print('REBALANCE FREE')
         # print(current_point.freeFrequency)
         current_point, game = rebalance(current_point, game, game.free, params=params)
+    if current_point.getValue() < 1:
+        print_res(out, current_point, all_games[index])
+        continue
 
     rebalance_count += 1
     current_value = current_point.getValue()
@@ -38,7 +52,6 @@ for index in range(L):
     while rebalance_count < MAX_REBALANCE_COUNT:
         current_point, game = Descent_base(file_name=all_games[index], params=params, rebalance=False,
                                            start_point=current_point)
-
         if free_mode:
             current_point, game = Descent_free(game=game, params=params, start_point=current_point, rebalance=False)
 
@@ -46,18 +59,25 @@ for index in range(L):
         # exit('printed')
 
         current_point, game = rebalance(current_point, game, game.base, params=params)
+        if current_point.getValue() < 1:
+            break
         if free_mode:
             current_point, game = rebalance(current_point, game, game.free, params=params)
+        if current_point.getValue() < 1:
+            break
 
         prev_value = current_value
         current_value = current_point.getValue()
 
-        if current_value < 1:
-            # TODO сделать вывод результата
-            break
         if current_value == prev_value:
-            # TODO сделать сообщение о невозможности зафититься
-            break
+            current_point.scaling(base=True)
+            current_point.scaling(base=False)
+
+        rebalance_count += 1
+
+    if current_point.getValue() < 1:
+        print_res(out, current_point, all_games[index])
+        continue
 
     current_point, game = Descent_base(file_name=all_games[index], params=params, rebalance=False,
                                        start_point=current_point)
@@ -69,6 +89,10 @@ for index in range(L):
 
     print('Base RTP:', current_point.base_rtp, 'RTP:', current_point.rtp, 'SD:', current_point.sdnew)
 
+    print_res(out, current_point, all_games[index])
+
     print(all_games[index] + ' done\n\n\n')
     # simulate_result = simulate.make_spins(game, count=1_000_000)
     # print('simulate rtp: ', simulate_result['rtp'], '\tsimulate sd: ', simulate_result['sd'])
+
+

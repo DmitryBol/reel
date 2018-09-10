@@ -3,30 +3,35 @@ import json
 import FrontEnd.structure_alpha as Q
 import random
 import numpy as np
+import copy
 
 
 # noinspection SpellCheckingInspection,PyShadowingNames
 def scatter_payment(obj, gametype, matrix):
     res = 0
+    base_res = 0
     for scat in gametype.scatterlist:
         cnt = 0
         for i in range(obj.window[1]):
             for j in range(obj.window[0]):
                 if matrix[i, j] == scat:
                     cnt += 1
-        #print('scat:', scat, 'cnt:', cnt)
         res += gametype.symbol[scat].payment[cnt] * len(obj.line)
-        #print('payment:', gametype.symbol[scat].payment[cnt] * len(obj.line))
-        #print('len:', len(obj.line))
+        base_res += gametype.symbol[scat].payment[cnt] * len(obj.line)
 
         if gametype.symbol[scat].scatter[cnt] > 0:
             for _ in range(gametype.symbol[scat].scatter[cnt]):
-                res += make_spin(obj, 'free')
-    return res
+                res += make_spin(obj, 'free')[0]
+    return [res, base_res]
 
 
 def take_win(game, gametype, matrix):
-    res = scatter_payment(game, gametype, matrix)
+    scat_payment = scatter_payment(game, gametype, matrix)
+    res = scat_payment[0]
+    base_res = scat_payment[1]
+    bonus_count = 0
+    if res > base_res and gametype.name == 'base':
+        bonus_count += 1
 
     for i in range(gametype.window[1]):
         for j1 in range(gametype.window[0]):
@@ -39,13 +44,29 @@ def take_win(game, gametype, matrix):
         width = game.window[0]
         line_combination = gametype.get_combination(string, width)
         for comb in line_combination:
-            res += gametype.symbol[comb[0]].payment[comb[1]]
-    return res
+            wilds = []
+            mult = 1
+            for index in range(comb[1]):
+                if comb[2] == 'left':
+                    if string[index] in gametype.wildlist or string[index] in gametype.ewildlist:
+                        wilds.append(string[index])
+                if comb[2] == 'right':
+                    if string[gametype.window[0] - index - 1] in gametype.wildlist or string[gametype.window[0] - index - 1] in gametype.ewildlist:
+                        wilds.append(string[gametype.window[0] - index - 1])
+            for wild_id in set(wilds):
+                wild_id = int(wild_id)
+                mult *= gametype.symbol[wild_id].wild.multiplier
+            res += gametype.symbol[comb[0]].payment[comb[1]] * mult
+            if gametype.name == 'base':
+                base_res += gametype.symbol[comb[0]].payment[comb[1]] * mult
+    return [res, base_res, bonus_count]
 
 
 def make_spin(obj, type):
     matrix = np.zeros((obj.window[1], obj.window[0]))
     res = 0
+    base_res = 0
+    bonus_count = 0
     if type == 'base':
         for i in range(obj.window[0]):
             temp = random.randint(0, len(obj.base.reels[i]))
@@ -58,7 +79,10 @@ def make_spin(obj, type):
                     for k in range(obj.window[1]):
                         matrix[k, j1] = matrix[i, j1]
 
-        res += take_win(game=obj, gametype=obj.base, matrix=matrix)
+        win = take_win(game=obj, gametype=obj.base, matrix=matrix)
+        res += win[0]
+        base_res += win[1]
+        bonus_count += win[2]
 
     if type == 'free':
         for i in range(obj.window[0]):
@@ -72,12 +96,40 @@ def make_spin(obj, type):
                     for k in range(obj.window[1]):
                         matrix[k, j1] = matrix[i, j1]
 
-        res += take_win(game=obj, gametype=obj.free, matrix=matrix)
+        res += take_win(game=obj, gametype=obj.free, matrix=matrix)[0]
 
-    return res
+    return [res, base_res, bonus_count]
 
 
 def make_spins(game, count=100000):
+    payments_sum = 0
+    payments_square_sum = 0
+    count_with_win = 0
+    base_payments_sum = 0
+    bonus_count = 0
+
+    for cnt in range(count):
+        spin_result = make_spin(game, 'base')
+        if spin_result[0] > 0:
+            count_with_win += 1
+        payments_sum += spin_result[0] / len(game.line)
+        base_payments_sum += spin_result[1] / len(game.line)
+        payments_square_sum += (spin_result[0] / len(game.line)) ** 2
+        bonus_count += spin_result[2]
+        if (cnt + 1) % int(count/100) == 0:
+            print(str(round((cnt + 1) / count * 100)) + '%')
+
+    _rtp = payments_sum / count
+    _sd = (1 / (count - 1) * (payments_square_sum - 1 / count * payments_sum ** 2)) ** 0.5
+    _base_rtp = base_payments_sum / count
+    _hitrate = -1
+    if bonus_count > 0:
+        _hitrate = count / bonus_count
+
+    return {'rtp': _rtp, 'sd': _sd, 'wins': count_with_win / count, 'base_rtp': _base_rtp, 'hitrate': _hitrate}
+
+
+def make_spins_ui(ui, game, count=100000):
     payments_sum = 0
     payments_square_sum = 0
     count_with_win = 0
@@ -89,7 +141,7 @@ def make_spins(game, count=100000):
         payments_sum += spin_result / len(game.line)
         payments_square_sum += (spin_result / len(game.line)) ** 2
         if (cnt + 1) % int(count/100) == 0:
-            print(str(round((cnt + 1) / count * 100)) + '%')
+            ui.progressbar.setValue(round((cnt + 1) / count * 100))
 
     _rtp = payments_sum / count
     _sd = (1 / (count - 1) * (payments_square_sum - 1 / count * payments_sum ** 2)) ** 0.5
