@@ -329,7 +329,7 @@ class Game:
     def freemean2(self, lines):
         s = self.count_base_RTP2('free', lines)
         v = 0
-        for scatter_comb in self.base.scatter_num_comb:
+        for scatter_comb in self.free.scatter_num_comb:
             scat = scatter_comb[0]
             counts = scatter_comb[1]
             for cnt in range(self.window[0] + 1):
