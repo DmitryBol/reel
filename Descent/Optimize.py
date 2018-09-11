@@ -237,8 +237,8 @@ def Descent_base(params, file_name, rebalance=True, start_point=None):
                         print('hitrate ', findedMin.hitrate)
                         root = copy.deepcopy(findedMin)
                         print(root.baseFrequency)
-                        # findedMin.printBaseReel(file_name)
-                        break
+                        findedMin.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
+                        return [findedMin, game]
                     else:
                         print('path ', findedMin.value)
                         root = copy.deepcopy(findedMin)
@@ -324,7 +324,8 @@ def Descent_free(params, start_point, game, rebalance=True):
                         print('hitrate ', findedMin.hitrate)
                         root = copy.deepcopy(findedMin)
                         print(root.freeFrequency)
-                        break
+                        findedMin.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False)
+                        return [findedMin, game]
                     else:
                         print('path ', findedMin.value)
                         root = copy.deepcopy(findedMin)
