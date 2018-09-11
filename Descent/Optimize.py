@@ -324,6 +324,9 @@ def Descent_free(params, start_point, game, rebalance=True):
                         print('hitrate ', findedMin.hitrate)
                         root = copy.deepcopy(findedMin)
                         print(root.freeFrequency)
+                        root.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=True)
+                        root.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=True)
+                        return [root, game]
                         break
                     else:
                         print('path ', findedMin.value)
