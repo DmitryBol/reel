@@ -44,9 +44,21 @@ def take_win(game, gametype, matrix):
         width = game.window[0]
         line_combination = gametype.get_combination(string, width)
         for comb in line_combination:
-            res += gametype.symbol[comb[0]].payment[comb[1]]
+            wilds = []
+            mult = 1
+            for index in range(comb[1]):
+                if comb[2] == 'left':
+                    if string[index] in gametype.wildlist or string[index] in gametype.ewildlist:
+                        wilds.append(string[index])
+                if comb[2] == 'right':
+                    if string[gametype.window[0] - index - 1] in gametype.wildlist or string[gametype.window[0] - index - 1] in gametype.ewildlist:
+                        wilds.append(string[gametype.window[0] - index - 1])
+            for wild_id in set(wilds):
+                wild_id = int(wild_id)
+                mult *= gametype.symbol[wild_id].wild.multiplier
+            res += gametype.symbol[comb[0]].payment[comb[1]] * mult
             if gametype.name == 'base':
-                base_res += gametype.symbol[comb[0]].payment[comb[1]]
+                base_res += gametype.symbol[comb[0]].payment[comb[1]] * mult
     return [res, base_res, bonus_count]
 
 
