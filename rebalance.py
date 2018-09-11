@@ -232,6 +232,9 @@ def rebalance(start_point, game, gametype, params):
 
     start_point.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=True)
 
+    if start_point.F(base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=True) < 1:
+        return start_point
+
     print('during fitting')
     print('base rtp: ', start_point.base_rtp)
     print('rtp: ', start_point.rtp)
