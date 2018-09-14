@@ -2,10 +2,10 @@
 import sys
 import os
 import json
-import ntpath
-import numpy as np
 import FrontEnd.structure_alpha as Q
-import simulate
+import FrontEnd.threads as threads
+import FrontEnd.info_functions as info_func
+import FrontEnd.sub_functions as sub
 from PyQt5 import QtWidgets, QtGui, QtCore, sip
 
 # counts
@@ -16,61 +16,6 @@ default_color = QtGui.QColor(220, 220, 220)
 wild_color = QtGui.QColor(255, 247, 165)
 scatter_color = QtGui.QColor(192, 236, 249)
 wildnscatter_color = QtGui.QColor(221, 172, 225)
-
-
-def path_leaf(path):
-    head, tail = ntpath.split(path)
-    return tail or ntpath.basename(head)
-
-
-def isint(value):
-    try:
-        int(value)
-        return int(value)
-    except ValueError:
-        return -1
-
-
-def isfloat(value):
-    try:
-        float(value)
-        return True
-    except ValueError:
-        return False
-
-
-def float_validate(self, bot, top):
-    sender = self.sender()
-    if str(sender.text()) != '':
-        try:
-            if not bot <= float(sender.text()) <= top:
-                raise ValueError
-            sender.setStyleSheet('')
-        except ValueError:
-            sender.setStyleSheet('QLineEdit {background-color: #f6989d;}')
-    else:
-        sender.setStyleSheet('')
-
-
-def int_validate(self, bot, top):
-    sender = self.sender()
-    if str(sender.text()) != '':
-        try:
-            if not bot <= int(sender.text()) <= top:
-                raise ValueError
-            sender.setStyleSheet('')
-        except ValueError:
-            sender.setStyleSheet('QLineEdit {background-color: #f6989d;}')
-    else:
-        sender.setStyleSheet('')
-
-
-def string_validate(self):
-    sender = self.sender()
-    if str(sender.text()) == '' or ';' in str(sender.text()):
-        sender.setStyleSheet('QLineEdit {background-color: #f6989d;}')
-    else:
-        sender.setStyleSheet('')
 
 
 class Aesthetic(QtWidgets.QWidget):
@@ -152,32 +97,14 @@ class LineEdits(QtWidgets.QWidget):
 
         self.setLayout(self.fon)
 
-    int_validate = int_validate
-    float_validate = float_validate
+    int_validate = sub.int_validate
+    float_validate = sub.float_validate
 
-    def collect_info(self):
-        info = []
-        for i in range(len(self.lines)):
-            if isint(str(self.lines[i].text())) > 0:
-                info.append([i + 1, int(str(self.lines[i].text()))])
-        return info
+    collect_line_info = info_func.collect_line_info
+    arrange_line_info = info_func.arrange_line_info
 
-    def arrange_info(self):
-        info = []
-        for i in range(len(self.lines)):
-            if isint(str(self.lines[i].text())) > 0:
-                info.append(int(str(self.lines[i].text())))
-            else:
-                return None
-        return info
-
-    def set_info(self, interim_info):
-        for obj in interim_info:
-            self.lines[obj[0] - 1].setText(str(obj[1]))
-
-    def fill_info(self, interim_info):
-        for i in range(len(interim_info)):
-            self.lines[i].setText(str(interim_info[i]))
+    set_line_info = info_func.set_line_info
+    fill_line_info = info_func.fill_line_info
 
 
 class SwitchButtons(QtWidgets.QWidget):
@@ -227,17 +154,9 @@ class SwitchButtons(QtWidgets.QWidget):
                                  "QPushButton:hover { background-color: #27E83A }")
             sender.setIcon(QtGui.QIcon('icons/allowed.png'))
 
-    def collect_info(self):
-        info = []
-        for i in range(len(self.buttons)):
-            if not self.buttons[i].isChecked():
-                info.append(i + 1)
-        return info
+    collect_button_info = info_func.collect_button_info
 
-    def set_info(self, interim_symbol_type):
-        for i in range(len(self.buttons)):
-            if i + 1 not in interim_symbol_type['position']:
-                self.buttons[i].click()
+    set_button_info = info_func.set_button_info
 
 
 class Output(QtWidgets.QFrame):
@@ -305,7 +224,7 @@ class Output(QtWidgets.QFrame):
 
     def set_path(self, path):
         directory = os.path.dirname(path)
-        leaf = str(path_leaf(path))
+        leaf = str(sub.path_leaf(path))
         name = leaf.split('.')[0]
         reels_path = directory + '/' + name + '_reels.txt'
         self.line_path.setText(reels_path)
@@ -326,10 +245,10 @@ class Output(QtWidgets.QFrame):
         self.table_simparam.setItem(1, 1, QtWidgets.QTableWidgetItem(str(simparam['sd'])))
 
         self.table_simparam.setItem(2, 0, QtWidgets.QTableWidgetItem('hitrate'))
-        #self.table_simparam.setItem(2, 1, QtWidgets.QTableWidgetItem(str(simparam['hitrate'])))
+        self.table_simparam.setItem(2, 1, QtWidgets.QTableWidgetItem(str(simparam['hitrate'])))
 
         self.table_simparam.setItem(3, 0, QtWidgets.QTableWidgetItem('base RTP'))
-        #self.table_simparam.setItem(3, 1, QtWidgets.QTableWidgetItem(str(simparam['base_rtp'])))
+        self.table_simparam.setItem(3, 1, QtWidgets.QTableWidgetItem(str(simparam['base_rtp'])))
 
         self.table_simparam.setItem(4, 0, QtWidgets.QTableWidgetItem('wins'))
         self.table_simparam.setItem(4, 1, QtWidgets.QTableWidgetItem(str(simparam['wins'])))
@@ -398,28 +317,11 @@ class Wild(QtWidgets.QWidget):
         w = fm.boundingRect(text).width()
         self.line_substitute.setFixedWidth(max(w + 12, 40))
 
-    float_validate = float_validate
+    float_validate = sub.float_validate
 
-    def collect_info(self):
-        d = {}
-        if isint(str(self.line_multiplier.text())) >= 0:
-            d.update({'multiplier': int(str(self.line_multiplier.text()))})
-        if self.checkbox_expand.checkState() == QtCore.Qt.Checked:
-            d.update({'expand': True})
-        words = str(self.line_substitute.text()).split('; ')
-        if words is not None and words != ['']:
-            d.update({'substitute': words})
-        return d
+    collect_wild_info = info_func.collect_wild_info
 
-    def set_info(self, interim_symbol_type):
-        if 'multiplier' in interim_symbol_type['wild']:
-            self.line_multiplier.setText(str(interim_symbol_type['wild']['multiplier']))
-
-        if 'expand' in interim_symbol_type['wild'] and interim_symbol_type['wild']['expand'] is True:
-            self.checkbox_expand.setChecked(True)
-
-        if 'substitute' in interim_symbol_type['wild']:
-            self.line_substitute.setText('; '.join(interim_symbol_type['wild']['substitute']))
+    set_wild_info = info_func.set_wild_info
 
 
 class Gametype(QtWidgets.QWidget):
@@ -564,37 +466,9 @@ class Gametype(QtWidgets.QWidget):
             self.label_frequency.hide()
             self.line_frequency.hide()
 
-    def collect_info(self):
-        d = {}
-        d.update({'direction': str(self.line_direction.currentText())})
-        d.update({'position': self.buttons_position.collect_info()})
-        if self.box_scatter.isChecked() is True:
-            d.update({'scatter': self.line_freespins.collect_info()})
-        if self.box_wild.isChecked() is True:
-            d.update({'wild': self.wild.collect_info()})
-        if self.mode is False:
-            d.update({'frequency': self.line_frequency.arrange_info()})
-        return d
+    collect_gametype_info = info_func.collect_gametype_info
 
-    def set_info(self, interim_symbol_type):
-        if 'direction' in interim_symbol_type:
-            index = self.line_direction.findText(interim_symbol_type['direction'], QtCore.Qt.MatchFixedString)
-            if index >= 0:
-                self.line_direction.setCurrentIndex(index)
-
-        if 'position' in interim_symbol_type:
-            self.buttons_position.set_info(interim_symbol_type)
-
-        if 'scatter' in interim_symbol_type:
-            self.box_scatter.setChecked(True)
-            self.line_freespins.set_info(interim_symbol_type['scatter'])
-
-        if 'wild' in interim_symbol_type:
-            self.box_wild.setChecked(True)
-            self.wild.set_info(interim_symbol_type)
-
-        if 'frequency' in interim_symbol_type:
-            self.line_frequency.fill_info(interim_symbol_type['frequency'])
+    set_gametype_info = info_func.set_gametype_info
 
 
 class Symbol(QtWidgets.QWidget):
@@ -707,33 +581,17 @@ class Symbol(QtWidgets.QWidget):
             self.button_free.setToolTip('Edit free game properties')
             self.button_state = True
 
-    string_validate = string_validate
+    string_validate = sub.string_validate
 
-    def collect_info(self):
-        d = {}
-        if str(self.line_name.text()) == '':
-            raise Exception('symbol name should not be empty')
-        if ';' in str(self.line_name.text()):
-            raise Exception('symbol name should not contain ";" in it')
-        else:
-            d.update({'name': str(self.line_name.text())})
-        d.update({'payment': self.line_payment.collect_info()})
-        d.update({'base': self.base.collect_info()})
-        if self.free is not None:
-            d.update({'free': self.free.collect_info()})
-        return d
+    collect_symbol_info = info_func.collect_symbol_info
 
-    def set_info(self, interim_symbol):
-        self.line_name.setText(str(interim_symbol['name']))
-        self.line_payment.set_info(interim_symbol['payment'])
-        if 'base' in interim_symbol:
-            self.base.set_info(interim_symbol['base'])
-        if 'free' in interim_symbol:
-            self.button_free_clicked()
-            self.free.set_info(interim_symbol['free'])
+    set_symbol_info = info_func.set_symbol_info
 
 
 class Window(QtWidgets.QWidget):
+    request_parameters = QtCore.pyqtSignal(Q.Game)
+    request_simulation = QtCore.pyqtSignal(Q.Game)
+
     def __init__(self, path=None):
         super(Window, self).__init__()
 
@@ -743,6 +601,9 @@ class Window(QtWidgets.QWidget):
         self.path = path
 
         self.game = None
+
+        self.real_thread = QtCore.QThread()
+        self._threaded = threads.Threaded()
 
         self.fon_scroll = QtWidgets.QGridLayout()
         self.scroll = QtWidgets.QScrollArea()
@@ -821,6 +682,8 @@ class Window(QtWidgets.QWidget):
         self.progressbar = QtWidgets.QProgressBar()
 
         self.init_ui()
+
+        self.init_threads()
 
     def init_ui(self):
         self.fon.setRowStretch(0, 4)
@@ -951,6 +814,15 @@ class Window(QtWidgets.QWidget):
         self.fon_scroll.addLayout(self.fon_log, 2, 0)
         self.setLayout(self.fon_scroll)
 
+    def init_threads(self):
+        self._threaded.count_parameters_result.connect(self.count_parameters_finished)
+        self._threaded.simulation_result.connect(self.simulation_finished)
+        self.request_parameters.connect(self._threaded.count_parameters)
+        self.request_simulation.connect(self._threaded.simulation)
+        self._threaded.moveToThread(self.real_thread)
+        QtWidgets.qApp.aboutToQuit.connect(self.real_thread.quit)
+        #self._thread.start()
+
     def click_add_symbol(self, opened=None):
         global default_color
         symbol = Symbol(self.count_symbols, self.width, self.mode)
@@ -1049,7 +921,7 @@ class Window(QtWidgets.QWidget):
         del self.deleteLines[num]
 
     def width_changed(self):
-        if isint(str(self.line_width.text())) > 0:
+        if sub.isint(str(self.line_width.text())) > 0:
             self.width = int(str(self.line_width.text()))
             for i in range(len(self.symbols)):
                 self.symbols[i].width = self.width
@@ -1108,7 +980,7 @@ class Window(QtWidgets.QWidget):
                 self.grid_lines.addWidget(self.lines[i], pos[0], pos[1])
 
     def height_changed(self):
-        if isint(str(self.line_height.text())) > 0:
+        if sub.isint(str(self.line_height.text())) > 0:
             self.height = int(str(self.line_height.text()))
             for line in self.lines:
                 for atom in line.lines:
@@ -1120,8 +992,8 @@ class Window(QtWidgets.QWidget):
                     atom.textChanged.connect(lambda: self.int_validate(1, self.height))
                     atom.textChanged.emit(atom.text())
 
-    int_validate = int_validate
-    float_validate = float_validate
+    int_validate = sub.int_validate
+    float_validate = sub.float_validate
 
     def switch_mode(self):
         if self.mode is True:
@@ -1171,128 +1043,70 @@ class Window(QtWidgets.QWidget):
         self.label_mode1.setMaximumWidth(4000)
         self.label_mode2.setMaximumWidth(4000)
 
-    def answer(self):
-        parameters = self.run()
-        self.widget_output.setItem(0, 0, QtWidgets.QTableWidgetItem('RTP'))
-        self.widget_output.setItem(0, 1, QtWidgets.QTableWidgetItem(str(parameters['rtp'])))
+    collect_info = info_func.collect_info
+    collect_frequency = info_func.collect_frequency
 
-        self.widget_output.setItem(1, 0, QtWidgets.QTableWidgetItem('volatility'))
-        self.widget_output.setItem(1, 1, QtWidgets.QTableWidgetItem(str(parameters['sdnew'])))
-
-        self.widget_output.setItem(2, 0, QtWidgets.QTableWidgetItem('hitrate'))
-        self.widget_output.setItem(2, 1, QtWidgets.QTableWidgetItem(str(parameters['hitrate'])))
-
-        self.widget_output.setItem(3, 0, QtWidgets.QTableWidgetItem('base RTP'))
-        self.widget_output.setItem(3, 1, QtWidgets.QTableWidgetItem(str(parameters['base_rtp'])))
-
-    def collect_info(self):
-        d = {}
-        d.update({'window': [self.width, self.height]})
-        symbols = []
-        for i in range(len(self.symbols)):
-            symbols.append(self.symbols[i].collect_info())
-        d.update({'symbols': symbols})
-
-        lines = []
-        for i in range(len(self.lines)):
-            if self.lines[i].arrange_info() is not None:
-                lines.append(self.lines[i].arrange_info())
-        d.update({'lines': lines})
-
-        if isint(str(self.line_freemultiplier.text())) >= 0:
-            d.update({'free_multiplier': int(str(self.line_freemultiplier.text()))})
-
-        if isint(str(self.line_distance.text())) >= 0:
-            d.update({'distance': int(str(self.line_distance.text()))})
-
-        if self.mode is True:
-            if isfloat(str(self.line_rtp.text())) and isfloat(str(self.line_rtp_error.text())):
-                d.update({'RTP': [float(str(self.line_rtp.text())), float(str(self.line_rtp_error.text()))]})
-
-            if isfloat(str(self.line_volatility.text())) and isfloat(str(self.line_volatility_error.text())):
-                d.update({'volatility': [float(str(self.line_volatility.text())), float(str(self.line_volatility_error.text()))]})
-
-            if isfloat(str(self.line_hitrate.text())) and isfloat(str(self.line_hitrate_error.text())):
-                d.update({'hitrate': [float(str(self.line_hitrate.text())), float(str(self.line_hitrate_error.text()))]})
-
-            if isfloat(str(self.line_baseRTP.text())) and isfloat(str(self.line_baseRTP_error.text())):
-                d.update({'baseRTP': [float(str(self.line_baseRTP.text())), float(str(self.line_baseRTP_error.text()))]})
-        return d
-
-    def set_info(self, interim):
-        if 'window' in interim:
-            self.line_width.setText(str(interim['window'][0]))
-            self.width = interim['window'][0]
-            self.line_height.setText(str(interim['window'][1]))
-            self.height = interim['window'][1]
-
-        for i in range(len(interim['symbols'])):
-            self.click_add_symbol(True)
-            self.symbols[i].set_info(interim['symbols'][i])
-
-        for i in range(len(interim['lines'])):
-            self.click_add_line()
-            self.lines[i].fill_info(interim['lines'][i])
-
-        if 'free_multiplier' in interim:
-            self.line_freemultiplier.setText(str(interim['free_multiplier']))
-
-        if 'distance' in interim:
-            self.line_distance.setText(str(interim['distance']))
-
-        if 'RTP' in interim:
-            self.line_rtp.setText(str(interim['RTP'][0]))
-            self.line_rtp_error.setText(str(interim['RTP'][1]))
-
-        if 'volatility' in interim:
-            self.line_volatility.setText(str(interim['volatility'][0]))
-            self.line_volatility_error.setText(str(interim['volatility'][1]))
-
-        if 'hitrate' in interim:
-            self.line_hitrate.setText(str(interim['hitrate'][0]))
-            self.line_hitrate_error.setText(str(interim['hitrate'][1]))
-
-        if 'baseRTP' in interim:
-            self.line_baseRTP.setText(str(interim['baseRTP'][0]))
-            self.line_baseRTP_error.setText(str(interim['baseRTP'][1]))
+    set_info = info_func.set_info
 
     def run(self):
-        info = self.collect_info()
-        self.game = Q.Game(info)
+        self.real_thread.start()
+        self.line_log.setStyleSheet('QLineEdit {border: none}')
+        try:
+            info = self.collect_info()
+            self.game = Q.Game(info)
 
-        if self.mode is True:
-            pass
+            if self.mode is True:
+                self.line_log.setText('Generating reels...')
 
-        if self.mode is False:
-            base_frequency = []
-            free_frequency = []
-            for symbol in self.symbols:
-                if symbol.base.line_frequency.arrange_info() is None:
-                    i = self.symbols.index(symbol) + 1
-                    raise Exception('Frequency of symbol ' + str(i) + ' was not set correctly')
-                else:
-                    base_frequency.append(symbol.base.line_frequency.arrange_info())
+            if self.mode is False:
+                self.line_log.setText('Counting parameters...')
+                frequencies = self.collect_frequency()
 
-                if symbol.free is None:
-                    free_frequency.append(symbol.base.line_frequency.arrange_info())
-                else:
-                    if symbol.free.line_frequency.arrange_info() is None:
-                        i = self.symbols.index(symbol) + 1
-                        raise Exception('Frequency of symbol ' + str(i) + ' was not set correctly')
-                    else:
-                        free_frequency.append(symbol.free.line_frequency.arrange_info())
+                self.game.base.fill_frequency(frequencies['base_frequency'])
+                self.game.free.fill_frequency(frequencies['free_frequency'])
 
-            self.game.base.fill_frequency(np.array(base_frequency).T.tolist())
-            self.game.free.fill_frequency(np.array(free_frequency).T.tolist())
+                self.request_parameters.emit(self.game)
+                self.progressbar.setRange(0, 0)
 
-            parameters = self.game.standalone_count_parameters()
+        except Exception as error:
+            self.line_log.setStyleSheet('QLineEdit {color: red; border: none}')
+            self.line_log.setText("%s" % error)
 
-            self.widget_output.set_param(parameters)
+    @QtCore.pyqtSlot(dict)
+    def count_parameters_finished(self, parameters):
+        self.real_thread.terminate()
+        self.line_log.setStyleSheet('QLineEdit {color: green; border: none}')
+        self.line_log.setText("process finished")
+
+        self.widget_output.set_param(parameters)
+        self.progressbar.setRange(0, 100)
 
     def simulation(self):
-        simparam = simulate.make_spins_ui(self, self.game)
-        self.widget_output.set_simparam(simparam)
+        self.real_thread.start()
+        self.line_log.setStyleSheet('QLineEdit {border: none}')
+        self.line_log.setText('Running simulation...')
+        try:
+            self.request_simulation.emit(self.game)
+            self.progressbar.setRange(0, 0)
 
+        except Exception as error:
+            self.line_log.setStyleSheet('QLineEdit {color: red; border: none}')
+            self.line_log.setText("%s" % error)
+
+    @QtCore.pyqtSlot(dict)
+    def simulation_finished(self, simparam):
+        self.real_thread.terminate()
+        self.line_log.setStyleSheet('QLineEdit {color: green; border: none}')
+        self.line_log.setText("process finished")
+
+        self.widget_output.set_simparam(simparam)
+        self.progressbar.setRange(0, 100)
+
+    def stop(self):
+        self.real_thread.terminate()
+        self.line_log.setStyleSheet('QLineEdit {border: none}')
+        self.line_log.setText("process terminated")
+        self.progressbar.setRange(0, 100)
 
 
 class Main(QtWidgets.QMainWindow):
@@ -1342,6 +1156,10 @@ class Main(QtWidgets.QMainWindow):
         self.action_simulation.triggered.connect(self.trigger_simulation)
         self.action_simulation.setEnabled(False)
 
+        self.action_stop = QtWidgets.QAction(QtGui.QIcon('icons/stop.png'), 'Stop', self)
+        self.action_stop.triggered.connect(self.trigger_stop)
+        self.action_stop.setEnabled(False)
+
         self.action_switch = QtWidgets.QAction(QtGui.QIcon('icons/switch2.png'), 'Switch mode', self)
         self.action_switch.triggered.connect(self.trigger_switch)
         self.action_switch.setEnabled(False)
@@ -1368,6 +1186,7 @@ class Main(QtWidgets.QMainWindow):
 
         run.addAction(self.action_run)
         run.addAction(self.action_simulation)
+        run.addAction(self.action_stop)
         run.addAction(self.action_switch)
 
         self.tool_file.addAction(self.action_new)
@@ -1377,6 +1196,7 @@ class Main(QtWidgets.QMainWindow):
 
         self.tool_run.addAction(self.action_run)
         self.tool_run.addAction(self.action_simulation)
+        self.tool_run.addAction(self.action_stop)
         self.tool_run.addAction(self.action_switch)
 
     def close_tab(self, current_index):
@@ -1407,52 +1227,31 @@ class Main(QtWidgets.QMainWindow):
             else:
                 self.action_simulation.setEnabled(True)
 
+            if current.real_thread.isRunning() is False:
+                self.action_stop.setEnabled(False)
+            else:
+                self.action_stop.setEnabled(True)
+
     def trigger_run(self):
-        self.action_run.setIcon(QtGui.QIcon('icons/stop.png'))
-        self.tab.setDisabled(True)
         current = self.tab.currentWidget()
-        current.line_log.setStyleSheet('QLineEdit {border: none}')
-        if current.mode is True:
-            current.line_log.setText('Generating reels...')
-        else:
-            current.line_log.setText('Counting parameters...')
-        QtWidgets.QApplication.processEvents()
-        try:
-            current.run()
-
-        except Exception as error:
-            current.line_log.setStyleSheet('QLineEdit {color: red; border: none}')
-            current.line_log.setText("%s" % error)
-
-        else:
-            current.line_log.setStyleSheet('QLineEdit {color: green; border: none}')
-            current.line_log.setText("process finished")
-
-        self.tab.setEnabled(True)
-        self.action_run.setIcon(QtGui.QIcon('icons/run2.png'))
+        current.real_thread.finished.connect(lambda: self.action_stop.setEnabled(False))
+        current.run()
 
         self.action_simulation.setEnabled(True)
+        self.action_stop.setEnabled(True)
 
     def trigger_simulation(self):
-        self.action_simulation.setIcon(QtGui.QIcon('icons/stop.png'))
-        self.tab.setDisabled(True)
         current = self.tab.currentWidget()
-        current.line_log.setStyleSheet('QLineEdit {border: none}')
-        current.line_log.setText('Running simulation...')
-        QtWidgets.QApplication.processEvents()
-        try:
-            current.simulation()
+        current.real_thread.finished.connect(lambda: self.action_stop.setEnabled(False))
+        current.simulation()
 
-        except Exception as error:
-            current.line_log.setStyleSheet('QLineEdit {color: red; border: none}')
-            current.line_log.setText("%s" % error)
+        self.action_stop.setEnabled(True)
 
-        else:
-            current.line_log.setStyleSheet('QLineEdit {color: green; border: none}')
-            current.line_log.setText("process finished")
+    def trigger_stop(self):
+        current = self.tab.currentWidget()
+        current.stop()
 
-        self.tab.setEnabled(True)
-        self.action_simulation.setIcon(QtGui.QIcon('icons/simulation.png'))
+        self.action_stop.setEnabled(False)
 
     def trigger_switch(self):
         current = self.tab.currentWidget()
@@ -1489,7 +1288,7 @@ class Main(QtWidgets.QMainWindow):
             file.close()
             self.action_save.setEnabled(True)
             i = self.tab.currentIndex()
-            self.tab.setTabText(i, str(path_leaf(path)))
+            self.tab.setTabText(i, str(sub.path_leaf(path)))
 
     def trigger_open(self):
         path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File', '', 'All Files (*.txt *.json);;Txt Files (*.txt);;Json Files (*.json)')
@@ -1500,16 +1299,20 @@ class Main(QtWidgets.QMainWindow):
             file.close()
 
             new_tab = Window(path)
-            new_tab.set_info(info)
+            try:
+                new_tab.set_info(info)
+            except Exception as error:
+                print(error)
 
-            self.tab.addTab(new_tab, str(path_leaf(path)))
+            self.tab.addTab(new_tab, str(sub.path_leaf(path)))
             self.tab.setCurrentWidget(new_tab)
 
     def trigger_quit(self):
         QtWidgets.qApp.quit()
 
 
-app = QtWidgets.QApplication(sys.argv)
-a_window = Main()
-a_window.showMaximized()
-sys.exit(app.exec_())
+if __name__ == "__main__":
+    app = QtWidgets.QApplication(sys.argv)
+    a_window = Main()
+    a_window.showMaximized()
+    sys.exit(app.exec_())

@@ -112,3 +112,9 @@ venv.bak/
 .idea/workspace.xml
 archive/test_file.py
 /.idea/kotlinc.xml
+/colors.scheme.xml
+/debugger.xml
+/filetypes.xml
+/ide.general.xml
+/ui.lnf.xml
+/vcs.xml

@@ -129,24 +129,34 @@ def make_spins(game, count=100000):
     return {'rtp': _rtp, 'sd': _sd, 'wins': count_with_win / count, 'base_rtp': _base_rtp, 'hitrate': _hitrate}
 
 
-def make_spins_ui(ui, game, count=100000):
+def make_spins_ui(progressbar, game, count=100000):
     payments_sum = 0
     payments_square_sum = 0
     count_with_win = 0
+    base_payments_sum = 0
+    bonus_count = 0
+
+    progressbar.setRange(0, count - 1)
 
     for cnt in range(count):
         spin_result = make_spin(game, 'base')
-        if spin_result > 0:
+        if spin_result[0] > 0:
             count_with_win += 1
-        payments_sum += spin_result / len(game.line)
-        payments_square_sum += (spin_result / len(game.line)) ** 2
-        if (cnt + 1) % int(count/100) == 0:
-            ui.progressbar.setValue(round((cnt + 1) / count * 100))
+        payments_sum += spin_result[0] / len(game.line)
+        base_payments_sum += spin_result[1] / len(game.line)
+        payments_square_sum += (spin_result[0] / len(game.line)) ** 2
+        bonus_count += spin_result[2]
+        #if (cnt + 1) % int(count/100) == 0:
+        progressbar.setValue(cnt)
 
     _rtp = payments_sum / count
     _sd = (1 / (count - 1) * (payments_square_sum - 1 / count * payments_sum ** 2)) ** 0.5
+    _base_rtp = base_payments_sum / count
+    _hitrate = -1
+    if bonus_count > 0:
+        _hitrate = count / bonus_count
 
-    return {'rtp': _rtp, 'sd': _sd, 'wins': count_with_win / count}
+    return {'rtp': _rtp, 'sd': _sd, 'wins': count_with_win / count, 'base_rtp': _base_rtp, 'hitrate': _hitrate}
 
 
 def main_process(FILES):
