@@ -230,7 +230,9 @@ def rebalance(start_point, game, gametype, params):
     err_rtp = params['err_rtp']
     err_sdnew = params['err_sdnew']
 
-    start_point.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=True)
+    while start_point.value > 1:
+        print(start_point.value)
+        start_point.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=True)
 
     if start_point.F(base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=True) < 1:
         return [start_point, game]
