@@ -12,7 +12,7 @@ class OutResult:
         self.total_scats = len(scatterlist)
 
     def add_symbols(self, symbols):
-        self.total_length = 3 * len(symbols)
+        self.total_length = 7 * len(symbols)
 
 
 def notice_positions(frequency, gametype):

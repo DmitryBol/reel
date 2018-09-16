@@ -115,4 +115,14 @@ class Point:
         f.close()
         f1.close()
 
-
+    def collect_params(self, game):
+        temp_game = copy.deepcopy(game)
+        temp_game.base.reels = copy.deepcopy(self.baseReel)
+        temp_game.free.reels = copy.deepcopy(self.freeReel)
+        temp_game.base.frequency = copy.deepcopy(self.baseFrequency)
+        temp_game.free.frequency = copy.deepcopy(self.freeFrequency)
+        params = temp_game.standalone_count_parameters(shuffle=False)
+        self.base_rtp = params['base_rtp']
+        self.rtp = params['rtp']
+        self.sdnew = params['sdnew']
+        self.hitrate = params['hitrate']

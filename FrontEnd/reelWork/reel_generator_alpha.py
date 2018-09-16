@@ -7,6 +7,24 @@ from . import support as support
 import numpy.random as np_rnd
 
 
+def name_by_index(symbols, index):
+    if index < len(symbols):
+        return symbols[index].name
+    else:
+        raise Exception('Symbols count is lower than index')
+
+
+def indexes_to_names(symbols, reels):
+    res = []
+    reel_id = 0
+    for reel in reels:
+        res.append([])
+        for symbol_id in reel:
+            res[reel_id].append(name_by_index(symbols, symbol_id))
+        reel_id += 1
+    return res
+
+
 def index_by_name(symbols, name):
     index = 0
     for symbol in symbols:
@@ -135,6 +153,7 @@ def generate_one_reel(symbols, array, distance, seniors):
     s = int(sum(array))
     res = []
     for j in range(10000):
+
         array_copy = copy.deepcopy(array)
         last_symbols = [-10] * (distance - 1)
         senior_coef = 2
@@ -142,8 +161,12 @@ def generate_one_reel(symbols, array, distance, seniors):
         good_shuffle = True
 
         for _ in range(s):
+            if sum(array_copy) == 0:
+                break
             new_index = get_element(array_copy, seniors, last_symbols, senior_coef, power)
+
             if new_index == -1:
+                #print(last_symbols, array_copy)
                 good_shuffle = False
                 break
             else:
@@ -152,7 +175,7 @@ def generate_one_reel(symbols, array, distance, seniors):
                     raise Exception('Reel frequency for symbol ' + symbols[new_index].name + "can't be divided by "
                                                                                              "minimal group length")
 
-                probability_distribution = [1 / x for x in list_of_candidates]
+                probability_distribution = [1.0 / x for x in list_of_candidates]
                 prob_s = sum(probability_distribution)
                 for i in range(len(probability_distribution)):
                     probability_distribution[i] = probability_distribution[i] / prob_s
@@ -160,7 +183,7 @@ def generate_one_reel(symbols, array, distance, seniors):
 
             for k in range(distance - 1 - cnt):
                 last_symbols[distance - k - 2] = last_symbols[distance - k - 3]
-            for k in range(cnt):
+            for k in range(min(cnt, len(last_symbols))):
                 last_symbols[k] = new_index
             array_copy[new_index] -= cnt
             for _ in range(cnt):

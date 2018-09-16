@@ -3,6 +3,7 @@ import numpy as np
 import itertools
 import re
 import copy
+import matplotlib.pyplot as plt
 
 from FrontEnd import moments
 # import moments
@@ -514,3 +515,57 @@ class Game:
         self.free.fill_simple_num_comb(self.window, self.line)
 
         return self.count_parameters(base=False, sd_flag=True)
+
+    def fill_borders(self, out_plot):
+        if self.borders is None:
+            print('No payment borders for plot')
+            return
+        if 0 not in self.borders:
+            self.borders = [0] + self.borders
+        self.base.create_simple_num_comb(self.window, self.line)
+        self.base.fill_scatter_num_comb(self.window)
+        self.base.fill_count_killed(self.window[0])
+        self.base.fill_simple_num_comb(self.window, self.line)
+
+        self.free.create_simple_num_comb(self.window, self.line)
+        self.free.fill_scatter_num_comb(self.window)
+        self.free.fill_count_killed(self.window[0])
+        self.free.fill_simple_num_comb(self.window, self.line)
+
+        freemean = self.freemean2(self.line)
+        keys_to_bars = {}
+        for border in self.borders:
+            keys_to_bars['<' + str(border)] = 0
+
+        total_bet = len(self.line)
+        for comb in self.base.simple_num_comb:
+            index = 0
+            while index < len(self.borders) and comb[2]/total_bet >= self.borders[index]:
+                index += 1
+            keys_to_bars['<' + str(self.borders[index])] += comb[1]
+        for scatter_comb in self.base.scatter_num_comb:
+            for scatter_count in range(self.window[0] + 1):
+                if self.base.symbol[scatter_comb[0]].scatter[scatter_count] > 0:
+                    payment = self.base.symbol[scatter_comb[0]].payment[scatter_count]
+                    payment += freemean * self.base.symbol[scatter_comb[0]].scatter[scatter_count]
+                    index = 0
+                    while index < len(self.borders) and payment >= self.borders[index]:
+                        index += 1
+                        keys_to_bars['<' + str(self.borders[index])] += scatter_comb[1][scatter_count]
+                elif self.base.symbol[scatter_comb[0]].payment[scatter_count] > 0:
+                    index = 0
+                    payment = self.base.symbol[scatter_comb[0]].payment[scatter_count]
+                    while index < len(self.borders) and payment >= self.borders[index]:
+                        index += 1
+                        keys_to_bars['<' + str(self.borders[index])] += scatter_comb[1][scatter_count]
+        all_combinations_cnt = self.base.all_combinations2()
+        for key in self.borders:
+            keys_to_bars['<' + str(key)] = keys_to_bars['<' + str(key)] / all_combinations_cnt
+        if '<0' in keys_to_bars:
+            del keys_to_bars['<0']
+        plt.bar(range(len(keys_to_bars)), list(keys_to_bars.values()), align='center')
+        plt.xticks(range(len(keys_to_bars)), list(keys_to_bars.keys()))
+        plt.title('Line wins distribution')
+        plt.savefig(out_plot)
+        plt.clf()
+        return
