@@ -581,6 +581,6 @@ class Game:
         plt.clf()
         return
 
-    def generate_parameters_reels(self, out_log, max_rebalance_count, distribution_filename=None):
+    def generate_parameters_reels(self, out_log, max_rebalance_count=5, distribution_filename=None):
         main_process(out_log=out_log, max_rebalance_count=max_rebalance_count, plot_name=distribution_filename,
                      game_structure=self)
