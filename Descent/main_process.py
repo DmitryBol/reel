@@ -51,12 +51,17 @@ def is_done(current_point, start_time, game_name, game, out_log, plot_name):
     return False
 
 
-def main_process(game_name, out_log, max_rebalance_count, plot_name=None):
-    file = open(game_name, 'r')
-    j = file.read()
-    interim = json.loads(j)
-    game = Game(interim)
-    file.close()
+def main_process(out_log, max_rebalance_count, plot_name=None, game_structure=None, game_name=None):
+    if game_name is not None:
+        file = open(game_name, 'r')
+        j = file.read()
+        interim = json.loads(j)
+        game = Game(interim)
+        file.close()
+    elif game_structure is not None:
+        game = copy.deepcopy(game_structure)
+    else:
+        raise Exception('There is no structure Game or rules file for main process')
     params = {'rtp': game.RTP[0], 'err_rtp': game.RTP[1], 'base_rtp': game.baseRTP[0], 'err_base_rtp': game.baseRTP[1],
               'sdnew': game.volatility[0], 'err_sdnew': game.volatility[1], 'hitrate': game.hitrate[0],
               'err_hitrate': game.hitrate[1]}

@@ -6,6 +6,7 @@ import copy
 import matplotlib.pyplot as plt
 
 from FrontEnd import moments
+from Descent.main_process import main_process
 # import moments
 import FrontEnd.reelWork.reel_generator_alpha as rg
 
@@ -279,8 +280,6 @@ class Game:
             self.free_multiplier = sought(interim, 'free_multiplier')
         else:
             self.free_multiplier = 1
-
-
 
         self.RTP = sought(interim, 'RTP')
         self.volatility = sought(interim, 'volatility')
@@ -581,3 +580,7 @@ class Game:
         plt.savefig(out_plot)
         plt.clf()
         return
+
+    def generate_parameters_reels(self, out_log, max_rebalance_count, distribution_filename=None):
+        main_process(out_log=out_log, max_rebalance_count=max_rebalance_count, plot_name=distribution_filename,
+                     game_structure=self)
