@@ -51,15 +51,15 @@ def is_done(current_point, start_time, game_name, game, out_log, plot_name):
     return False
 
 
-def main_process(out_log, max_rebalance_count=5, plot_name=None, game_structure=None, game_name=None):
+def main_process(out_log, max_rebalance_count=5, plot_name=None, game_structure: Game=None, game_name=None):
     if game_name is not None:
         file = open(game_name, 'r')
         j = file.read()
         interim = json.loads(j)
-        game = Game(interim)
+        game: Game = Game(interim)
         file.close()
     elif game_structure is not None:
-        game = copy.deepcopy(game_structure)
+        game: Game = copy.deepcopy(game_structure)
     else:
         raise Exception('There is no structure Game or rules file for main process')
     params = {'rtp': game.RTP[0], 'err_rtp': game.RTP[1], 'base_rtp': game.baseRTP[0], 'err_base_rtp': game.baseRTP[1],
@@ -134,6 +134,9 @@ def main_process(out_log, max_rebalance_count=5, plot_name=None, game_structure=
     print('Base RTP:', current_point.base_rtp, 'RTP:', current_point.rtp, 'SD:', current_point.sdnew, 'Hitrate: ',
           current_point.hitrate)
 
+    if game_structure is not None:
+        game_structure.base.reels = copy.deepcopy(game.base.reels)
+        game_structure.free.reels = copy.deepcopy(game.free.reels)
     print_res(out_log, current_point, game_name, game)
     create_plot(plot_name, current_point, game)
 
