@@ -51,7 +51,7 @@ def is_done(current_point, start_time, game_name, game, out_log, plot_name):
     return False
 
 
-def main_process(out_log, max_rebalance_count, plot_name=None, game_structure=None, game_name=None):
+def main_process(out_log, max_rebalance_count=5, plot_name=None, game_structure=None, game_name=None):
     if game_name is not None:
         file = open(game_name, 'r')
         j = file.read()

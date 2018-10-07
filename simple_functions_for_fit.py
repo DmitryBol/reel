@@ -1,6 +1,5 @@
 # coding=utf-8
 import json
-import FrontEnd.structure_alpha as Q
 import math
 import copy
 
