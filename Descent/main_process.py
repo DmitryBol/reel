@@ -26,6 +26,8 @@ def print_res(out, point: Point, game_name, game):
 
 
 def create_plot(plot_name, point: Point, game):
+    if plot_name is None:
+        return
     temp_game = copy.deepcopy(game)
     temp_game.base.frequency = copy.deepcopy(point.base.frequency)
     temp_game.free.frequency = copy.deepcopy(point.free.frequency)
@@ -49,7 +51,7 @@ def is_done(current_point, start_time, game_name, game, out_log, plot_name):
     return False
 
 
-def main_process(game_name, out_log, max_rebalance_count, plot_name):
+def main_process(game_name, out_log, max_rebalance_count, plot_name=None):
     file = open(game_name, 'r')
     j = file.read()
     interim = json.loads(j)
