@@ -61,8 +61,9 @@ def remove_groups(gametype, reels):
                 group_len += 1
             else:
                 if group_len not in gametype.symbol[symbol_id].group_by:
-                    raise Exception('Reels have group of symbol ' + gametype.symbol[symbol_id].name + "which length "
-                                                                                                      "not in rules")
+                    raise Exception(
+                        'Reels have group of symbol ' + gametype.symbol[symbol_id].name + " which length (" + str(
+                            group_len) + ") not in rules")
                 else:
                     res[reel_id].append(prev_id)
                     group_len = 1
@@ -105,7 +106,8 @@ def simple_validate_reels(distance, gametype, reels):
         L = len(reel)
         for index in range(L):
             if reel_id not in gametype.symbol[reel[index]].position:
-                raise Exception('Reels have symbol ' + gametype.symbol[reel[index]].name + ' on ' + str(reel_id + 1) + ' reel')
+                raise Exception(
+                    'Reels have symbol ' + gametype.symbol[reel[index]].name + ' on ' + str(reel_id + 1) + ' reel')
             array = []
             for i in range(distance - 1):
                 array.append(reel[(index + i + 1) % L])
@@ -166,7 +168,7 @@ def generate_one_reel(symbols, array, distance, seniors):
             new_index = get_element(array_copy, seniors, last_symbols, senior_coef, power)
 
             if new_index == -1:
-                #print(last_symbols, array_copy)
+                # print(last_symbols, array_copy)
                 good_shuffle = False
                 break
             else:
@@ -209,27 +211,29 @@ def generate_one_reel(symbols, array, distance, seniors):
     return res
 
 
-def reel_generator(self, array, width, distance, validate=False):
+def reel_generator(gametype, frequency_array, window_width, reel_distance, validate=False):
     seniors = []
     res = []
-    total_symbols = len(self.symbol)
+    total_symbols = len(gametype.symbol)
     for i in range(total_symbols):
-        if self.symbol[i].scatter:
+        if gametype.symbol[i].scatter:
             seniors.append(i)
-        if self.symbol[i].wild:
-            if self.symbol[i].wild.expand:
+        if gametype.symbol[i].wild:
+            if gametype.symbol[i].wild.expand:
                 seniors.append(i)
 
-    for i in range(width):
-        res.append(generate_one_reel(self.symbol, array[i], distance, seniors))
+    for i in range(window_width):
+        res.append(generate_one_reel(gametype.symbol, frequency_array[i], reel_distance, seniors))
 
-    self.reels = res
+    # раньше ленты записывались в gametype
+    # gametype.reels = res
 
     if validate:
-        if simple_validate_reels(distance, self, res) == 0:
-            return
+        if simple_validate_reels(reel_distance, gametype, res) == 0:
+            return res
         else:
             raise Exception("Can't validate reels")
+    return res
 
 
 # noinspection PySimplifyBooleanCheck

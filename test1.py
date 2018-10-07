@@ -40,5 +40,11 @@ game.free.fill_scatter_num_comb(game.window)
 game.free.fill_count_killed(game.window[0])
 game.free.fill_simple_num_comb(game.window, game.line)
 
+print(game.base.scatter_num_comb[0])
 
-print(make_spins(game))
+print(game.freemean2(game.line))
+print(game.count_base_RTP2('base', game.line))
+print(game.count_RTP2(game.freemean2(game.line), game.count_base_RTP2('base', game.line)))
+print(game.count_hitrate2())
+
+#print(make_spins(game))

@@ -16,6 +16,8 @@ class OutResult:
 
 
 def notice_positions(frequency, gametype):
+    if frequency is None:
+        return None
     window_width = len(frequency)
     n_symbols = len(gametype.symbol)
     res = copy.deepcopy(frequency)
@@ -28,24 +30,19 @@ def notice_positions(frequency, gametype):
     return res
 
 
-def get_scatter_frequency(gameFileName, HR, ERROR):
-    file = open(gameFileName, 'r')
-    j = file.read()
-    interim = json.loads(j)
-    game = Q.Game(interim)
-    file.close()
+def get_scatter_frequency(game, hitrate, hitrate_error):
 
-    exit = True
+    exit_flag = True
     for scat in game.base.scatterlist:
         for cnt in range(game.window[0] + 1):
             if game.base.symbol[scat].scatter[cnt] > 0:
-                exit = False
-    if exit:
+                exit_flag = False
+    if exit_flag:
         return -1
 
     res = OutResult(game.base.scatterlist)
 
-    if HR == -1:
+    if hitrate == -1:
         for scatter_id in game.base.scatterlist:
             if max(game.base.symbol[scatter_id].scatter) > 0:
                 res[scatter_id] = 0
@@ -65,8 +62,8 @@ def get_scatter_frequency(gameFileName, HR, ERROR):
 
     temp_HR = game.count_hitrate2()
 
-    while math.fabs(temp_HR - HR) > ERROR:
-        if temp_HR < HR:
+    while math.fabs(temp_HR - hitrate) > hitrate_error:
+        if temp_HR < hitrate:
             index = 0
             while index in game.base.scatterlist:
                 index += 1

@@ -1,12 +1,6 @@
-import json
-import FrontEnd.structure_alpha as Q
-import time
-import simple_functions_for_fit as sm
 import copy
-import numpy as np
 from Descent.Point import Point
 from Descent.Split import Split
-from simple_functions_for_fit import notice_positions
 
 Inf = 0.05
 wildInf = 0.025
@@ -14,59 +8,39 @@ ewildInf = 0.015
 
 
 class Group:
-    def __init__(self, game, type, root, number, params, rebalance=True):
+    def __init__(self, game, type_name, root: Point, number_of_groups, params, rebalance=True):
         self.root = root
-        base_rtp = params['base_rtp']
-        rtp = params['rtp']
-        sdnew = params['sdnew']
-        err_base_rtp = params['err_base_rtp']
-        err_rtp = params['err_rtp']
-        err_sdnew = params['err_sdnew']
 
-        if type == 'base':
+        if type_name == 'base':
             gametype = game.base
-
-            self.total = [sum(i) for i in root.baseFrequency]
-            self.split = Split(gametype, number, root.baseFrequency)
-            self.points = []
-            for i in range(number - 1):
-                for j in range(i + 1, number):
-                    group1 = self.split.groupTransfer(gametype, i, j, rebalance=rebalance)
-                    if group1:
-                        new_point = Point(group1.frequency, root.freeFrequency, game)
-                        new_point.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
-                        self.points.append(
-                            new_point
-                        )
-                    group2 = self.split.groupTransfer(gametype, j, i, rebalance=rebalance)
-                    if group2:
-                        new_point = Point(group2.frequency, root.freeFrequency, game)
-                        new_point.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
-                        self.points.append(
-                            new_point
-                        )
-
-        elif type == 'free':
+            main_frequency = root.get_base_frequency()
+            second_frequency = root.get_free_frequency()
+        elif type_name == 'free':
             gametype = game.free
-            self.total = [sum(i) for i in root.freeFrequency]
-            self.split = Split(gametype, number, root.freeFrequency)
-            self.points = []
-            for i in range(number - 1):
-                for j in range(i + 1, number):
-                    group1 = self.split.groupTransfer(gametype, i, j, rebalance=rebalance)
-                    if group1:
-                        new_point = Point(root.baseFrequency, group1.frequency, game)
-                        new_point.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=False)
-                        self.points.append(new_point)
-                    group2 = self.split.groupTransfer(gametype, j, i, rebalance=rebalance)
-                    if group2:
-                        new_point = Point(root.baseFrequency, group2.frequency, game)
-                        new_point.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=False)
-                        self.points.append(new_point)
+            main_frequency = root.get_free_frequency()
+            second_frequency = root.get_base_frequency()
         else:
-            raise Exception('Not supported gametype in creating Group object')
+            raise Exception('Not supported gametype')
 
-    def findMin(self):
+        self.total = [sum(i) for i in main_frequency]
+        self.split = Split(gametype, number_of_groups, main_frequency)
+        self.points = []
+        for i in range(number_of_groups - 1):
+            for j in range(i + 1, number_of_groups):
+                group1 = self.split.group_transfer(gametype, i, j, balance=rebalance)
+                if group1:
+                    new_point = Point(main_frequency=group1.frequency, second_frequency=second_frequency, game=game,
+                                      main_type=type_name)
+                    new_point.fill_point(game, params)
+                    self.points.append(new_point)
+                group2 = self.split.group_transfer(gametype, j, i, balance=rebalance)
+                if group2:
+                    new_point = Point(main_frequency=group2.frequency, second_frequency=second_frequency, game=game,
+                                      main_type=type_name)
+                    new_point.fill_point(game, params)
+                    self.points.append(new_point)
+
+    def find_best_point(self):
         index = -1
         current = copy.deepcopy(self.root.value)
         for i in range(len(self.points)):
@@ -79,11 +53,12 @@ class Group:
         else:
             return copy.deepcopy(self.points[index])
 
-    def printGroup(self, type='base'):
+    def print_group(self, type_name='base'):
         for point in self.points:
-            if type == 'base':
-                print('point value: ', point.value, point.baseFrequency)
-            elif type == 'free':
-                print('point value: ', point.value, 'rtp: ', point.rtp, 'base_rtp: ', point.base_rtp, point.baseFrequency, point.freeFrequency)
+            if type_name == 'base':
+                print('point value: ', point.value, point.base.frequency)
+            elif type_name == 'free':
+                print('point value: ', point.value, 'rtp: ', point.rtp, 'base_rtp: ', point.base_rtp,
+                      point.base.frequency, point.free.frequency)
             else:
-                raise Exception('Not supported gametype in printing Group object')
+                raise Exception('Not supported gametype')

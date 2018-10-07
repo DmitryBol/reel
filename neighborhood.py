@@ -362,7 +362,7 @@ def FirstMethod(hitrate, err_hitrate, file_name):
 
     #float(s[0]), float(s[1]), float(s[2])
 
-    root.fillVal(base_rtp, freemean, rtp, sdnew, err_base_rtp, err_freemean, err_rtp, err_sdnew)
+    root.fill_point_metric(base_rtp, freemean, rtp, sdnew, err_base_rtp, err_freemean, err_rtp, err_sdnew)
     print('root value ', root.value)
 
     print('assuming base_rtp, freemean, rtp, sdnew ', base_rtp, freemean, rtp, sdnew)

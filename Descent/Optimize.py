@@ -1,16 +1,9 @@
-import json
-import FrontEnd.structure_alpha as Q
-import time
 import simple_functions_for_fit as sm
 import copy
-import numpy as np
 from Descent.Point import Point
-from Descent.Split import Split
 from Descent.Groups import Group
-from simple_functions_for_fit import notice_positions
-from Descent.rebalance import rebalance
-from FrontEnd.reelWork.reel_generator_alpha import name_by_index
-from FrontEnd.reelWork.reel_generator_alpha import indexes_to_names
+from FrontEnd.structure_alpha import Game
+from Descent.parameters_utils import get_parameters_from_dict
 
 Inf = 0.05
 wildInf = 0.025
@@ -20,198 +13,178 @@ scatterInf = 0.005
 scaleLimit = 5
 
 
-class Reels:
-    def __init__(self, game, base_frequency, free_frequency, base_reels=None, free_reels=None):
-        self.base = copy.deepcopy(base_reels)
-        self.free = copy.deepcopy(free_reels)
-        temp_game = copy.deepcopy(game)
-        if base_reels is None:
-            temp_game.base.reel_genertor(base_frequency, temp_game.window[0], temp_game.window[1])
-            self.base = copy.deepcopy(temp_game.base.reels)
-        if free_reels is None:
-            temp_game.free.reel_genertor(free_frequency, temp_game.window[0], temp_game.window[1])
-            self.free = copy.deepcopy(temp_game.free.reels)
-
-
 def double_bubble(a, b):
     for i in range(len(a) - 1):
         for j in range(i + 1, len(a)):
             if a[i] > a[j]:
                 a[i], a[j] = a[j], a[i]
                 b[i], b[j] = b[j], b[i]
+    return
 
 
-def initialDistributions(obj, out, params):
-    base_rtp = params['base_rtp']
-    rtp = params['rtp']
-    sdnew = params['sdnew']
-    err_base_rtp = params['err_base_rtp']
-    err_rtp = params['err_rtp']
-    err_sdnew = params['err_sdnew']
-
-    freeFrequency = [[int(300 / len(obj.free.symbol)) for _ in range(len(obj.free.symbol))] for _ in
-                     range(obj.window[0])]
-
-    for scatter_id in obj.free.scatterlist:
-        if max(obj.free.symbol[scatter_id].scatter) > 0:
-            for reel_id in range(obj.window[0]):
-                freeFrequency[reel_id][scatter_id] = max(1, int(scatterInf * 300))
-
-    baseFrequency = [[0 for _ in range(len(obj.base.symbol))] for _ in range(obj.window[0])]
-    numb_of_scatters = []
-    for reel_id in range(obj.window[0]):
-        numb_of_scatters.append(0)
-        for j in range(len(obj.base.scatterlist)):
-            scatter_id = obj.base.scatterlist[j]
-            baseFrequency[reel_id][scatter_id] = out.scatter_index_with_frequency[scatter_id]
-            numb_of_scatters[reel_id] += baseFrequency[reel_id][scatter_id]
-
-    initial = []
-    total = out.total_length
-    n_symbols = len(obj.base.symbol)
-
-    blocked_scatters = []
-    for scatter_id in obj.base.scatterlist:
-        if max(obj.base.symbol[scatter_id].scatter) > 0:
-            blocked_scatters.append(scatter_id)
-    n_symbols -= len(blocked_scatters)
-
+def get_blocked_symbols(window_width, symbols):
     blocked_symbols = []
-    for reel_id in range(obj.window[0]):
+    for reel_id in range(window_width):
         blocked_symbols.append([])
-        for symbol_id in range(len(obj.base.symbol)):
-            if reel_id not in obj.base.symbol[symbol_id].position:
+        for symbol_id in range(len(symbols)):
+            if reel_id not in symbols[symbol_id].position:
                 blocked_symbols[reel_id].append(symbol_id)
-        k = (total - numb_of_scatters[reel_id]) // (n_symbols - len(blocked_symbols[reel_id]))
-        ost = (total - numb_of_scatters[reel_id]) % (n_symbols - len(blocked_symbols[reel_id]))
-        for symbol_id in range(len(obj.base.symbol)):
-            if symbol_id not in blocked_symbols[reel_id] and symbol_id not in blocked_scatters:
-                baseFrequency[reel_id][symbol_id] = k
+    return blocked_symbols
+
+
+def create_initial_frequency(game, blocked_symbols, total, numb_of_scatters, used_symbols_cnt, base_frequency,
+                             blocked_scatters, initial, free_frequency, main_symbol, type_flag):
+    used_symbols_count = used_symbols_cnt - 1
+    if main_symbol in blocked_scatters:
+        return
+
+    for reel_id in range(game.window[0]):
+        if type_flag == 'middle':
+            base_frequency[reel_id][main_symbol] = (total - numb_of_scatters[reel_id]) // (
+                    used_symbols_count - len(blocked_symbols[reel_id]))
+        elif type_flag == 'max':
+            base_frequency[reel_id][main_symbol] = int(game.base.max_border * total)
+        elif type_flag == 'min':
+            base_frequency[reel_id][main_symbol] = int(game.base.infPart(main_symbol) * total) + 1
+        else:
+            raise Exception('No such type for initial distribution')
+
+        partition_frequency = (total - numb_of_scatters[reel_id] - base_frequency[reel_id][main_symbol]) // (
+                used_symbols_count - len(blocked_symbols[reel_id]))
+        ost = (total - numb_of_scatters[reel_id] - base_frequency[reel_id][main_symbol]) % (
+                used_symbols_count - len(blocked_symbols[reel_id]))
+        for symbol_id in range(len(game.base.symbol)):
+            if symbol_id not in blocked_scatters + blocked_symbols[reel_id] + [main_symbol]:
+                base_frequency[reel_id][symbol_id] = partition_frequency
         counter = 0
         symbol_id = 0
         while counter < ost:
-            if symbol_id not in blocked_symbols[reel_id] and symbol_id not in blocked_scatters:
-                baseFrequency[reel_id][symbol_id] += 1
+            if symbol_id not in blocked_scatters + blocked_symbols[reel_id] + [main_symbol]:
+                base_frequency[reel_id][symbol_id] += 1
                 counter += 1
             symbol_id += 1
 
-    initial.append(Point(baseFrequency, freeFrequency, obj))
+    initial.append(Point(main_frequency=base_frequency, second_frequency=free_frequency, game=game, main_type='base'))
 
-    n_symbols -= 1
-    for i in range(len(obj.base.symbol)):
-        if i in blocked_scatters:
-            continue
-        for reel_id in range(obj.window[0]):
-            baseFrequency[reel_id][i] = int(obj.base.max_border * total)
-            k = (total - numb_of_scatters[reel_id] - baseFrequency[reel_id][i]) // (
-                    n_symbols - len(blocked_symbols[reel_id]))
-            ost = (total - numb_of_scatters[reel_id] - baseFrequency[reel_id][i]) % (
-                    n_symbols - len(blocked_symbols[reel_id]))
-            for symbol_id in range(len(obj.base.symbol)):
-                if symbol_id not in blocked_scatters + blocked_symbols[reel_id] + [i]:
-                    baseFrequency[reel_id][symbol_id] = k
-            counter = 0
-            symbol_id = 0
-            while counter < ost:
-                if symbol_id not in blocked_scatters + blocked_symbols[reel_id] + [i]:
-                    baseFrequency[reel_id][symbol_id] += 1
-                    counter += 1
-                symbol_id += 1
-        initial.append(Point(baseFrequency, freeFrequency, obj))
 
-        for reel_id in range(obj.window[0]):
-            baseFrequency[reel_id][i] = int(obj.base.infPart(i) * total) + 1
-            k = (total - numb_of_scatters[reel_id] - baseFrequency[reel_id][i]) // (
-                    n_symbols - len(blocked_symbols[reel_id]))
-            ost = (total - numb_of_scatters[reel_id] - baseFrequency[reel_id][i]) % (
-                    n_symbols - len(blocked_symbols[reel_id]))
-            for symbol_id in range(len(obj.base.symbol)):
-                if symbol_id not in blocked_scatters + blocked_symbols[reel_id] + [i]:
-                    baseFrequency[reel_id][symbol_id] = k
-            counter = 0
-            symbol_id = 0
-            while counter < ost:
-                if symbol_id not in blocked_scatters + blocked_symbols[reel_id] + [i]:
-                    baseFrequency[reel_id][symbol_id] += 1
-                    counter += 1
-                symbol_id += 1
-        initial.append(Point(baseFrequency, baseFrequency, obj))
+def fresh_free_scatters(free_frequency, scatterlist, free_symbols, window_width, max_len):
+    for scatter_id in scatterlist:
+        if max(free_symbols[scatter_id].scatter) > 0:
+            for reel_id in range(window_width):
+                if reel_id in free_symbols[scatter_id].position:
+                    free_frequency[reel_id][scatter_id] = max(1, int(scatterInf * max_len))
+                else:
+                    free_frequency[reel_id][scatter_id] = 0
+    return
+
+
+def initial_base_distributions(game: Game, scatter_frequency_result, params, max_len=100):
+    free_frequency = [[max_len // len(game.free.symbol) for _ in range(len(game.free.symbol))] for _ in
+                      range(game.window[0])]
+
+    fresh_free_scatters(free_frequency=free_frequency, scatterlist=game.free.scatterlist, free_symbols=game.free.symbol,
+                        window_width=game.window[0], max_len=max_len)
+
+    base_frequency = [[0 for _ in range(len(game.base.symbol))] for _ in range(game.window[0])]
+    numb_of_scatters = []
+    for reel_id in range(game.window[0]):
+        numb_of_scatters.append(0)
+        for j in range(len(game.base.scatterlist)):
+            scatter_id = game.base.scatterlist[j]
+            base_frequency[reel_id][scatter_id] = scatter_frequency_result.scatter_index_with_frequency[scatter_id]
+            numb_of_scatters[reel_id] += base_frequency[reel_id][scatter_id]
+
+    initial = []
+    total = scatter_frequency_result.total_length
+    game_symbols_count = len(game.base.symbol)
+
+    blocked_scatters = []
+    for scatter_id in game.base.scatterlist:
+        if max(game.base.symbol[scatter_id].scatter) > 0:
+            blocked_scatters.append(scatter_id)
+    used_symbols_count = game_symbols_count - len(blocked_scatters)
+
+    blocked_symbols = get_blocked_symbols(window_width=game.window[0], symbols=game.base.symbol)
+
+    main_symbol = 0
+    for symbol_id in range(len(game.base.symbol)):
+        if symbol_id not in blocked_scatters and any(
+                [symbol_id not in blocked_symbols[reel_id] for reel_id in range(game.window[0])]):
+            main_symbol = symbol_id
+            break
+    create_initial_frequency(game=game, blocked_symbols=blocked_symbols, total=total,
+                             numb_of_scatters=numb_of_scatters, used_symbols_cnt=used_symbols_count,
+                             base_frequency=base_frequency, blocked_scatters=blocked_scatters, initial=initial,
+                             free_frequency=free_frequency, main_symbol=main_symbol, type_flag='middle')
+
+    for symbol_id in range(len(game.base.symbol)):
+        create_initial_frequency(game=game, blocked_symbols=blocked_symbols, total=total,
+                                 numb_of_scatters=numb_of_scatters, used_symbols_cnt=used_symbols_count,
+                                 base_frequency=base_frequency, blocked_scatters=blocked_scatters, initial=initial,
+                                 free_frequency=free_frequency, main_symbol=symbol_id, type_flag='max')
+
+        create_initial_frequency(game=game, blocked_symbols=blocked_symbols, total=total,
+                                 numb_of_scatters=numb_of_scatters, used_symbols_cnt=used_symbols_count,
+                                 base_frequency=base_frequency, blocked_scatters=blocked_scatters, initial=initial,
+                                 free_frequency=free_frequency, main_symbol=symbol_id, type_flag='min')
 
     counter = 1
     # TODO убрать slice
     for point in initial[:1]:
-        point.fillPoint(obj, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
-        print('end point ', counter, point.baseFrequency, point.value)
+        point.fill_point(game, params)
+        print('end point ', counter, point.base.frequency, point.value)
         counter += 1
     return initial[:1]
 
 
-def initialFreeDistributions(obj, baseFrequency, freeFrequency, params):
-    base_rtp = params['base_rtp']
-    rtp = params['rtp']
-    sdnew = params['sdnew']
-    err_base_rtp = params['err_base_rtp']
-    err_rtp = params['err_rtp']
-    err_sdnew = params['err_sdnew']
-
+def initial_free_distributions(game, base_frequency, free_frequency, params):
     initial = []
 
-    freeFrequencyCopy = sm.notice_positions(freeFrequency, obj.free)
-    baseFrequencyCopy = sm.notice_positions(baseFrequency, obj.base)
-    initial.append(Point(baseFrequencyCopy, freeFrequencyCopy, obj))
+    freeFrequencyCopy = sm.notice_positions(free_frequency, game.free)
+    baseFrequencyCopy = sm.notice_positions(base_frequency, game.base)
+    initial.append(
+        Point(second_frequency=baseFrequencyCopy, main_frequency=freeFrequencyCopy, game=game, main_type='free'))
     for p in initial:
-        p.fillPoint(obj, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False, sd_flag=False)
+        p.fill_point(game, params, base=False, sd_flag=False)
 
     return initial
 
 
-# параметр rebalance отвечает за сбаланировку групп псоле перекидываний элементов
+# параметр balance отвечает за балансировку групп после перекидываний элементов
 
-def Descent_base(params, file_name, rebalance=True, start_point=None):
-    base_rtp = params['base_rtp']
-    rtp = params['rtp']
-    sdnew = params['sdnew']
-    err_base_rtp = params['err_base_rtp']
-    err_rtp = params['err_rtp']
-    err_sdnew = params['err_sdnew']
-    hitrate = params['hitrate']
-    err_hitrate = params['err_hitrate']
+def descent_base(params, game, balance=True, start_point=None):
+    base_rtp, rtp, sdnew, hitrate, err_base_rtp, err_rtp, err_sdnew, err_hitrate = get_parameters_from_dict(params)
 
-    file = open(file_name, 'r')
-    j = file.read()
-    interim = json.loads(j)
-    game = Q.Game(interim)
-    file.close()
-
-    out = sm.get_scatter_frequency(file_name, hitrate, err_hitrate)
+    out = sm.get_scatter_frequency(game, hitrate, err_hitrate)
     if out == -1 and hitrate != -1:
         raise Exception('Game rules not contain freespins, but you try to fit HitRate. Please, set it -1')
     elif out == -1:
-
         out = sm.OutResult(game.base.scatterlist)
         out.add_symbols(game.base.symbol)
+
     blocked_scatters = []
     for scatter_id in game.base.scatterlist:
         if max(game.base.symbol[scatter_id].scatter) > 0:
             blocked_scatters.append(scatter_id)
 
-    print('started')
+    print('started base descent')
     game.base.create_simple_num_comb(game.window, game.line)
     game.free.create_simple_num_comb(game.window, game.line)
     print('created_num_comb')
 
     roots = []
-    if start_point == None:
-        roots = initialDistributions(game, out, params)
+    if start_point is None:
+        roots = initial_base_distributions(game, out, params)
     else:
         roots.append(start_point)
-    findedMin = Point(frequency_base=roots[0].baseFrequency, frequency_free=roots[0].freeFrequency, game=game)
-    print('INITIAL POINTS, THEIR DISTRIBUTIONS, VALUES AND PARAMETRES:')
+    finded_min = Point(main_frequency=roots[0].base.frequency, second_frequency=roots[0].free.frequency, game=game,
+                       main_type='base')
+    print('INITIAL POINTS, THEIR DISTRIBUTIONS, VALUES AND PARAMETERS:')
 
     value_list = []
     for root in roots:
         # root.fillVal(base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
-        print(root.baseFrequency, ' value is ', root.value, 'base_rtp, rtp, sdnew, hitrate :',
+        print(root.base.frequency, ' value is ', root.value, 'base_rtp, rtp, sdnew, hitrate :',
               root.base_rtp, root.rtp, root.sdnew, root.hitrate)
         value_list = value_list + [root.value]
     index_list = list(range(len(value_list)))
@@ -220,86 +193,73 @@ def Descent_base(params, file_name, rebalance=True, start_point=None):
     print('assuming errors for base rtp, rtp,  sd ', err_base_rtp, err_rtp, err_sdnew)
 
     # print(value_list)
+    index_list.remove(0)
     index_list = [0] + index_list
 
     for index in index_list:
-        print('TRYING POINT', roots[index].baseFrequency,
+        print('TRYING POINT', roots[index].base.frequency,
               ' value is ', roots[index].value,
               'base_rtp, rtp, sdnew, hitrate :',
               roots[index].base_rtp, roots[index].rtp, roots[index].sdnew, roots[index].hitrate)
         root = roots[index]
 
-        min_is_found = False
         currentScale = 0
-        while not min_is_found and currentScale < scaleLimit:
+        while currentScale < scaleLimit:
             number_of_groups = len(game.base.wildlist) + len(game.base.ewildlist) + \
                                len(game.base.scatterlist) - len(blocked_scatters) + 1
             max_number_of_groups = len(game.base.symbol) - len(blocked_scatters)
             while number_of_groups <= max_number_of_groups:
-                temp_group = Group(game, 'base', root, number_of_groups, params, rebalance=rebalance)
+                temp_group = Group(game, 'base', root, number_of_groups, params, rebalance=balance)
                 print('groups ', temp_group.split.groups)
 
-                temp_group.printGroup()
+                temp_group.print_group()
 
-                findedMin = temp_group.findMin()
-                if findedMin != -1:
-                    if findedMin.value < 1:
-                        min_is_found = True
-                        print('ending with ', findedMin.value)
-                        print('base ', findedMin.base_rtp)
-                        print('rtp ', findedMin.rtp)
-                        print('sdnew ', findedMin.sdnew)
-                        print('hitrate ', findedMin.hitrate)
-                        root = copy.deepcopy(findedMin)
-                        print(root.baseFrequency)
-                        game.base.reels = copy.deepcopy(findedMin.baseReel)
-                        game.free.reels = copy.deepcopy(findedMin.freeReel)
-                        findedMin.fillVal(base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
-                        return [findedMin, game]
+                finded_min = temp_group.find_best_point()
+                if finded_min != -1:
+                    if finded_min.value < 1:
+                        print('ending with ', finded_min.value)
+                        print('base ', finded_min.base_rtp)
+                        print('rtp ', finded_min.rtp)
+                        print('sdnew ', finded_min.sdnew)
+                        print('hitrate ', finded_min.hitrate)
+                        root = copy.deepcopy(finded_min)
+                        print(root.base.frequency)
+                        game.base.reels = copy.deepcopy(finded_min.base.reels)
+                        game.free.reels = copy.deepcopy(finded_min.free.reels)
+                        finded_min.fill_point_metric(params)
+                        return [finded_min, game]
                     else:
-                        print('path ', findedMin.value)
-                        root = copy.deepcopy(findedMin)
+                        print('path ', finded_min.value)
+                        root = copy.deepcopy(finded_min)
                 else:
-
-                    if number_of_groups > 0.5 * max_number_of_groups and number_of_groups < max_number_of_groups:
+                    if 0.5 * max_number_of_groups < number_of_groups < max_number_of_groups:
                         number_of_groups = max_number_of_groups
                     else:
                         number_of_groups += 1
 
-            if not min_is_found:
-                root.scaling()
-                currentScale += 1
-                print('SCALING ', currentScale)
-            else:
-                break
-        if min_is_found:
-            break
+            root.scaling()
+            currentScale += 1
+            print('SCALING ', currentScale)
 
     print('Base done')
 
-    findedMin.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew)
+    finded_min.fill_point(game, params, base=False, sd_flag=True, base_shuffle=False, free_shuffle=False)
 
-    return [findedMin, game]
+    return [finded_min, game]
 
 
-def Descent_free(params, start_point, game, rebalance=True):
-    base_rtp = params['base_rtp']
-    rtp = params['rtp']
-    sdnew = params['sdnew']
-    err_base_rtp = params['err_base_rtp']
-    err_rtp = params['err_rtp']
-    err_sdnew = params['err_sdnew']
-    hitrate = params['hitrate']
-    err_hitrate = params['err_hitrate']
+def descent_free(params, start_point, game, balance=True):
+    base_rtp, rtp, sdnew, hitrate, err_base_rtp, err_rtp, err_sdnew, err_hitrate = get_parameters_from_dict(params)
 
-    print('started_free')
+    print('started free descent')
 
-    roots = initialFreeDistributions(game, start_point.baseFrequency, start_point.freeFrequency, params)
-    findedMin = Point(frequency_base=roots[0].baseFrequency, frequency_free=roots[0].freeFrequency, game=game)
+    roots = initial_free_distributions(game, start_point.baseFrequency, start_point.freeFrequency, params)
+    finded_min = Point(second_frequency=roots[0].base.frequency, main_frequency=roots[0].free.frequency, game=game,
+                       main_type='free')
 
     value_list = []
     for root in roots:
-        print(root.freeFrequency, ' value is ', root.value, 'base_rtp, rtp, sdnew, hitrate :',
+        print(root.free.frequency, ' value is ', root.value, 'base_rtp, rtp, sdnew, hitrate :',
               root.base_rtp, root.rtp, root.sdnew, root.hitrate)
         value_list = value_list + [root.value]
 
@@ -308,218 +268,53 @@ def Descent_free(params, start_point, game, rebalance=True):
     print('assuming base rtp, rtp, sd ', base_rtp, rtp, sdnew)
     print('assuming errors for base rtp, rtp,  sd ', err_base_rtp, err_rtp, err_sdnew)
 
+    index_list.remove(0)
     index_list = [0] + index_list
 
     for index in index_list:
-        print('TRYING POINT', roots[index].freeFrequency,
+        print('TRYING POINT', roots[index].free.frequency,
               ' value is ', roots[index].value,
               'base_rtp, rtp, sdnew, hitrate :',
               roots[index].base_rtp, roots[index].rtp, roots[index].sdnew, roots[index].hitrate)
         root = roots[index]
 
-        min_is_found = False
         currentScale = 0
-        while not min_is_found and currentScale < scaleLimit:
+        while currentScale < scaleLimit:
             number_of_groups = len(game.free.wildlist) + len(game.free.ewildlist) + \
                                len(game.free.scatterlist) + 1
             max_number_of_groups = len(game.base.symbol)
             while number_of_groups <= max_number_of_groups:
-                temp_group = Group(game, 'free', root, number_of_groups, params, rebalance=rebalance)
+                temp_group = Group(game, 'free', root, number_of_groups, params, rebalance=balance)
                 print('groups ', temp_group.split.groups)
 
-                temp_group.printGroup('free')
+                temp_group.print_group('free')
 
-                findedMin = temp_group.findMin()
-                if findedMin != -1:
-                    if findedMin.value < 1:
-                        min_is_found = True
-                        print('ending with ', findedMin.value)
-                        print('base ', findedMin.base_rtp)
-                        print('rtp ', findedMin.rtp)
-                        print('sdnew ', findedMin.sdnew)
-                        print('hitrate ', findedMin.hitrate)
-                        root = copy.deepcopy(findedMin)
+                finded_min = temp_group.find_best_point()
+                if finded_min != -1:
+                    if finded_min.value < 1:
+                        print('ending with ', finded_min.value)
+                        print('base ', finded_min.base_rtp)
+                        print('rtp ', finded_min.rtp)
+                        print('sdnew ', finded_min.sdnew)
+                        print('hitrate ', finded_min.hitrate)
+                        root = copy.deepcopy(finded_min)
                         print(root.freeFrequency)
-                        findedMin.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False)
-                        return [findedMin, game]
+                        finded_min.fill_point_metric(params, base=False)
+                        return [finded_min, game]
                     else:
-                        print('path ', findedMin.value)
-                        root = copy.deepcopy(findedMin)
+                        print('path ', finded_min.value)
+                        root = copy.deepcopy(finded_min)
                 else:
-                    if number_of_groups > 0.5 * max_number_of_groups and number_of_groups < max_number_of_groups:
+                    if 0.5 * max_number_of_groups < number_of_groups < max_number_of_groups:
                         number_of_groups = max_number_of_groups
                     else:
                         number_of_groups += 1
-            if not min_is_found:
-                root.scaling()
-                currentScale += 1
-                print('SCALING ', currentScale)
-            else:
-                break
-        if min_is_found:
-            break
+            root.scaling()
+            currentScale += 1
+            print('SCALING ', currentScale)
 
     print('Free done')
 
-    findedMin.fillPoint(game, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=False)
+    finded_min.fill_point(game, params, base=False, sd_flag=True, base_shuffle=False, free_shuffle=False)
 
-    return [findedMin, game]
-
-
-def print_res(out, point, game_name, game):
-    out.write('Game: ' + str(game_name) + '\n')
-    out.write('Base RTP:' + str(point.base_rtp) + ', RTP:' + str(point.rtp) + ', SD:' + str(point.sdnew))
-    out.write('\n\nReels\n')
-    out.write('base:\n')
-    reels_cnt = len(point.baseReel)
-
-    names = indexes_to_names(game.base.symbol, point.baseReel)
-    for reel_id in range(reels_cnt):
-        out.write('\t{')
-        reel_len = len(names[reel_id])
-        for index in range(reel_len - 1):
-            out.write(names[reel_id][index] + ', ')
-        out.write(names[reel_id][reel_len - 1] + '}\n')
-
-
-def create_plot(plot_name, point, game):
-    temp_game = copy.deepcopy(game)
-    temp_game.base.frequency = copy.deepcopy(point.baseFrequency)
-    temp_game.free.frequency = copy.deepcopy(point.freeFrequency)
-    temp_game.base.reels = copy.deepcopy(point.baseReel)
-    temp_game.free.reels = copy.deepcopy(point.freeReel)
-
-    temp_game.fill_borders(plot_name)
-    return
-
-
-def main_process(game_name, out_log, max_rebalance_count, plot_name):
-
-    file = open(game_name, 'r')
-    j = file.read()
-    interim = json.loads(j)
-    game = Q.Game(interim)
-    file.close()
-    params = {'rtp': game.RTP[0], 'err_rtp': game.RTP[1], 'base_rtp': game.baseRTP[0], 'err_base_rtp': game.baseRTP[1],
-              'sdnew': game.volatility[0], 'err_sdnew': game.volatility[1], 'hitrate': game.hitrate[0],
-              'err_hitrate': game.hitrate[1]}
-
-    rebalance_count = 0
-    start_time = time.time()
-    prev_value = -1
-    free_mode = params['hitrate'] > 0
-
-    current_point, game = Descent_base(file_name=game_name, params=params)
-    if free_mode:
-        current_point, game = Descent_free(game=game, params=params, start_point=current_point)
-
-    current_point.collect_params(game)
-    default_SD = current_point.sdnew
-    print('default_SD: ', default_SD)
-    min_SD = default_SD * 0.95
-    if free_mode:
-        max_SD = default_SD * 1.25
-    else:
-        max_SD = default_SD * 1.90
-    if params['sdnew'] < min_SD or params['sdnew'] > max_SD:
-        exception_str = 'This SD is not compatible with current RTP, base RTP. Please, select SD between ' + str(
-            round(min_SD, 2)) + ' and ' + str(round(max_SD, 2))
-        raise Exception(exception_str)
-
-    print('REBALANCE BASE')
-    current_point, game = rebalance(current_point, game, game.base, params=params)
-    if current_point.getValue() < 1:
-        spend_time = time.time() - start_time
-        hours = int(spend_time / 60 / 60)
-        mins = int((spend_time - hours * 3600) / 60)
-        sec = int(spend_time - hours * 3600 - mins * 60)
-        print(game_name + ' done in ' + str(hours) + 'h ' + str(mins) + 'min ' + str(sec) + 'sec')
-        print_res(out_log, current_point, game_name, game)
-        create_plot(plot_name, current_point, game)
-        return
-    if free_mode:
-        print('REBALANCE FREE')
-        # print(current_point.freeFrequency)
-        current_point, game = rebalance(current_point, game, game.free, params=params)
-    if current_point.getValue() < 1:
-        spend_time = time.time() - start_time
-        hours = int(spend_time / 60 / 60)
-        mins = int((spend_time - hours * 3600) / 60)
-        sec = int(spend_time - hours * 3600 - mins * 60)
-        print(game_name + ' done in ' + str(hours) + 'h ' + str(mins) + 'min ' + str(sec) + 'sec')
-        print_res(out_log, current_point, game_name, game)
-        create_plot(plot_name, current_point, game)
-        return
-
-    rebalance_count += 1
-    current_value = current_point.getValue()
-
-    while rebalance_count < max_rebalance_count:
-        current_point, game = Descent_base(file_name=game_name, params=params, rebalance=False,
-                                           start_point=current_point)
-        if free_mode:
-            current_point, game = Descent_free(game=game, params=params, start_point=current_point, rebalance=False)
-
-        # print('\n\n\n\n\n\nCurrent frequency:\n', current_point.freeFrequency)
-        # exit('printed')
-
-        current_point, game = rebalance(current_point, game, game.base, params=params)
-        if current_point.getValue() < 1:
-            spend_time = time.time() - start_time
-            hours = int(spend_time / 60 / 60)
-            mins = int((spend_time - hours * 3600) / 60)
-            sec = int(spend_time - hours * 3600 - mins * 60)
-            print(game_name + ' done in ' + str(hours) + 'h ' + str(mins) + 'min ' + str(sec) + 'sec')
-            break
-        if free_mode:
-            current_point, game = rebalance(current_point, game, game.free, params=params)
-        if current_point.getValue() < 1:
-            spend_time = time.time() - start_time
-            hours = int(spend_time / 60 / 60)
-            mins = int((spend_time - hours * 3600) / 60)
-            sec = int(spend_time - hours * 3600 - mins * 60)
-            print(game_name + ' done in ' + str(hours) + 'h ' + str(mins) + 'min ' + str(sec) + 'sec')
-            break
-
-        prev_value = current_value
-        current_value = current_point.getValue()
-
-        if current_value == prev_value:
-            current_point.scaling(base=True)
-            current_point.scaling(base=False)
-
-        rebalance_count += 1
-
-    if current_point.getValue() < 1:
-        spend_time = time.time() - start_time
-        hours = int(spend_time / 60 / 60)
-        mins = int((spend_time - hours * 3600) / 60)
-        sec = int(spend_time - hours * 3600 - mins * 60)
-        print(game_name + ' done in ' + str(hours) + 'h ' + str(mins) + 'min ' + str(sec) + 'sec')
-        print_res(out_log, current_point, game_name, game)
-        create_plot(plot_name, current_point, game)
-        return
-
-    current_point, game = Descent_base(file_name=game_name, params=params, rebalance=False,
-                                       start_point=current_point)
-
-    if free_mode:
-        current_point, game = Descent_free(game=game, params=params, start_point=current_point, rebalance=False)
-
-    # current_point.fillPoint(game, params['base_rtp'], params['rtp'], params['sdnew'], params['err_base_rtp'], params['err_rtp'], params['err_sdnew'], base=False, sd_flag=True)
-
-    current_point.collect_params()
-
-    print('Base RTP:', current_point.base_rtp, 'RTP:', current_point.rtp, 'SD:', current_point.sdnew)
-
-    print_res(out_log, current_point, game_name, game)
-    create_plot(plot_name, current_point, game)
-
-    spend_time = time.time() - start_time
-    hours = int(spend_time / 60 / 60)
-    mins = int((spend_time - hours * 3600) / 60)
-    sec = int(spend_time - hours * 3600 - mins * 60)
-
-    print(game_name + ' done in ' + str(hours) + 'h ' + str(mins) + 'min ' + str(sec) + 'sec')
-
-    return
+    return [finded_min, game]

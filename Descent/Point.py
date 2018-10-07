@@ -1,126 +1,152 @@
-import json
-import FrontEnd.structure_alpha as Q
-import time
-import simple_functions_for_fit as sm
 import copy
 import numpy as np
 from simple_functions_for_fit import notice_positions
+from FrontEnd.structure_alpha import Gametype
+from FrontEnd.structure_alpha import Game
+from FrontEnd.reelWork.reel_generator_alpha import reel_generator
 
 Inf = 0.05
 wildInf = 0.025
 ewildInf = 0.015
 
 
+class GametypePoint:
+    def __init__(self, frequency, gametype):
+        self.frequency = notice_positions(frequency, gametype)
+        self.reels = None
+        self.type_name = gametype.name
+        return
+
+    def generate_reels(self, gametype: Gametype, frequency=None):
+        if self.frequency is None and frequency is None:
+            raise Exception('None frequency during reel generator')
+        if frequency is not None:
+            self.frequency = frequency
+        self.reels = reel_generator(gametype=gametype, frequency_array=self.frequency, window_width=gametype.window[0],
+                                    reel_distance=gametype.distance, validate=False)
+        return
+
+    def scaling(self, scale=2):
+        for reel_id in range(len(self.frequency)):
+            for symbol_id in range(len(self.frequency[reel_id])):
+                self.frequency[reel_id][symbol_id] *= scale
+        return
+
+    def fill(self, gametype, frequency=None, shuffle=False):
+        if shuffle:
+            self.generate_reels(gametype, frequency)
+
+        gametype.fill_frequency(self.frequency)
+        gametype.fill_reels(self.reels)
+
+        gametype.fill_count_killed(gametype.window[0])
+        gametype.fill_simple_num_comb(gametype.window, gametype.lines)
+        gametype.fill_scatter_num_comb(gametype.window)
+        return
+
+    def print_reels(self, file, max_symbol_length=15):
+        max_length = 0
+        for reel_id in range(len(self.reels)):
+            if len(self.reels[reel_id]) > max_length:
+                max_length = len(self.reels[reel_id])
+        for symbol_id in range(max_length):
+            out_str = ''
+            for reel_id in range(len(self.reels)):
+                if symbol_id < len(self.reels[reel_id]):
+                    t = (max_symbol_length - len(self.reels[reel_id][symbol_id].name)) * ' '
+                    out_str = out_str + self.reels[reel_id][symbol_id].name + t
+                else:
+                    out_str = max_symbol_length * ' '
+            file.write(out_str + '\n')
+            file.write('\n')
+
+
 class Point:
-    def __init__(self, frequency_base, frequency_free, game):
-        self.baseFrequency = notice_positions(frequency_base, game.base)
-        self.freeFrequency = notice_positions(frequency_free, game.free)
-        self.baseReel = '-1'
-        self.freeReel = '-1'
+    def __init__(self, main_frequency, second_frequency, game: Game, main_type='base'):
+        if main_type == 'base':
+            self.base = GametypePoint(main_frequency, game.base)
+            self.free = GametypePoint(second_frequency, game.free)
+        elif main_type == 'free':
+            self.base = GametypePoint(second_frequency, game.base)
+            self.free = GametypePoint(main_frequency, game.free)
+        else:
+            raise Exception('Not supported gametype')
+
         self.base_rtp = '-1'
         self.rtp = '-1'
         self.sdnew = '-1'
         self.hitrate = '-1'
         self.value = '-1'
 
-    def getValue(self):
+    def get_value(self):
         return self.value
 
-    def check(self, game):
-       return game.base.check(self.baseFrequency) and game.free.check(self.freeFrequency)
+    def get_base_frequency(self):
+        return self.base.frequency
 
-    def F(self, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=True, sd_flag=False):
-        t = []
+    def get_free_frequency(self):
+        return self.free.frequency
+
+    def check(self, game: Game):
+        return game.base.check(self.get_base_frequency()) and game.free.check(self.get_free_frequency())
+
+    def metric(self, params, base=True, sd_flag=False):
+        base_rtp = params['base_rtp']
+        rtp = params['rtp']
+        sdnew = params['sdnew']
+        err_base_rtp = params['err_base_rtp']
+        err_rtp = params['err_rtp']
+        err_sdnew = params['err_sdnew']
+        metrics_list = []
 
         if base:
-            t.append(np.fabs(base_rtp - self.base_rtp)/err_base_rtp)
+            metrics_list.append(np.fabs(base_rtp - self.base_rtp) / err_base_rtp)
         else:
-            t.append(np.fabs(rtp - self.rtp)/err_rtp)
+            metrics_list.append(np.fabs(rtp - self.rtp) / err_rtp)
             if sd_flag:
-                t.append(np.fabs(sdnew - self.sdnew)/err_sdnew)
+                metrics_list.append(np.fabs(sdnew - self.sdnew) / err_sdnew)
+        return max(metrics_list)
 
-        return max(t)
-
-    def fillVal(self, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=True, sd_flag=False):
-        self.value = self.F(base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=base, sd_flag=sd_flag)
+    def fill_point_metric(self, params, base=True, sd_flag=False):
+        self.value = self.metric(params, base=base, sd_flag=sd_flag)
 
     def scaling(self, scale=2, base=True):
         if base:
-            for i in range(len(self.baseFrequency)):
-                for j in range(len(self.baseFrequency[i])):
-                    self.baseFrequency[i][j] = scale*self.baseFrequency[i][j]
+            self.base.scaling(scale=scale)
         else:
-            for i in range(len(self.freeFrequency)):
-                for j in range(len(self.freeFrequency[i])):
-                    self.freeFrequency[i][j] = scale*self.freeFrequency[i][j]
+            self.free.scaling(scale=scale)
 
-    def fillPoint(self, obj, base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base=True, sd_flag=False):
+    def fill_point(self, game, params, base=True, sd_flag=False,
+                   base_shuffle=True, free_shuffle=True):
         if base:
-            obj.base.reel_generator(self.baseFrequency, obj.window[0], obj.window[1])
-            self.baseReel = obj.base.reels
-            obj.base.fill_frequency(self.baseFrequency)
-            obj.base.fill_count_killed(obj.window[0])
+            self.base.fill(game.base, shuffle=base_shuffle)
+        self.free.fill(game.free, shuffle=free_shuffle)
 
-            obj.base.fill_simple_num_comb(obj.window, obj.line)
-            obj.base.fill_scatter_num_comb(obj.window)
+        point_params = game.count_parameters(base, sd_flag)
 
-        obj.free.reel_generator(self.freeFrequency, obj.window[0], obj.window[1])
-        obj.free.fill_frequency(self.freeFrequency)
+        self.base_rtp, self.rtp, self.sdnew, self.hitrate = point_params['base_rtp'], point_params['rtp'], point_params[
+            'sdnew'], point_params['hitrate']
 
-        obj.free.fill_count_killed(obj.window[0])
-        obj.free.fill_simple_num_comb(obj.window, obj.line)
-        obj.free.fill_scatter_num_comb(obj.window)
+        self.fill_point_metric(params, base, sd_flag)
 
-        self.freeReel = obj.free.reels
+    def print_reels(self, file_name):
+        file_name_base = file_name[:file_name.find('\\') + 1] + "Base Reels\\" + file_name[file_name.find('\\') + 1:]
+        file_base = open(file_name_base, 'w')
+        file_name_free = file_name[:file_name.find('\\') + 1] + "Free Reels\\" + file_name[file_name.find('\\') + 1:]
+        file_free = open(file_name_free, 'w')
 
-        params = obj.count_parameters(base, sd_flag)
+        self.base.print_reels(file_base)
+        self.free.print_reels(file_free)
 
-        self.base_rtp, self.rtp, self.sdnew, self.hitrate = params['base_rtp'], params['rtp'], params['sdnew'], params['hitrate']
-
-        self.fillVal(base_rtp, rtp, sdnew, err_base_rtp, err_rtp, err_sdnew, base, sd_flag)
-
-    def printReel(self, file):
-        max_length = 0
-        file = file[:file.find('\\') + 1] + "Base Reels\\" + file[file.find('\\') + 1:]
-        f = open(file, 'w')
-        file1 = file[:file.find('\\') + 1] + "Free Reels\\" + file[file.find('\\') + 1:]
-        f1 = open(file1, 'w')
-        for l in range(len(self.baseReel)):
-            if len(self.baseReel[l]) > max_length:
-                max_length = len(self.baseReel[l])
-        for i in range(max_length):
-            s = ''
-            for l in range(len(self.baseReel)):
-                if i < len(self.baseReel[l]):
-                    t = (15 - len(self.baseReel[l][i].name))*' '
-                    s = s + self.baseReel[l][i].name + t
-                else:
-                    s = 15*' '
-            f.write(s + '\n')
-            f.write('\n')
-
-        for l in range(len(self.freeReel)):
-            if len(self.freeReel[l]) > max_length:
-                max_length = len(self.freeReel[l])
-        for i in range(max_length):
-            s = ''
-            for l in range(len(self.freeReel)):
-                if i < len(self.freeReel[l]):
-                    t = (15 - len(self.freeReel[l][i].name))*' '
-                    s = s + self.freeReel[l][i].name + t
-                else:
-                    s = 15*' '
-            f1.write(s + '\n')
-            f1.write('\n')
-        f.close()
-        f1.close()
+        file_base.close()
+        file_free.close()
 
     def collect_params(self, game):
         temp_game = copy.deepcopy(game)
-        temp_game.base.reels = copy.deepcopy(self.baseReel)
-        temp_game.free.reels = copy.deepcopy(self.freeReel)
-        temp_game.base.frequency = copy.deepcopy(self.baseFrequency)
-        temp_game.free.frequency = copy.deepcopy(self.freeFrequency)
+        temp_game.base.reels = copy.deepcopy(self.base.reels)
+        temp_game.free.reels = copy.deepcopy(self.free.reels)
+        temp_game.base.frequency = copy.deepcopy(self.base.frequency)
+        temp_game.free.frequency = copy.deepcopy(self.free.frequency)
         params = temp_game.standalone_count_parameters(shuffle=False)
         self.base_rtp = params['base_rtp']
         self.rtp = params['rtp']

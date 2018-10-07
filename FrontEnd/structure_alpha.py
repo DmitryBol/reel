@@ -86,8 +86,9 @@ class Symbol:
 
 
 class Gametype:
-    def __init__(self, interim, type, w, lines, height):
+    def __init__(self, interim, type, w, lines, height, distance):
         self.name = type
+        self.distance = distance
         if sought(interim, 'symbol'):
             self.symbol = [None] * len(sought(interim, 'symbol'))
             for i in range(len(sought(interim, 'symbol'))):
@@ -172,7 +173,13 @@ class Gametype:
     def fill_frequency(self, frequency):
         self.frequency = frequency
 
-    reel_generator = rg.reel_generator
+    def reel_generator(self, frequency_array, window_width, reel_distance, validate=False):
+        self.reels = rg.reel_generator(gametype=self, frequency_array=frequency_array, window_width=window_width,
+                                       reel_distance=reel_distance, validate=validate)
+
+    def fill_reels(self, input_reels):
+        self.reels = copy.deepcopy(input_reels)
+
     get_combination = rg.get_simple_combination
     count_combinations2 = rg.count_combinations2
     count_num_comb = rg.count_num_comb
@@ -260,18 +267,20 @@ class Game:
         else:
             raise Exception('Field "line" is not found in json file.')
 
-        self.base = Gametype(interim, 'base', self.window[0], self.line, self.window[1])
-        self.free = Gametype(interim, 'free', self.window[0], self.line, self.window[1])
+        if sought(interim, 'distance'):
+            self.distance = sought(interim, 'distance')
+        else:
+            self.distance = self.window[1]
+
+        self.base = Gametype(interim, 'base', self.window[0], self.line, self.window[1], self.distance)
+        self.free = Gametype(interim, 'free', self.window[0], self.line, self.window[1], self.distance)
 
         if sought(interim, 'free_multiplier'):
             self.free_multiplier = sought(interim, 'free_multiplier')
         else:
             self.free_multiplier = 1
 
-        if sought(interim, 'distance'):
-            self.distance = sought(interim, 'distance')
-        else:
-            self.distance = self.window[1]
+
 
         self.RTP = sought(interim, 'RTP')
         self.volatility = sought(interim, 'volatility')
@@ -483,11 +492,14 @@ class Game:
             base_rtp = self.count_base_RTP2('base', self.line)
             freemean = self.freemean2(self.line)
             rtp = self.count_RTP2(freemean, base_rtp)
-            sdalpha = self.count_volatility_alpha(freemean, self.line, [self.base.simple_num_comb, self.free.simple_num_comb])
+            sdalpha = self.count_volatility_alpha(freemean, self.line,
+                                                  [self.base.simple_num_comb, self.free.simple_num_comb])
             hitrate = self.count_hitrate2()
 
             freemean_first = self.freemean2(self.line[0:1])
-            sdalpha_first = self.count_volatility_alpha(freemean_first, self.line[0:1], [self.base.simple_num_comb_first, self.free.simple_num_comb_first])
+            sdalpha_first = self.count_volatility_alpha(freemean_first, self.line[0:1],
+                                                        [self.base.simple_num_comb_first,
+                                                         self.free.simple_num_comb_first])
 
             self.parameters = {'base_rtp': base_rtp, 'freemean': freemean, 'rtp': rtp, 'sdold': sdalpha,
                                'hitrate': hitrate, 'sdnew': sdalpha_first}
@@ -540,7 +552,7 @@ class Game:
         total_bet = len(self.line)
         for comb in self.base.simple_num_comb:
             index = 0
-            while index < len(self.borders) and comb[2]/total_bet >= self.borders[index]:
+            while index < len(self.borders) and comb[2] / total_bet >= self.borders[index]:
                 index += 1
             keys_to_bars['<' + str(self.borders[index])] += comb[1]
         for scatter_comb in self.base.scatter_num_comb:

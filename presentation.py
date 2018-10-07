@@ -1,7 +1,6 @@
-from Descent.Optimize import main_process
-import time
+from Descent.main_process import main_process
 
-all_games = ['Games/Shining_Crown.txt', 'Games/Shining_Crown.txt']
+all_games = ['Games/Shining_Crown.txt']
 
 L = len(all_games)
 
