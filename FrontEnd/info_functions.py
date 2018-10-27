@@ -162,15 +162,24 @@ def collect_info(self):
     if self.mode is True:
         if sub.isfloat(str(self.line_rtp.text())) and sub.isfloat(str(self.line_rtp_error.text())):
             d.update({'RTP': [float(str(self.line_rtp.text())), float(str(self.line_rtp_error.text()))]})
+        else:
+            raise Exception('RTP was not set correctly')
 
         if sub.isfloat(str(self.line_volatility.text())) and sub.isfloat(str(self.line_volatility_error.text())):
             d.update({'volatility': [float(str(self.line_volatility.text())), float(str(self.line_volatility_error.text()))]})
+        else:
+            raise Exception('volatility was not set correctly')
 
         if sub.isfloat(str(self.line_hitrate.text())) and sub.isfloat(str(self.line_hitrate_error.text())):
             d.update({'hitrate': [float(str(self.line_hitrate.text())), float(str(self.line_hitrate_error.text()))]})
+        else:
+            raise Exception('hitrate was not set correctly')
 
         if sub.isfloat(str(self.line_baseRTP.text())) and sub.isfloat(str(self.line_baseRTP_error.text())):
             d.update({'baseRTP': [float(str(self.line_baseRTP.text())), float(str(self.line_baseRTP_error.text()))]})
+        else:
+            raise Exception('base RTP was not set correctly')
+
     return d
 
 

@@ -1,6 +1,6 @@
 import json
-import structure as Q
-import structure_alpha as A
+import FrontEnd.structure as Q
+import FrontEnd.structure_alpha as A
 
 file = open('D:\\PyCharm\\PycharmProjects\\reel\\Games\\Garage.txt', 'r')
 j = file.read()
@@ -23,6 +23,7 @@ try:
         print("\tbase")
         print("\t\tbase_direction : ", obj.symbol[i].base.direction, '\t\t|\t\t', joj.base.symbol[i].direction)
         print("\t\tbase_position : ", obj.symbol[i].base.position, '\t\t|\t\t', joj.base.symbol[i].position)
+        print("\t\tbase_groupby : ", 'wooo', '\t\t|\t\t', joj.base.symbol[i].group_by)
         print("\t\tbase_scatter : ", obj.symbol[i].base.scatter, '\t\t|\t\t', joj.base.symbol[i].scatter)
         if obj.symbol[i].base.wild:
             print("\t\t\tbase_wild_multiplier : ", obj.symbol[i].base.wild.multiplier, '\t\t|\t\t',
@@ -40,6 +41,7 @@ try:
         print("\tfree")
         print("\t\tfree_direction : ", obj.symbol[i].free.direction, '\t\t|\t\t', joj.free.symbol[i].direction)
         print("\t\tfree_position : ", obj.symbol[i].free.position, '\t\t|\t\t', joj.free.symbol[i].position)
+        print("\t\tfree_groupby : ", 'wooo', '\t\t|\t\t', joj.free.symbol[i].group_by)
         print("\t\tfree_scatter : ", obj.symbol[i].free.scatter, '\t\t|\t\t', joj.free.symbol[i].scatter)
         if obj.symbol[i].free.wild:
             print("\t\t\tfree_wild_multiplier : ", obj.symbol[i].free.wild.multiplier, '\t\t|\t\t',

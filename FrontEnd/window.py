@@ -8,6 +8,7 @@ import FrontEnd.info_functions as info_func
 import FrontEnd.sub_functions as sub
 from PyQt5 import QtWidgets, QtGui, QtCore, sip
 
+
 # counts
 count_tabs = 1
 
@@ -16,6 +17,13 @@ default_color = QtGui.QColor(220, 220, 220)
 wild_color = QtGui.QColor(255, 247, 165)
 scatter_color = QtGui.QColor(192, 236, 249)
 wildnscatter_color = QtGui.QColor(221, 172, 225)
+
+
+def getQTableWidgetHeight(table):
+    h = table.horizontalHeader().height() + 4
+    for i in range(table.rowCount()):
+        h += table.rowHeight(i)
+    return h
 
 
 class Aesthetic(QtWidgets.QWidget):
@@ -199,6 +207,7 @@ class Output(QtWidgets.QFrame):
         self.table_simparam.setRowCount(5)
         hheader = self.table_simparam.horizontalHeader()
         hheader.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        self.table_simparam.setFixedHeight(getQTableWidgetHeight(self.table_simparam))
 
         self.table_param.hide()
         self.table_simparam.hide()
@@ -222,6 +231,8 @@ class Output(QtWidgets.QFrame):
         hheader = self.table_param.horizontalHeader()
         hheader.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
 
+        self.table_param.setFixedHeight(getQTableWidgetHeight(self.table_param))
+
     def set_path(self, path):
         directory = os.path.dirname(path)
         leaf = str(sub.path_leaf(path))
@@ -239,34 +250,52 @@ class Output(QtWidgets.QFrame):
 
     def set_simparam(self, simparam):
         self.table_simparam.setItem(0, 0, QtWidgets.QTableWidgetItem('RTP'))
-        self.table_simparam.setItem(0, 1, QtWidgets.QTableWidgetItem(str(simparam['rtp'])))
+        item_RTP = QtWidgets.QTableWidgetItem(str(round(simparam['rtp'], 4)))
+        item_RTP.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignRight)
+        self.table_simparam.setItem(0, 1, item_RTP)
 
         self.table_simparam.setItem(1, 0, QtWidgets.QTableWidgetItem('volatility'))
-        self.table_simparam.setItem(1, 1, QtWidgets.QTableWidgetItem(str(simparam['sd'])))
+        item_sd = QtWidgets.QTableWidgetItem(str(round(simparam['sd'], 4)))
+        item_sd.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignRight)
+        self.table_simparam.setItem(1, 1, item_sd)
 
         self.table_simparam.setItem(2, 0, QtWidgets.QTableWidgetItem('hitrate'))
-        self.table_simparam.setItem(2, 1, QtWidgets.QTableWidgetItem(str(simparam['hitrate'])))
+        item_hr = QtWidgets.QTableWidgetItem(str(round(simparam['hitrate'], 4)))
+        item_hr.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignRight)
+        self.table_simparam.setItem(2, 1, item_hr)
 
         self.table_simparam.setItem(3, 0, QtWidgets.QTableWidgetItem('base RTP'))
-        self.table_simparam.setItem(3, 1, QtWidgets.QTableWidgetItem(str(simparam['base_rtp'])))
+        item_br = QtWidgets.QTableWidgetItem(str(round(simparam['base_rtp'], 4)))
+        item_br.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignRight)
+        self.table_simparam.setItem(3, 1, item_br)
 
         self.table_simparam.setItem(4, 0, QtWidgets.QTableWidgetItem('wins'))
-        self.table_simparam.setItem(4, 1, QtWidgets.QTableWidgetItem(str(simparam['wins'])))
+        item_wins = QtWidgets.QTableWidgetItem(str(round(simparam['wins'], 4)))
+        item_wins.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignRight)
+        self.table_simparam.setItem(4, 1, item_wins)
 
         self.table_simparam.show()
 
     def set_param(self, parameters):
         self.table_param.setItem(0, 0, QtWidgets.QTableWidgetItem('RTP'))
-        self.table_param.setItem(0, 1, QtWidgets.QTableWidgetItem(str(parameters['rtp'])))
+        item_rtp = QtWidgets.QTableWidgetItem(str(round(parameters['rtp'], 4)))
+        item_rtp.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignRight)
+        self.table_param.setItem(0, 1, item_rtp)
 
         self.table_param.setItem(1, 0, QtWidgets.QTableWidgetItem('volatility'))
-        self.table_param.setItem(1, 1, QtWidgets.QTableWidgetItem(str(parameters['sdnew'])))
+        item_sd = QtWidgets.QTableWidgetItem(str(round(parameters['sdnew'], 4)))
+        item_sd.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignRight)
+        self.table_param.setItem(1, 1, item_sd)
 
         self.table_param.setItem(2, 0, QtWidgets.QTableWidgetItem('hitrate'))
-        self.table_param.setItem(2, 1, QtWidgets.QTableWidgetItem(str(parameters['hitrate'])))
+        item_ht = QtWidgets.QTableWidgetItem(str(round(parameters['hitrate'], 4)))
+        item_ht.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignRight)
+        self.table_param.setItem(2, 1, item_ht)
 
         self.table_param.setItem(3, 0, QtWidgets.QTableWidgetItem('base RTP'))
-        self.table_param.setItem(3, 1, QtWidgets.QTableWidgetItem(str(parameters['base_rtp'])))
+        item_br = QtWidgets.QTableWidgetItem(str(round(parameters['base_rtp'], 4)))
+        item_br.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignRight)
+        self.table_param.setItem(3, 1, item_br)
 
         self.table_simparam.hide()
 
@@ -589,6 +618,7 @@ class Symbol(QtWidgets.QWidget):
 
 
 class Window(QtWidgets.QWidget):
+    request_reels = QtCore.pyqtSignal(Q.Game, str)
     request_parameters = QtCore.pyqtSignal(Q.Game)
     request_simulation = QtCore.pyqtSignal(Q.Game)
 
@@ -815,8 +845,10 @@ class Window(QtWidgets.QWidget):
         self.setLayout(self.fon_scroll)
 
     def init_threads(self):
+        self._threaded.generate_reels_result.connect(self.generate_reels_finished)
         self._threaded.count_parameters_result.connect(self.count_parameters_finished)
         self._threaded.simulation_result.connect(self.simulation_finished)
+        self.request_reels.connect(self._threaded.generate_reels)
         self.request_parameters.connect(self._threaded.count_parameters)
         self.request_simulation.connect(self._threaded.simulation)
         self._threaded.moveToThread(self.real_thread)
@@ -1048,7 +1080,7 @@ class Window(QtWidgets.QWidget):
 
     set_info = info_func.set_info
 
-    def run(self):
+    def run(self, path=None):
         self.real_thread.start()
         self.line_log.setStyleSheet('QLineEdit {border: none}')
         try:
@@ -1057,6 +1089,9 @@ class Window(QtWidgets.QWidget):
 
             if self.mode is True:
                 self.line_log.setText('Generating reels...')
+
+                self.request_reels.emit(self.game, path)
+                self.progressbar.setRange(0, 0)
 
             if self.mode is False:
                 self.line_log.setText('Counting parameters...')
@@ -1071,6 +1106,13 @@ class Window(QtWidgets.QWidget):
         except Exception as error:
             self.line_log.setStyleSheet('QLineEdit {color: red; border: none}')
             self.line_log.setText("%s" % error)
+
+    @QtCore.pyqtSlot(str)
+    def generate_reels_finished(self, path):
+        self.real_thread.terminate()
+        self.line_log.setStyleSheet('QLineEdit {color: green; border: none}')
+        self.line_log.setText("process finished")
+        self.progressbar.setRange(0, 100)
 
     @QtCore.pyqtSlot(dict)
     def count_parameters_finished(self, parameters):
@@ -1235,7 +1277,8 @@ class Main(QtWidgets.QMainWindow):
     def trigger_run(self):
         current = self.tab.currentWidget()
         current.real_thread.finished.connect(lambda: self.action_stop.setEnabled(False))
-        current.run()
+        path = str(current.widget_output.line_path.text())
+        current.run(path)
 
         self.action_simulation.setEnabled(True)
         self.action_stop.setEnabled(True)

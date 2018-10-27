@@ -117,7 +117,7 @@ def make_spins(game, count=100000):
         payments_square_sum += (spin_result[0] / len(game.line)) ** 2
         bonus_count += spin_result[2]
         if (cnt + 1) % int(count/100) == 0:
-            print(str(round((cnt + 1) / count * 100)) + '%')
+            print('\r' + str(round((cnt + 1) / count * 100)) + '%', end='')
 
     _rtp = payments_sum / count
     _sd = (1 / (count - 1) * (payments_square_sum - 1 / count * payments_sum ** 2)) ** 0.5
