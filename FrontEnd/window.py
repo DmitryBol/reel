@@ -168,38 +168,49 @@ class SwitchButtons(QtWidgets.QWidget):
 
 
 class Output(QtWidgets.QFrame):
-    def __init__(self, path):
+    def __init__(self):
         super(Output, self).__init__()
 
         self.fon = QtWidgets.QVBoxLayout()
 
-        self.widget_reels = QtWidgets.QWidget()
-        self.fon_reels = QtWidgets.QGridLayout()
-        self.label_reels = QtWidgets.QLabel('Choose file where reels will be saved:')
-        self.line_path = QtWidgets.QLineEdit()
-        self.button_open = QtWidgets.QPushButton('open')
-
+        self.label_param = QtWidgets.QLabel('Calculated parameters')
         self.table_param = QtWidgets.QTableWidget()
 
+        self.label_simparam = QtWidgets.QLabel('Simulated parameters')
         self.table_simparam = QtWidgets.QTableWidget()
 
-        self.path_reels = None
-
-        if path is not None:
-            self.set_path(path)
-
         self.init_ui()
-        self.init_widget()
-        self.init_table()
+        self.init_table_param()
+        self.init_table_simparam()
 
     def init_ui(self):
         self.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.setFrameShadow(QtWidgets.QFrame.Sunken)
+
+        self.fon.addWidget(self.label_param)
         self.fon.addWidget(self.table_param)
-        self.fon.addWidget(self.widget_reels)
+
+        self.fon.addWidget(self.label_simparam)
         self.fon.addWidget(self.table_simparam)
+
         self.fon.addStretch(4)
-        self.fon.setContentsMargins(0, 0, 0, 0)
+        self.fon.setContentsMargins(0, 10, 0, 0)
+
+        self.setLayout(self.fon)
+
+    def init_table_param(self):
+        self.label_param.setAlignment(QtCore.Qt.AlignCenter)
+
+        self.table_param.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.table_param.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.table_param.setColumnCount(2)
+        self.table_param.setRowCount(4)
+        hheader = self.table_param.horizontalHeader()
+        hheader.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        self.table_param.setFixedHeight(getQTableWidgetHeight(self.table_param))
+
+    def init_table_simparam(self):
+        self.label_simparam.setAlignment(QtCore.Qt.AlignCenter)
 
         self.table_simparam.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.table_simparam.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
@@ -208,45 +219,6 @@ class Output(QtWidgets.QFrame):
         hheader = self.table_simparam.horizontalHeader()
         hheader.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
         self.table_simparam.setFixedHeight(getQTableWidgetHeight(self.table_simparam))
-
-        self.table_param.hide()
-        self.table_simparam.hide()
-
-        self.setLayout(self.fon)
-
-    def init_widget(self):
-        self.fon_reels.setColumnStretch(0, 4)
-        self.widget_reels.setLayout(self.fon_reels)
-        self.button_open.clicked.connect(self.file_open)
-
-        self.fon_reels.addWidget(self.label_reels, 0, 0, 1, 2)
-        self.fon_reels.addWidget(self.line_path, 1, 0)
-        self.fon_reels.addWidget(self.button_open, 1, 1)
-
-    def init_table(self):
-        self.table_param.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.table_param.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.table_param.setColumnCount(2)
-        self.table_param.setRowCount(4)
-        hheader = self.table_param.horizontalHeader()
-        hheader.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
-
-        self.table_param.setFixedHeight(getQTableWidgetHeight(self.table_param))
-
-    def set_path(self, path):
-        directory = os.path.dirname(path)
-        leaf = str(sub.path_leaf(path))
-        name = leaf.split('.')[0]
-        reels_path = directory + '/' + name + '_reels.txt'
-        self.line_path.setText(reels_path)
-
-    def switch_mode(self, mode):
-        if mode is True:
-            self.table_param.hide()
-            self.widget_reels.show()
-        else:
-            self.table_param.show()
-            self.widget_reels.hide()
 
     def set_simparam(self, simparam):
         self.table_simparam.setItem(0, 0, QtWidgets.QTableWidgetItem('RTP'))
@@ -274,8 +246,6 @@ class Output(QtWidgets.QFrame):
         item_wins.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignRight)
         self.table_simparam.setItem(4, 1, item_wins)
 
-        self.table_simparam.show()
-
     def set_param(self, parameters):
         self.table_param.setItem(0, 0, QtWidgets.QTableWidgetItem('RTP'))
         item_rtp = QtWidgets.QTableWidgetItem(str(round(parameters['rtp'], 4)))
@@ -296,14 +266,6 @@ class Output(QtWidgets.QFrame):
         item_br = QtWidgets.QTableWidgetItem(str(round(parameters['base_rtp'], 4)))
         item_br.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignRight)
         self.table_param.setItem(3, 1, item_br)
-
-        self.table_simparam.hide()
-
-    def file_open(self):
-        path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File', '', 'All Files (*.txt *.json);;Txt Files (*.txt);;Json Files (*.json)')
-        if path:
-            self.line_path.setText(path)
-            self.path_reels = path
 
 
 class Wild(QtWidgets.QWidget):
@@ -703,7 +665,7 @@ class Window(QtWidgets.QWidget):
         self.line_baseRTP_error = QtWidgets.QLineEdit()
 
         self.splitter = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
-        self.widget_output = Output(path)
+        self.widget_output = Output()
         self.fon_output = QtWidgets.QVBoxLayout()
 
         self.fon_log = QtWidgets.QHBoxLayout()
@@ -1064,7 +1026,6 @@ class Window(QtWidgets.QWidget):
             self.label1_anim.finished.connect(self.finished_anim)
 
         self.box_param.setEnabled(self.mode)
-        self.widget_output.switch_mode(self.mode)
         for symbol in self.symbols:
             symbol.mode = not symbol.mode
             symbol.base.switch_mode()
@@ -1080,35 +1041,43 @@ class Window(QtWidgets.QWidget):
 
     set_info = info_func.set_info
 
-    def run(self, path=None):
+    def generate_preprocess(self):
+        info = self.collect_info()
+        self.game = Q.Game(info)
+
+    def generate(self, path):
         self.real_thread.start()
         self.line_log.setStyleSheet('QLineEdit {border: none}')
-        try:
-            info = self.collect_info()
-            self.game = Q.Game(info)
+        self.line_log.setText('Generating reels...')
+        self.progressbar.setRange(0, 0)
 
-            if self.mode is True:
-                self.line_log.setText('Generating reels...')
+        self.request_reels.emit(self.game, path)
 
-                self.request_reels.emit(self.game, path)
-                self.progressbar.setRange(0, 0)
+    def calculate_preprocess(self):
+        info = self.collect_info()
+        self.game = Q.Game(info)
 
-            if self.mode is False:
-                self.line_log.setText('Counting parameters...')
-                frequencies = self.collect_frequency()
+        frequencies = self.collect_frequency()
+        self.game.base.fill_frequency(frequencies['base_frequency'])
+        self.game.free.fill_frequency(frequencies['free_frequency'])
 
-                self.game.base.fill_frequency(frequencies['base_frequency'])
-                self.game.free.fill_frequency(frequencies['free_frequency'])
+    def calculate(self):
+        self.real_thread.start()
+        self.line_log.setStyleSheet('QLineEdit {border: none}')
+        self.line_log.setText('Counting parameters...')
+        self.progressbar.setRange(0, 0)
 
-                self.request_parameters.emit(self.game)
-                self.progressbar.setRange(0, 0)
+        self.request_parameters.emit(self.game)
 
-        except Exception as error:
-            self.line_log.setStyleSheet('QLineEdit {color: red; border: none}')
-            self.line_log.setText("%s" % error)
+    def simulation(self):
+        self.real_thread.start()
+        self.line_log.setStyleSheet('QLineEdit {border: none}')
+        self.line_log.setText('Running simulation...')
+        self.progressbar.setRange(0, 0)
+        self.request_simulation.emit(self.game)
 
     @QtCore.pyqtSlot(str)
-    def generate_reels_finished(self, path):
+    def generate_reels_finished(self):
         self.real_thread.terminate()
         self.line_log.setStyleSheet('QLineEdit {color: green; border: none}')
         self.line_log.setText("process finished")
@@ -1122,18 +1091,6 @@ class Window(QtWidgets.QWidget):
 
         self.widget_output.set_param(parameters)
         self.progressbar.setRange(0, 100)
-
-    def simulation(self):
-        self.real_thread.start()
-        self.line_log.setStyleSheet('QLineEdit {border: none}')
-        self.line_log.setText('Running simulation...')
-        try:
-            self.request_simulation.emit(self.game)
-            self.progressbar.setRange(0, 0)
-
-        except Exception as error:
-            self.line_log.setStyleSheet('QLineEdit {color: red; border: none}')
-            self.line_log.setText("%s" % error)
 
     @QtCore.pyqtSlot(dict)
     def simulation_finished(self, simparam):
@@ -1156,7 +1113,7 @@ class Main(QtWidgets.QMainWindow):
         super(Main, self).__init__()
 
         self.setWindowTitle('Slot Machine Creator')
-        self.setWindowIcon(QtGui.QIcon('icons/yarlyk.png'))
+        self.setWindowIcon(QtGui.QIcon('icons/yarlyk1.png'))
         self.setGeometry(200, 200, 1000, 600)
 
         self.tab = QtWidgets.QTabWidget()
@@ -1189,10 +1146,14 @@ class Main(QtWidgets.QMainWindow):
         self.action_quit.setShortcut('Ctrl+Q')
         self.action_quit.triggered.connect(self.trigger_quit)
 
-        self.action_run = QtWidgets.QAction(QtGui.QIcon('icons/run2.png'), 'Run', self)
-        self.action_run.setShortcut('Ctrl+R')
-        self.action_run.triggered.connect(self.trigger_run)
-        self.action_run.setEnabled(False)
+        self.action_generate = QtWidgets.QAction(QtGui.QIcon('icons/generate.png'), 'Generate reels', self)
+        self.action_generate.setShortcut('Ctrl+R')
+        self.action_generate.triggered.connect(self.trigger_generate)
+        self.action_generate.setEnabled(False)
+
+        self.action_calculate = QtWidgets.QAction(QtGui.QIcon('icons/calc.png'), 'Calculate parameters', self)
+        self.action_calculate.triggered.connect(self.trigger_calculate)
+        self.action_calculate.setEnabled(False)
 
         self.action_simulation = QtWidgets.QAction(QtGui.QIcon('icons/simulation.png'), 'Run simulation', self)
         self.action_simulation.triggered.connect(self.trigger_simulation)
@@ -1226,7 +1187,8 @@ class Main(QtWidgets.QMainWindow):
         file.addAction(self.action_settings)
         file.addAction(self.action_quit)
 
-        run.addAction(self.action_run)
+        run.addAction(self.action_generate)
+        run.addAction(self.action_calculate)
         run.addAction(self.action_simulation)
         run.addAction(self.action_stop)
         run.addAction(self.action_switch)
@@ -1236,7 +1198,8 @@ class Main(QtWidgets.QMainWindow):
         self.tool_file.addAction(self.action_save)
         self.tool_file.addAction(self.action_saveas)
 
-        self.tool_run.addAction(self.action_run)
+        self.tool_run.addAction(self.action_generate)
+        self.tool_run.addAction(self.action_calculate)
         self.tool_run.addAction(self.action_simulation)
         self.tool_run.addAction(self.action_stop)
         self.tool_run.addAction(self.action_switch)
@@ -1248,57 +1211,84 @@ class Main(QtWidgets.QMainWindow):
 
     def change_tab(self, index):
         if index == -1:
-            self.action_run.setEnabled(False)
+            self.action_generate.setEnabled(False)
+            self.action_calculate.setEnabled(False)
             self.action_simulation.setEnabled(False)
             self.action_switch.setEnabled(False)
             self.action_saveas.setEnabled(False)
             self.action_save.setEnabled(False)
         else:
-            self.action_run.setEnabled(True)
-            self.action_switch.setEnabled(True)
-            self.action_saveas.setEnabled(True)
+            self.enable_bar()
 
             current = self.tab.currentWidget()
-            if current.path is None:
-                self.action_save.setEnabled(False)
-            else:
-                self.action_save.setEnabled(True)
-
-            if current.game is None:
-                self.action_simulation.setEnabled(False)
-            else:
-                self.action_simulation.setEnabled(True)
-
             if current.real_thread.isRunning() is False:
                 self.action_stop.setEnabled(False)
             else:
                 self.action_stop.setEnabled(True)
 
-    def trigger_run(self):
+    def trigger_generate(self):
         current = self.tab.currentWidget()
-        current.real_thread.finished.connect(lambda: self.action_stop.setEnabled(False))
-        path = str(current.widget_output.line_path.text())
-        current.run(path)
+        try:
+            current.generate_preprocess()
+            path, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File', '', 'All Files (*.txt *.json);;Txt Files (*.txt);;Json Files (*.json)')
+            if path:
+                current.real_thread.finished.connect(self.enable_bar)
+                current.generate(path)
 
-        self.action_simulation.setEnabled(True)
-        self.action_stop.setEnabled(True)
+                self.disable_bar()
+
+        except Exception as error:
+            self.enable_bar()
+            current.real_thread.terminate()
+            current.line_log.setStyleSheet('QLineEdit {color: red; border: none}')
+            current.line_log.setText("%s" % error)
+            current.progressbar.setRange(0, 100)
+
+    def trigger_calculate(self):
+        current = self.tab.currentWidget()
+        try:
+            current.calculate_preprocess()
+            current.real_thread.finished.connect(self.enable_bar)
+            current.calculate()
+
+            self.disable_bar()
+
+        except Exception as error:
+            self.enable_bar()
+            current.real_thread.terminate()
+            current.line_log.setStyleSheet('QLineEdit {color: red; border: none}')
+            current.line_log.setText("%s" % error)
+            current.progressbar.setRange(0, 100)
 
     def trigger_simulation(self):
         current = self.tab.currentWidget()
-        current.real_thread.finished.connect(lambda: self.action_stop.setEnabled(False))
-        current.simulation()
-
-        self.action_stop.setEnabled(True)
+        try:
+            current.real_thread.finished.connect(self.enable_bar)
+            current.simulation()
+            self.disable_bar()
+        except Exception as error:
+            self.enable_bar()
+            current.real_thread.terminate()
+            current.line_log.setStyleSheet('QLineEdit {color: red; border: none}')
+            current.line_log.setText("%s" % error)
+            current.progressbar.setRange(0, 100)
 
     def trigger_stop(self):
+        self.enable_bar()
         current = self.tab.currentWidget()
         current.stop()
-
-        self.action_stop.setEnabled(False)
 
     def trigger_switch(self):
         current = self.tab.currentWidget()
         current.switch_mode()
+        if current.mode is True:
+            self.action_generate.setEnabled(True)
+            self.action_calculate.setEnabled(False)
+            self.action_simulation.setEnabled(False)
+        else:
+            self.action_generate.setEnabled(False)
+            self.action_calculate.setEnabled(True)
+            self.action_simulation.setEnabled(False)
 
     def trigger_new(self):
         global count_tabs
@@ -1306,11 +1296,6 @@ class Main(QtWidgets.QMainWindow):
         self.tab.addTab(new_tab, 'untitled' + str(count_tabs))
         self.tab.setCurrentWidget(new_tab)
         count_tabs += 1
-
-        #button = QtWidgets.QPushButton('x')
-
-        #tab_bar = self.tab.tabBar()
-        #tab_bar.setTabButton(self.tab.currentIndex(), QtWidgets.QTabBar.RightSide, button)
 
     def trigger_save(self):
         current = self.tab.currentWidget()
@@ -1325,7 +1310,6 @@ class Main(QtWidgets.QMainWindow):
             file = open(path, 'w')
             current = self.tab.currentWidget()
             current.path = path
-            current.widget_output.set_path(path)
             info = current.collect_info()
             json.dump(info, file)
             file.close()
@@ -1352,6 +1336,50 @@ class Main(QtWidgets.QMainWindow):
 
     def trigger_quit(self):
         QtWidgets.qApp.quit()
+
+    def enable_bar(self):
+        self.tab.setEnabled(True)
+        self.bar.setEnabled(True)
+        self.action_new.setEnabled(True)
+        self.action_open.setEnabled(True)
+        self.action_switch.setEnabled(True)
+        self.action_saveas.setEnabled(True)
+        self.action_stop.setEnabled(False)
+
+        current = self.tab.currentWidget()
+        if current.path is None:
+            self.action_save.setEnabled(False)
+        else:
+            self.action_save.setEnabled(True)
+
+        if current.mode is True:
+            self.action_generate.setEnabled(True)
+            if current.game is None:
+                self.action_calculate.setEnabled(False)
+                self.action_simulation.setEnabled(False)
+            else:
+                self.action_calculate.setEnabled(True)
+                self.action_simulation.setEnabled(True)
+        else:
+            self.action_generate.setEnabled(False)
+            self.action_calculate.setEnabled(True)
+            if current.game is None:
+                self.action_simulation.setEnabled(False)
+            else:
+                self.action_simulation.setEnabled(True)
+
+    def disable_bar(self):
+        self.tab.setEnabled(False)
+        self.bar.setEnabled(False)
+        self.action_new.setEnabled(False)
+        self.action_open.setEnabled(False)
+        self.action_save.setEnabled(False)
+        self.action_saveas.setEnabled(False)
+        self.action_generate.setEnabled(False)
+        self.action_calculate.setEnabled(False)
+        self.action_simulation.setEnabled(False)
+        self.action_switch.setEnabled(False)
+        self.action_stop.setEnabled(True)
 
 
 if __name__ == "__main__":

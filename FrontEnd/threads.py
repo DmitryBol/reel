@@ -15,7 +15,7 @@ class Threaded(QObject):
     @pyqtSlot(structure.Game, str)
     def generate_reels(self, game, output):
         main_process(game_structure=game, out_log=output)
-        self.generate_reels_result.emit(output)
+        self.generate_reels_result.emit()
 
     @pyqtSlot(structure.Game)
     def count_parameters(self, game):
