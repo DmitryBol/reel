@@ -14,7 +14,9 @@ class Threaded(QObject):
 
     @pyqtSlot(structure.Game, str)
     def generate_reels(self, game, output):
-        main_process(game_structure=game, out_log=output)
+        output_file = open(output, "w")
+        main_process(game_structure=game, out_log=output_file)
+        output_file.close()
         self.generate_reels_result.emit()
 
     @pyqtSlot(structure.Game)

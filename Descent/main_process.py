@@ -76,7 +76,7 @@ def is_done(current_point, start_time, game_name, game, out_log, plot_name):
         hours = int(spend_time / 60 / 60)
         mins = int((spend_time - hours * 3600) / 60)
         sec = int(spend_time - hours * 3600 - mins * 60)
-        print(game_name + ' done in ' + str(hours) + 'h ' + str(mins) + 'min ' + str(sec) + 'sec')
+        print(str(game_name) + ' done in ' + str(hours) + 'h ' + str(mins) + 'min ' + str(sec) + 'sec')
         print_res(out_log, current_point, game_name, game)
         create_plot(plot_name, current_point, game)
 
