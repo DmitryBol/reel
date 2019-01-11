@@ -5,7 +5,7 @@ from Descent.Groups import Group
 from FrontEnd.structure_alpha import Game
 from Descent.parameters_utils import get_parameters_from_dict
 
-Inf = 0.05
+Inf = 0.025
 wildInf = 0.025
 ewildInf = 0.015
 scatterInf = 0.005
@@ -137,15 +137,17 @@ def initial_base_distributions(game: Game, scatter_frequency_result, params, max
     return initial[:1]
 
 
-def initial_free_distributions(game, base_frequency, free_frequency, params):
+def initial_free_distributions(game, base_frequency, free_frequency, params, base_reels=None):
     initial = []
 
     freeFrequencyCopy = sm.notice_positions(free_frequency, game.free)
     baseFrequencyCopy = sm.notice_positions(base_frequency, game.base)
     initial.append(
-        Point(second_frequency=baseFrequencyCopy, main_frequency=freeFrequencyCopy, game=game, main_type='free'))
-    for p in initial:
-        p.fill_point(game, params, base=False, sd_flag=False)
+        Point(second_frequency=baseFrequencyCopy, main_frequency=freeFrequencyCopy, game=game, main_type='free',
+              base_reels=base_reels))
+
+    for point in initial:
+        point.fill_point(game, params, base=False, sd_flag=False, base_shuffle=False, free_shuffle=True)
 
     return initial
 
@@ -155,7 +157,10 @@ def initial_free_distributions(game, base_frequency, free_frequency, params):
 def descent_base(params, game, balance=True, start_point=None):
     base_rtp, rtp, sdnew, hitrate, err_base_rtp, err_rtp, err_sdnew, err_hitrate = get_parameters_from_dict(params)
 
+    start_game = copy.deepcopy(game)
+
     out = sm.get_scatter_frequency(game, hitrate, err_hitrate)
+    print('Generated scatter frequency')
     if out == -1 and hitrate != -1:
         raise Exception('Game rules not contain freespins, but you try to fit HitRate. Please, set it -1')
     elif out == -1:
@@ -209,7 +214,7 @@ def descent_base(params, game, balance=True, start_point=None):
                                len(game.base.scatterlist) - len(blocked_scatters) + 1
             max_number_of_groups = len(game.base.symbol) - len(blocked_scatters)
             while number_of_groups <= max_number_of_groups:
-                temp_group = Group(game, 'base', root, number_of_groups, params, rebalance=balance)
+                temp_group = Group(game, 'base', root, number_of_groups, params, rebalance=balance, sd_flag=False)
                 print('groups ', temp_group.split.groups)
 
                 temp_group.print_group()
@@ -243,19 +248,29 @@ def descent_base(params, game, balance=True, start_point=None):
 
     print('Base done')
 
+    if finded_min == -1:
+        return [start_point, start_game]
+
     finded_min.fill_point(game, params, base=False, sd_flag=True, base_shuffle=False, free_shuffle=False)
 
     return [finded_min, game]
 
 
-def descent_free(params, start_point, game, balance=True):
+def descent_free(params, start_point: Point, game, balance=True):
     base_rtp, rtp, sdnew, hitrate, err_base_rtp, err_rtp, err_sdnew, err_hitrate = get_parameters_from_dict(params)
 
     print('started free descent')
 
-    roots = initial_free_distributions(game, start_point.baseFrequency, start_point.freeFrequency, params)
+    # print('start point base reels: ', start_point.base.reels)
+
+    if rtp == -1:
+        return [start_point, game]
+
+    roots = initial_free_distributions(game, start_point.base.frequency, start_point.free.frequency, params,
+                                       base_reels=start_point.base.reels)
     finded_min = Point(second_frequency=roots[0].base.frequency, main_frequency=roots[0].free.frequency, game=game,
-                       main_type='free')
+                       main_type='free', base_reels=start_point.base.reels)
+    finded_min.base.reels = start_point.base.reels
 
     value_list = []
     for root in roots:
@@ -284,7 +299,8 @@ def descent_free(params, start_point, game, balance=True):
                                len(game.free.scatterlist) + 1
             max_number_of_groups = len(game.base.symbol)
             while number_of_groups <= max_number_of_groups:
-                temp_group = Group(game, 'free', root, number_of_groups, params, rebalance=balance)
+                temp_group = Group(game, 'free', root, number_of_groups, params, rebalance=balance, sd_flag=False,
+                                   base_reels=start_point.base.reels)
                 print('groups ', temp_group.split.groups)
 
                 temp_group.print_group('free')
@@ -298,8 +314,9 @@ def descent_free(params, start_point, game, balance=True):
                         print('sdnew ', finded_min.sdnew)
                         print('hitrate ', finded_min.hitrate)
                         root = copy.deepcopy(finded_min)
-                        print(root.freeFrequency)
-                        finded_min.fill_point_metric(params, base=False)
+                        print(root.free.frequency)
+                        finded_min.fill_point_metric(params, base=False, sd_flag=False)
+                        finded_min.base.reels = copy.deepcopy(start_point.base.reels)
                         return [finded_min, game]
                     else:
                         print('path ', finded_min.value)
@@ -316,5 +333,6 @@ def descent_free(params, start_point, game, balance=True):
     print('Free done')
 
     finded_min.fill_point(game, params, base=False, sd_flag=True, base_shuffle=False, free_shuffle=False)
+    finded_min.base.reels = copy.deepcopy(start_point.base.reels)
 
     return [finded_min, game]

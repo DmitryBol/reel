@@ -8,8 +8,10 @@ ewildInf = 0.015
 
 
 class Group:
-    def __init__(self, game, type_name, root: Point, number_of_groups, params, rebalance=True):
+    def __init__(self, game, type_name, root: Point, number_of_groups, params, rebalance=True, sd_flag=True, base_reels=None):
         self.root = root
+
+        base_flag = True
 
         if type_name == 'base':
             gametype = game.base
@@ -19,6 +21,7 @@ class Group:
             gametype = game.free
             main_frequency = root.get_free_frequency()
             second_frequency = root.get_base_frequency()
+            base_flag = False
         else:
             raise Exception('Not supported gametype')
 
@@ -28,17 +31,19 @@ class Group:
         for i in range(number_of_groups - 1):
             for j in range(i + 1, number_of_groups):
                 group1 = self.split.group_transfer(gametype, i, j, balance=rebalance)
+                # print('group1: ', group1)
                 if group1:
                     new_point = Point(main_frequency=group1.frequency, second_frequency=second_frequency, game=game,
-                                      main_type=type_name)
-                    new_point.fill_point(game, params)
+                                      main_type=type_name, base_reels=base_reels)
+                    new_point.fill_point(game, params, base=base_flag, sd_flag=sd_flag)
                     self.points.append(new_point)
                 group2 = self.split.group_transfer(gametype, j, i, balance=rebalance)
                 if group2:
                     new_point = Point(main_frequency=group2.frequency, second_frequency=second_frequency, game=game,
-                                      main_type=type_name)
-                    new_point.fill_point(game, params)
+                                      main_type=type_name, base_reels=base_reels)
+                    new_point.fill_point(game, params, base=base_flag, sd_flag=sd_flag)
                     self.points.append(new_point)
+        # print('group length: ', len(self.points))
 
     def find_best_point(self):
         index = -1
@@ -59,6 +64,6 @@ class Group:
                 print('point value: ', point.value, point.base.frequency)
             elif type_name == 'free':
                 print('point value: ', point.value, 'rtp: ', point.rtp, 'base_rtp: ', point.base_rtp,
-                      point.base.frequency, point.free.frequency)
+                      'sdnew: ', point.sdnew, point.base.frequency, point.free.frequency)
             else:
                 raise Exception('Not supported gametype')

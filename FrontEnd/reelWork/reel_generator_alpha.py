@@ -56,13 +56,14 @@ def remove_groups(gametype, reels):
         start_index = 0
         while reel[start_index] == prev_id:
             start_index += 1
+            group_len += 1
         for symbol_id in reel[start_index:]:
             if symbol_id == prev_id:
                 group_len += 1
             else:
-                if group_len not in gametype.symbol[symbol_id].group_by:
+                if group_len not in gametype.symbol[prev_id].group_by:
                     raise Exception(
-                        'Reels have group of symbol ' + gametype.symbol[symbol_id].name + " which length (" + str(
+                        'Reels have group of symbol ' + gametype.symbol[prev_id].name + " which length (" + str(
                             group_len) + ") not in rules")
                 else:
                     res[reel_id].append(prev_id)
@@ -190,6 +191,7 @@ def generate_one_reel(symbols, array, distance, seniors):
             array_copy[new_index] -= cnt
             for _ in range(cnt):
                 res.append(new_index)
+            # print(symbols[new_index].name, symbols[new_index].group_by, cnt)
         if good_shuffle:
             for i in range(distance - 1):
                 for_compare = []
@@ -204,10 +206,13 @@ def generate_one_reel(symbols, array, distance, seniors):
             res = []
             continue
 
+        print(j)
+
     # print(res)
     result = []
     for index in res:
         result.append(symbols[index])
+    # print(res)
     return res
 
 

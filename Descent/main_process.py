@@ -2,6 +2,7 @@ import time
 import json
 import copy
 
+import simulate
 from Descent.Optimize import descent_base, descent_free
 from Descent.rebalance import rebalance
 from FrontEnd.reelWork.reel_generator_alpha import indexes_to_names
@@ -11,7 +12,8 @@ from Descent.Point import Point
 
 def print_res(out, point: Point, game_name, game):
     out.write('Game: ' + str(game_name) + '\n')
-    out.write('Base RTP:' + str(point.base_rtp) + ', RTP:' + str(point.rtp) + ', SD:' + str(point.sdnew))
+    out.write('Base RTP: ' + str(point.base_rtp) + '\nRTP: ' + str(point.rtp) + '\nSD: ' + str(
+        point.sdnew) + '\nBonus Hitrate: ' + str(point.hitrate))
     out.write('\n\nReels\n')
     out.write('base:\n')
     reels_cnt = len(point.base.reels)
@@ -23,6 +25,36 @@ def print_res(out, point: Point, game_name, game):
         for index in range(reel_len - 1):
             out.write(names[reel_id][index] + ', ')
         out.write(names[reel_id][reel_len - 1] + '}\n')
+    out.write('free:\n')
+    reels_cnt = len(point.free.reels)
+
+    names = indexes_to_names(game.free.symbol, point.free.reels)
+    for reel_id in range(reels_cnt):
+        out.write('\t{')
+        reel_len = len(names[reel_id])
+        for index in range(reel_len - 1):
+            out.write(names[reel_id][index] + ', ')
+        out.write(names[reel_id][reel_len - 1] + '}\n')
+
+    out.write('\n\nJava Reels\n')
+    out.write('base:\n')
+    out.write('{//base\n')
+    for reel_id in range(reels_cnt):
+        out.write('\t{')
+        reel_len = len(point.base.reels[reel_id])
+        for index in range(reel_len - 1):
+            out.write(str(point.base.reels[reel_id][index] + 1) + ', ')
+        out.write(str(point.base.reels[reel_id][reel_len - 1] + 1) + '},\n')
+    out.write('}\n')
+    out.write('free:\n')
+    out.write('{//free\n')
+    for reel_id in range(reels_cnt):
+        out.write('\t{')
+        reel_len = len(point.free.reels[reel_id])
+        for index in range(reel_len - 1):
+            out.write(str(point.free.reels[reel_id][index] + 1) + ', ')
+        out.write(str(point.free.reels[reel_id][reel_len - 1] + 1) + '},\n')
+    out.write('}\n')
 
 
 def create_plot(plot_name, point: Point, game):
@@ -47,11 +79,15 @@ def is_done(current_point, start_time, game_name, game, out_log, plot_name):
         print(game_name + ' done in ' + str(hours) + 'h ' + str(mins) + 'min ' + str(sec) + 'sec')
         print_res(out_log, current_point, game_name, game)
         create_plot(plot_name, current_point, game)
+
+        # simulate_result = simulate.make_spins(game, count=1_000_000)
+        # print('\n\nsimulate base rtp: ', simulate_result['base_rtp'], '\nsimulate rtp: ', simulate_result['rtp'],
+        #       '\nsimulate sd: ', simulate_result['sd'])
         return True
     return False
 
 
-def main_process(out_log, max_rebalance_count=5, plot_name=None, game_structure: Game=None, game_name=None):
+def main_process(out_log, max_rebalance_count=5, plot_name=None, game_structure: Game = None, game_name=None):
     if game_name is not None:
         file = open(game_name, 'r')
         j = file.read()
@@ -90,13 +126,13 @@ def main_process(out_log, max_rebalance_count=5, plot_name=None, game_structure:
     print('REBALANCE BASE')
     current_point, game = rebalance(current_point, game, game.base, params=params)
     if is_done(current_point, start_time, game_name, game, out_log, plot_name):
-        return
+        return game
     if free_mode:
         print('REBALANCE FREE')
         # print(current_point.freeFrequency)
         current_point, game = rebalance(current_point, game, game.free, params=params)
     if is_done(current_point, start_time, game_name, game, out_log, plot_name):
-        return
+        return game
 
     rebalance_count += 1
     current_value = current_point.get_value()
@@ -110,7 +146,7 @@ def main_process(out_log, max_rebalance_count=5, plot_name=None, game_structure:
         if free_mode:
             current_point, game = rebalance(current_point, game, game.free, params=params)
         if is_done(current_point, start_time, game_name, game, out_log, plot_name):
-            return
+            return game
 
         prev_value = current_value
         current_value = current_point.get_value()
@@ -122,7 +158,7 @@ def main_process(out_log, max_rebalance_count=5, plot_name=None, game_structure:
         rebalance_count += 1
 
     if is_done(current_point, start_time, game_name, game, out_log, plot_name):
-        return
+        return game
 
     current_point, game = descent_base(params=params, game=game, balance=False, start_point=current_point)
 
@@ -147,4 +183,4 @@ def main_process(out_log, max_rebalance_count=5, plot_name=None, game_structure:
 
     print(game_name + ' done in ' + str(hours) + 'h ' + str(mins) + 'min ' + str(sec) + 'sec')
 
-    return
+    return game

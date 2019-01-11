@@ -1,5 +1,6 @@
 import copy
 from random import shuffle
+from FrontEnd.structure_alpha import Gametype
 
 Inf = 0.05
 wildInf = 0.025
@@ -37,7 +38,7 @@ class Split:
             blocked_scatters = []
 
         for symbol_id in range(len(gametype.symbol)):
-            if gametype.symbol[symbol_id].wild:
+            if gametype.symbol[symbol_id].wild and symbol_id not in blocked_scatters:
                 self.groups.append([symbol_id])
             if gametype.symbol[symbol_id].scatter and symbol_id not in blocked_scatters:
                 self.groups.append([symbol_id])
@@ -74,7 +75,7 @@ class Split:
                     self.frequency[reel_id][group[len(group) - 1 - j]] += 1
         return
 
-    def group_transfer(self, gametype, source_group, destination_group, balance=True):
+    def group_transfer(self, gametype: Gametype, source_group, destination_group, balance=True):
         new_frequency = copy.deepcopy(self.frequency)
 
         totals = [sum(self.frequency[reel_id]) for reel_id in range(len(self.frequency))]

@@ -4,13 +4,15 @@ from Descent.Optimize import double_bubble
 from FrontEnd.structure_alpha import Game
 from FrontEnd.structure_alpha import Gametype
 
-Inf = 0.025
-wildInf = 0.025
-ewildInf = 0.015
+Inf = 0.015
+wildInf = 0.015
+ewildInf = 0.01
 scatterInf = 0.005
 
 
-def calc_val(params, point):
+def calc_val(params, point: Point):
+    if params['rtp'] == -1:
+        return point.sdnew ** 1.5 / point.base_rtp - (params['sdnew']) ** 1.5 / params['base_rtp']
     return point.sdnew ** 1.5 / point.rtp - (params['sdnew']) ** 1.5 / params['rtp']
 
 
@@ -149,6 +151,11 @@ def binary_search(game: Game, gametype: Gametype, start_point: Point, params, so
 
 def rebalance(start_point: Point, game: Game, gametype: Gametype, params):
     print('REBALANCE')
+
+    print('\n\n\n')
+    print(params['base_rtp'], params['rtp'], params['sdnew'])
+    print(start_point.base_rtp, start_point.rtp, start_point.sdnew)
+    print('metric: ', start_point.metric(params, base=False, sd_flag=True))
 
     if start_point.metric(params, base=False, sd_flag=True) < 1:
         return [start_point, game]

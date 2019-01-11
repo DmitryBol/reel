@@ -9,7 +9,7 @@ from FrontEnd import moments
 # import moments
 import FrontEnd.reelWork.reel_generator_alpha as rg
 
-Inf = 0.05
+Inf = 0.025
 wildInf = 0.025
 ewildInf = 0.015
 
@@ -82,7 +82,9 @@ class Symbol:
             self.scatter = False
             self.wild = False
             if sought(sought(interim, 'symbol')[i], 'group_by'):
+                # print(self.name, self.group_by)
                 self.group_by = sought(sought(interim, 'symbol')[i], 'group_by')
+                # print(self.name, self.group_by)
 
 
 class Gametype:
@@ -230,18 +232,21 @@ class Gametype:
     def check(self, frequency):
         n_reels = len(frequency)
         if n_reels <= 0:
+            # print('failed caused by n_reels')
             return False
         n_symbols = len(frequency[0])
         reels_lens = []
         for reel_id in range(n_reels):
             for symbol_id in range(n_symbols):
                 if frequency[reel_id][symbol_id] < 0:
+                    # print('failed cause frequency < 0')
                     return False
                 elif frequency[reel_id][symbol_id] > 0 and reel_id not in self.symbol[symbol_id].position:
+                    # print('failed cause frequency > 0 on banned reel')
                     return False
             reels_lens.append(sum(frequency[reel_id]))
-        if max(reels_lens) != min(reels_lens):
-            return False
+        # if max(reels_lens) != min(reels_lens):
+        #     return False
         return True
 
     def infPart(self, symbol_id):
@@ -318,7 +323,7 @@ class Game:
         # для каждого символа создание и заполнение массива индексов экспандящихся вайлдов, заменяющих данный символ
         self.free.substituted_by_e()
 
-    def deleteline(self, number):
+    def delete_line(self, number):
         for i in range(number):
             self.line.pop()
 

@@ -44,18 +44,19 @@ def get_scatter_frequency(game, hitrate, hitrate_error):
     if hitrate == -1:
         for scatter_id in game.base.scatterlist:
             if max(game.base.symbol[scatter_id].scatter) > 0:
-                res[scatter_id] = 0
+                res.scatter_index_with_frequency[scatter_id] = 0
         return res
 
     reel = [0]*len(game.base.symbol)
     for scat in game.base.scatterlist:
         reel[scat] = res.scatter_index_with_frequency[scat]
     index = 0
-    while index in game.base.scatterlist:
+    while index in game.base.scatterlist or len(game.base.symbol[index].position) < game.window[0]:
         index += 1
     reel[index] = res.total_length - res.total_scats
-    frequency = [reel for _ in range(game.window[0])]
+    frequency = [copy.deepcopy(reel) for _ in range(game.window[0])]
     frequency = notice_positions(frequency, game.base)
+
     game.base.fill_frequency(frequency)
     game.base.fill_scatter_num_comb(game.window)
 
@@ -64,13 +65,16 @@ def get_scatter_frequency(game, hitrate, hitrate_error):
     while math.fabs(temp_HR - hitrate) > hitrate_error:
         if temp_HR < hitrate:
             index = 0
-            while index in game.base.scatterlist:
+            while index in game.base.scatterlist or len(game.base.symbol[index].position) < game.window[0]:
                 index += 1
             for i in range(game.window[0]):
                 frequency[i][index] += 1
             game.base.fill_frequency(frequency)
-            game.base.fill_scatter_num_comb(game.window)
             res.total_length = sum(game.base.frequency[0])
+            for i in range(game.window[0]):
+                while sum(game.base.frequency[i]) < res.total_length:
+                    frequency[i][index] += 1
+            game.base.fill_scatter_num_comb(game.window)
         else:
             for scat in game.base.scatterlist:
                 if max(game.base.symbol[scat].scatter) > 0:
@@ -85,14 +89,19 @@ def get_scatter_frequency(game, hitrate, hitrate_error):
                 if max(game.base.symbol[scat].scatter) > 0:
                     reel[scat] = res.scatter_index_with_frequency[scat]
             index = 0
-            while index in game.base.scatterlist:
+            while index in game.base.scatterlist or len(game.base.symbol[index].position) < game.window[0]:
                 index += 1
             reel[index] = res.total_length - res.total_scats
-            frequency = [reel for _ in range(game.window[0])]
+            frequency = [copy.deepcopy(reel) for _ in range(game.window[0])]
+            frequency = notice_positions(frequency, game.base)
+            for i in range(game.window[0]):
+                while sum(game.base.frequency[i]) < res.total_length:
+                    frequency[i][index] += 1
             game.base.fill_frequency(frequency)
             game.base.fill_scatter_num_comb(game.window)
         temp_HR = game.count_hitrate2()
 
+    print('temp_HR: ', temp_HR)
     return res
 
 

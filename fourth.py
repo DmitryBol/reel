@@ -24,7 +24,7 @@ for sees in FILES:
         interim = json.loads(j)
 
         obj = Q.Game(interim)
-        obj.deleteline(i)
+        obj.delete_line(i)
 
         obj.base.reel_generator(frequency, obj.window[0], obj.distance)
         obj.free.reel_generator(frequency, obj.window[0], obj.distance)

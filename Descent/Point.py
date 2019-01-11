@@ -11,9 +11,9 @@ ewildInf = 0.015
 
 
 class GametypePoint:
-    def __init__(self, frequency, gametype):
+    def __init__(self, frequency, gametype, reels):
         self.frequency = notice_positions(frequency, gametype)
-        self.reels = None
+        self.reels = reels
         self.type_name = gametype.name
         return
 
@@ -62,13 +62,14 @@ class GametypePoint:
 
 
 class Point:
-    def __init__(self, main_frequency, second_frequency, game: Game, main_type='base'):
+    def __init__(self, main_frequency, second_frequency, game: Game, main_type='base', base_reels=None, free_reels=None):
+        # print('point base reels: ', base_reels)
         if main_type == 'base':
-            self.base = GametypePoint(main_frequency, game.base)
-            self.free = GametypePoint(second_frequency, game.free)
+            self.base = GametypePoint(main_frequency, game.base, base_reels)
+            self.free = GametypePoint(second_frequency, game.free, free_reels)
         elif main_type == 'free':
-            self.base = GametypePoint(second_frequency, game.base)
-            self.free = GametypePoint(main_frequency, game.free)
+            self.base = GametypePoint(second_frequency, game.base, base_reels)
+            self.free = GametypePoint(main_frequency, game.free, free_reels)
         else:
             raise Exception('Not supported gametype')
 
@@ -102,9 +103,13 @@ class Point:
         if base:
             metrics_list.append(np.fabs(base_rtp - self.base_rtp) / err_base_rtp)
         else:
-            metrics_list.append(np.fabs(rtp - self.rtp) / err_rtp)
+            if rtp != -1:
+                metrics_list.append(np.fabs(rtp - self.rtp) / err_rtp)
             if sd_flag:
-                metrics_list.append(np.fabs(sdnew - self.sdnew) / err_sdnew)
+                if sdnew != -1:
+                    metrics_list.append(np.fabs(sdnew - self.sdnew) / err_sdnew)
+        if len(metrics_list) == 0:
+            return 0
         return max(metrics_list)
 
     def fill_point_metric(self, params, base=True, sd_flag=False):
@@ -116,10 +121,12 @@ class Point:
         else:
             self.free.scaling(scale=scale)
 
-    def fill_point(self, game, params, base=True, sd_flag=False,
+    def fill_point(self, game: Game, params, base=True, sd_flag=False,
                    base_shuffle=True, free_shuffle=True):
         if base:
             self.base.fill(game.base, shuffle=base_shuffle)
+        else:
+            self.base.fill(game.base, shuffle=False)
         self.free.fill(game.free, shuffle=free_shuffle)
 
         point_params = game.count_parameters(base, sd_flag)
