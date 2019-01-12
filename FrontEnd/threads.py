@@ -5,7 +5,7 @@ import simulate
 
 
 class Threaded(QObject):
-    generate_reels_result = pyqtSignal(str)
+    generate_reels_result = pyqtSignal()
     count_parameters_result = pyqtSignal(dict)
     simulation_result = pyqtSignal(dict)
 

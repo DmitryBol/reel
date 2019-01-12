@@ -1076,7 +1076,7 @@ class Window(QtWidgets.QWidget):
         self.progressbar.setRange(0, 0)
         self.request_simulation.emit(self.game)
 
-    @QtCore.pyqtSlot(str)
+    @QtCore.pyqtSlot()
     def generate_reels_finished(self):
         self.real_thread.terminate()
         self.line_log.setStyleSheet('QLineEdit {color: green; border: none}')
@@ -1247,7 +1247,8 @@ class Main(QtWidgets.QMainWindow):
     def trigger_calculate(self):
         current = self.tab.currentWidget()
         try:
-            current.calculate_preprocess()
+            if current.mode is False:
+                current.calculate_preprocess()
             current.real_thread.finished.connect(self.enable_bar)
             current.calculate()
 
