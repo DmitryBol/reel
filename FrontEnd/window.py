@@ -581,7 +581,7 @@ class Symbol(QtWidgets.QWidget):
 
 class Window(QtWidgets.QWidget):
     request_reels = QtCore.pyqtSignal(Q.Game, str)
-    request_parameters = QtCore.pyqtSignal(Q.Game)
+    request_parameters = QtCore.pyqtSignal(Q.Game, bool)
     request_simulation = QtCore.pyqtSignal(Q.Game)
 
     def __init__(self, path=None):
@@ -1067,7 +1067,7 @@ class Window(QtWidgets.QWidget):
         self.line_log.setText('Counting parameters...')
         self.progressbar.setRange(0, 0)
 
-        self.request_parameters.emit(self.game)
+        self.request_parameters.emit(self.game, self.mode)
 
     def simulation(self):
         self.real_thread.start()
@@ -1082,6 +1082,7 @@ class Window(QtWidgets.QWidget):
         self.line_log.setStyleSheet('QLineEdit {color: green; border: none}')
         self.line_log.setText("process finished")
         self.progressbar.setRange(0, 100)
+        print("reels on generate_reels XDDDDD end: ", self.game.base.reels)
 
     @QtCore.pyqtSlot(dict)
     def count_parameters_finished(self, parameters):

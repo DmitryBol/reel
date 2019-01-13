@@ -20,11 +20,14 @@ class Threaded(QObject):
         print("reels on generate_reels end: ", game.base.reels)
         self.generate_reels_result.emit()
 
-    @pyqtSlot(structure.Game)
-    def count_parameters(self, game: structure.Game):
+    @pyqtSlot(structure.Game, bool)
+    def count_parameters(self, game: structure.Game, mode: bool):
         print("reels on count_parameters start: ", game.base.reels)
         print("frequency on count_parameters start: ", game.base.frequency)
-        parameters = game.standalone_count_parameters()
+        if mode is True:
+            parameters = game.standalone_count_parameters(shuffle=False)
+        else:
+            parameters = game.standalone_count_parameters()
         self.count_parameters_result.emit(parameters)
 
     @pyqtSlot(structure.Game)
