@@ -23,7 +23,8 @@ class Threaded(QObject):
     @pyqtSlot(structure.Game)
     def count_parameters(self, game: structure.Game):
         print("reels on count_parameters start: ", game.base.reels)
-        parameters = game.standalone_count_parameters(shuffle=False)
+        print("frequency on count_parameters start: ", game.base.frequency)
+        parameters = game.standalone_count_parameters()
         self.count_parameters_result.emit(parameters)
 
     @pyqtSlot(structure.Game)
