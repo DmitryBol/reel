@@ -182,6 +182,20 @@ class Gametype:
     def fill_reels(self, input_reels):
         self.reels = copy.deepcopy(input_reels)
 
+    def fill_frequency_from_reels(self, reels):
+        print("reels on fill_frequency_from_reels start: ", reels)
+        frequency = []
+        max_symbol_id = -1
+        for reel in reels:
+            for symbol_id in reel:
+                if symbol_id > max_symbol_id:
+                    max_symbol_id = symbol_id
+        for reel_id in range(len(reels)):
+            frequency.append([0 for _ in range(max_symbol_id + 1)])
+            for symbol_id in reels[reel_id]:
+                frequency[reel_id][symbol_id] += 1
+        self.frequency = frequency
+
     get_combination = rg.get_simple_combination
     count_combinations2 = rg.count_combinations2
     count_num_comb = rg.count_num_comb
@@ -518,6 +532,9 @@ class Game:
         if shuffle:
             self.base.reel_generator(self.base.frequency, self.window[0], self.distance, validate=True)
             self.free.reel_generator(self.free.frequency, self.window[0], self.distance, validate=True)
+        else:
+            self.base.fill_frequency_from_reels(self.base.reels)
+            self.free.fill_frequency_from_reels(self.free.reels)
 
         self.base.create_simple_num_comb(self.window, self.line)
         self.base.fill_scatter_num_comb(self.window)

@@ -13,15 +13,17 @@ class Threaded(QObject):
         super(Threaded, self).__init__()
 
     @pyqtSlot(structure.Game, str)
-    def generate_reels(self, game, output):
+    def generate_reels(self, game: structure.Game, output):
         output_file = open(output, "w")
-        main_process(game_structure=game, out_log=output_file)
+        game = main_process(game_structure=game, out_log=output_file)
         output_file.close()
+        print("reels on generate_reels end: ", game.base.reels)
         self.generate_reels_result.emit()
 
     @pyqtSlot(structure.Game)
-    def count_parameters(self, game):
-        parameters = game.standalone_count_parameters()
+    def count_parameters(self, game: structure.Game):
+        print("reels on count_parameters start: ", game.base.reels)
+        parameters = game.standalone_count_parameters(shuffle=False)
         self.count_parameters_result.emit(parameters)
 
     @pyqtSlot(structure.Game)
