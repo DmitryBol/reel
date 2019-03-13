@@ -1,54 +1,39 @@
 import FrontEnd.structure_alpha as Q
 import json
+from FrontEnd.reelWork.reel_generator_alpha import is_comparable
 
-frequency = [
-    [0, 1, 30, 42, 51, 54, 69, 78, 84, 96],
-    [0, 1, 30, 42, 51, 54, 69, 78, 84, 96],
-    [0, 1, 30, 42, 51, 54, 69, 78, 84, 96],
-    [0, 1, 30, 42, 51, 54, 69, 78, 84, 96],
-    [0, 1, 30, 42, 51, 54, 69, 78, 84, 96]
+base_frequency = [
+    [12, 12, 20, 20, 20, 20, 20, 20, 20, 20, 20, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [12, 12, 20, 20, 20, 20, 20, 20, 20, 20, 20, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [12, 12, 20, 20, 20, 20, 20, 20, 20, 20, 20, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [12, 12, 20, 20, 20, 20, 20, 20, 20, 20, 20, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [12, 12, 20, 20, 20, 20, 20, 20, 20, 20, 20, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ]
 
-# frequency = [
-#     [0, 6, 6, 9, 12, 18, 18, 27, 27, 27],
-#     [0, 6, 6, 9, 12, 18, 18, 27, 27, 27],
-#     [0, 6, 6, 9, 12, 18, 18, 27, 27, 27],
-#     [0, 6, 6, 9, 12, 18, 18, 27, 27, 27],
-#     [0, 6, 6, 9, 12, 18, 18, 27, 27, 27]
-# ]
+free_frequency = [
+    [12, 12, 20, 20, 20, 20, 20, 20, 20, 20, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [12, 12, 20, 20, 20, 20, 20, 20, 20, 20, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [12, 12, 20, 20, 20, 20, 20, 20, 20, 20, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [12, 12, 20, 20, 20, 20, 20, 20, 20, 20, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [12, 12, 20, 20, 20, 20, 20, 20, 20, 20, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+]
 
-# frequency = [
-#     [9, 9, 9, 15, 15, 18, 18, 18, 24, 24],
-#     [9, 9, 9, 15, 15, 18, 18, 18, 24, 24],
-#     [9, 9, 9, 15, 15, 18, 18, 18, 24, 24],
-#     [9, 9, 9, 15, 15, 18, 18, 18, 24, 24],
-#     [9, 9, 9, 15, 15, 18, 18, 18, 24, 24]
-# ]
+file = open('/home/amvasylev/PycharmProjects/reel/Games/slot_1_3.json', 'r')
 
-new_frequency = []
-reel_id = 0
-
-for reel in frequency:
-    new_frequency.append([])
-    index = 0
-    for element in reel:
-        new_frequency[reel_id].append(element)
-        index += 1
-    reel_id += 1
-
-file = open('/home/amvasylev/PycharmProjects/reel/Games/GoldGold.json', 'r')
 j = file.read()
 interim = json.loads(j)
 game = Q.Game(interim)
 file.close()
 
-game.base.reel_generator(frequency_array=new_frequency, window_width=5, reel_distance=3, validate=False)
+print(len(game.base.symbol))
 
-# game.free.reel_generator(frequency_array=new_frequency, window_width=5, reel_distance=3, validate=False)
+# print(is_comparable(1, [2, 2, 2, 2, 2], [4, 5], game.base.symbol))
 
-print('{')
+game.base.reel_generator(frequency_array=base_frequency, window_width=game.window[0], reel_distance=4, validate=False)
+game.free.reel_generator(frequency_array=free_frequency, window_width=game.window[0], reel_distance=4, validate=False)
+
+print('base:\n{')
 for reel in game.base.reels:
-    # for reel in game.free.reels:
     out_str = '    {'
     for symbol in reel:
         out_str += str(symbol + 1) + ', '
@@ -57,9 +42,30 @@ for reel in game.base.reels:
 print('}')
 
 for reel in game.base.reels:
-    # for reel in game.free.reels:
     s = '- ['
     for element in reel:
         s += str(element + 1) + ', '
     s = s[:-2] + ']'
     print(s)
+
+print('\n\nfree:\n{')
+for reel in game.free.reels:
+    out_str = '    {'
+    for symbol in reel:
+        out_str += str(symbol + 1) + ', '
+    out_str = out_str[:-2] + '},'
+    print(out_str)
+print('}')
+
+for reel in game.free.reels:
+    s = '- ['
+    for element in reel:
+        s += str(element + 1) + ', '
+    s = s[:-2] + ']'
+    print(s)
+
+# exit(1)
+
+game.base.frequency = base_frequency
+game.free.frequency = free_frequency
+print(game.standalone_count_parameters(shuffle=False))

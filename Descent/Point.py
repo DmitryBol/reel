@@ -1,8 +1,6 @@
 import copy
 import numpy as np
 from simple_functions_for_fit import notice_positions
-from FrontEnd.structure_alpha import Gametype
-from FrontEnd.structure_alpha import Game
 from FrontEnd.reelWork.reel_generator_alpha import reel_generator
 
 Inf = 0.05
@@ -17,7 +15,7 @@ class GametypePoint:
         self.type_name = gametype.name
         return
 
-    def generate_reels(self, gametype: Gametype, frequency=None):
+    def generate_reels(self, gametype, frequency=None):
         if self.frequency is None and frequency is None:
             raise Exception('None frequency during reel generator')
         if frequency is not None:
@@ -62,7 +60,7 @@ class GametypePoint:
 
 
 class Point:
-    def __init__(self, main_frequency, second_frequency, game: Game, main_type='base', base_reels=None, free_reels=None):
+    def __init__(self, main_frequency, second_frequency, game, main_type='base', base_reels=None, free_reels=None):
         # print('point base reels: ', base_reels)
         if main_type == 'base':
             self.base = GametypePoint(main_frequency, game.base, base_reels)
@@ -88,7 +86,7 @@ class Point:
     def get_free_frequency(self):
         return self.free.frequency
 
-    def check(self, game: Game):
+    def check(self, game):
         return game.base.check(self.get_base_frequency()) and game.free.check(self.get_free_frequency())
 
     def metric(self, params, base=True, sd_flag=False):
@@ -121,7 +119,7 @@ class Point:
         else:
             self.free.scaling(scale=scale)
 
-    def fill_point(self, game: Game, params, base=True, sd_flag=False,
+    def fill_point(self, game, params, base=True, sd_flag=False,
                    base_shuffle=True, free_shuffle=True):
         if base:
             self.base.fill(game.base, shuffle=base_shuffle)

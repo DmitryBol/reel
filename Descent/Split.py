@@ -1,6 +1,5 @@
 import copy
 from random import shuffle
-from FrontEnd.structure_alpha import Gametype
 
 Inf = 0.05
 wildInf = 0.025
@@ -75,7 +74,7 @@ class Split:
                     self.frequency[reel_id][group[len(group) - 1 - j]] += 1
         return
 
-    def group_transfer(self, gametype: Gametype, source_group, destination_group, balance=True):
+    def group_transfer(self, gametype, source_group, destination_group, balance=True):
         new_frequency = copy.deepcopy(self.frequency)
 
         totals = [sum(self.frequency[reel_id]) for reel_id in range(len(self.frequency))]

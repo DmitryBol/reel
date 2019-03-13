@@ -2,11 +2,9 @@ import time
 import json
 import copy
 
-import simulate
 from Descent.Optimize import descent_base, descent_free
 from Descent.rebalance import rebalance
 from FrontEnd.reelWork.reel_generator_alpha import indexes_to_names
-from FrontEnd.structure_alpha import Game
 from Descent.Point import Point
 
 
@@ -87,15 +85,15 @@ def is_done(current_point, start_time, game_name, game, out_log, plot_name):
     return False
 
 
-def main_process(out_log, max_rebalance_count=5, plot_name=None, game_structure: Game = None, game_name=None):
+def main_process(out_log, max_rebalance_count=5, plot_name=None, game_structure=None, game_name=None):
     if game_name is not None:
         file = open(game_name, 'r')
         j = file.read()
         interim = json.loads(j)
-        game: Game = Game(interim)
+        # game = Game(interim)
         file.close()
     elif game_structure is not None:
-        game: Game = copy.deepcopy(game_structure)
+        game = copy.deepcopy(game_structure)
     else:
         raise Exception('There is no structure Game or rules file for main process')
     params = {'rtp': game.RTP[0], 'err_rtp': game.RTP[1], 'base_rtp': game.baseRTP[0], 'err_base_rtp': game.baseRTP[1],

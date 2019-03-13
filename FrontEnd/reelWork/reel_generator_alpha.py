@@ -227,7 +227,7 @@ def reel_generator(gametype, frequency_array, window_width, reel_distance, valid
             if gametype.symbol[i].wild.expand:
                 seniors.append(i)
 
-    print("frequency on reel_generator start: ", frequency_array)
+    # print("frequency on reel_generator start: ", frequency_array)
     for i in range(window_width):
         res.append(generate_one_reel(gametype.symbol, frequency_array[i], reel_distance, seniors))
 
@@ -397,7 +397,7 @@ def fill_count_killed(self, window_width):
 
 
 def fill_scatter_num_comb(self, window):
-    print("frequency on fill_scatter_num_comb start: ", self.frequency)
+    # print("frequency on fill_scatter_num_comb start: ", self.frequency)
     self.scatter_num_comb = []
     ind = 0
     for scat in self.scatterlist:

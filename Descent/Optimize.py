@@ -2,7 +2,6 @@ import simple_functions_for_fit as sm
 import copy
 from Descent.Point import Point
 from Descent.Groups import Group
-from FrontEnd.structure_alpha import Game
 from Descent.parameters_utils import get_parameters_from_dict
 
 Inf = 0.025
@@ -78,7 +77,7 @@ def fresh_free_scatters(free_frequency, scatterlist, free_symbols, window_width,
     return
 
 
-def initial_base_distributions(game: Game, scatter_frequency_result, params, max_len=100):
+def initial_base_distributions(game, scatter_frequency_result, params, max_len=100):
     free_frequency = [[max_len // len(game.free.symbol) for _ in range(len(game.free.symbol))] for _ in
                       range(game.window[0])]
 

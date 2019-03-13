@@ -1,9 +1,17 @@
 # coding=utf-8
+import time
+
 import numpy as np
 import itertools
 import re
 import copy
 import matplotlib.pyplot as plt
+from Descent.main_process import descent_base
+from Descent.main_process import descent_free
+from Descent.main_process import rebalance
+from Descent.main_process import is_done
+from Descent.main_process import print_res
+from Descent.main_process import create_plot
 
 from FrontEnd import moments
 # import moments
@@ -601,3 +609,89 @@ class Game:
         plt.savefig(out_plot)
         plt.clf()
         return
+
+    def main_process(self, out_log, max_rebalance_count=5, plot_name=None, game_name=None):
+        params = {'rtp': self.RTP[0], 'err_rtp': self.RTP[1], 'base_rtp': self.baseRTP[0],
+                  'err_base_rtp': self.baseRTP[1],
+                  'sdnew': self.volatility[0], 'err_sdnew': self.volatility[1], 'hitrate': self.hitrate[0],
+                  'err_hitrate': self.hitrate[1]}
+
+        rebalance_count = 0
+        start_time = time.time()
+        free_mode = params['hitrate'] > 0
+
+        current_point, self = descent_base(params, self, balance=True)
+        if free_mode:
+            current_point, self = descent_free(game=self, params=params, start_point=current_point)
+
+        current_point.collect_params(self)
+        default_SD = current_point.sdnew
+        print('default_SD: ', default_SD)
+        min_SD = default_SD * 0.95
+        if free_mode:
+            max_SD = default_SD * 1.25
+        else:
+            max_SD = default_SD * 1.90
+        if params['sdnew'] < min_SD or params['sdnew'] > max_SD:
+            exception_str = 'This SD is not compatible with current RTP, base RTP. Please, select SD between ' + str(
+                round(min_SD, 2)) + ' and ' + str(round(max_SD, 2))
+            raise Exception(exception_str)
+
+        print('REBALANCE BASE')
+        current_point, self = rebalance(current_point, self, self.base, params=params)
+        if is_done(current_point, start_time, game_name, self, out_log, plot_name):
+            return self
+        if free_mode:
+            print('REBALANCE FREE')
+            # print(current_point.freeFrequency)
+            current_point, self = rebalance(current_point, self, self.free, params=params)
+        if is_done(current_point, start_time, game_name, self, out_log, plot_name):
+            return self
+
+        rebalance_count += 1
+        current_value = current_point.get_value()
+
+        while rebalance_count < max_rebalance_count:
+            current_point, self = descent_base(params=params, game=self, balance=False, start_point=current_point)
+            if free_mode:
+                current_point, self = descent_free(game=self, params=params, start_point=current_point, balance=False)
+
+            current_point, self = rebalance(start_point=current_point, game=self, gametype=self.base, params=params)
+            if free_mode:
+                current_point, self = rebalance(current_point, self, self.free, params=params)
+            if is_done(current_point, start_time, game_name, self, out_log, plot_name):
+                return self
+
+            prev_value = current_value
+            current_value = current_point.get_value()
+
+            if current_value == prev_value:
+                current_point.scaling(base=True)
+                current_point.scaling(base=False)
+
+            rebalance_count += 1
+
+        if is_done(current_point, start_time, game_name, self, out_log, plot_name):
+            return self
+
+        current_point, self = descent_base(params=params, game=self, balance=False, start_point=current_point)
+
+        if free_mode:
+            current_point, self = descent_free(game=self, params=params, start_point=current_point, balance=False)
+
+        current_point.collect_params()
+
+        print('Base RTP:', current_point.base_rtp, 'RTP:', current_point.rtp, 'SD:', current_point.sdnew, 'Hitrate: ',
+              current_point.hitrate)
+
+        print_res(out_log, current_point, game_name, self)
+        create_plot(plot_name, current_point, self)
+
+        spend_time = time.time() - start_time
+        hours = int(spend_time / 60 / 60)
+        mins = int((spend_time - hours * 3600) / 60)
+        sec = int(spend_time - hours * 3600 - mins * 60)
+
+        print(game_name + ' done in ' + str(hours) + 'h ' + str(mins) + 'min ' + str(sec) + 'sec')
+
+        return self

@@ -1,8 +1,6 @@
 import copy
 from Descent.Point import Point
 from Descent.Optimize import double_bubble
-from FrontEnd.structure_alpha import Game
-from FrontEnd.structure_alpha import Gametype
 
 Inf = 0.015
 wildInf = 0.015
@@ -96,7 +94,7 @@ def chess(frequency, i, j, game, k=1, base=True):
     return new_frequency
 
 
-def binary_search(game: Game, gametype: Gametype, start_point: Point, params, sorted_symbols, i, j, right, left=1):
+def binary_search(game, gametype, start_point: Point, params, sorted_symbols, i, j, right, left=1):
     if gametype.name == 'base':
         main_frequency = start_point.base.frequency
         second_frequency = start_point.free.frequency
@@ -149,7 +147,7 @@ def binary_search(game: Game, gametype: Gametype, start_point: Point, params, so
     return middle
 
 
-def rebalance(start_point: Point, game: Game, gametype: Gametype, params):
+def rebalance(start_point: Point, game, gametype, params):
     print('REBALANCE')
 
     print('\n\n\n')

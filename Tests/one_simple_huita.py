@@ -1,36 +1,70 @@
-from random import randint
-from random import uniform
+start = [
+    [1, 1, 1, 1, 1],
+    [1, 1, 2, 1, 1],
+    [1, 1, 3, 1, 1],
+    [1, 2, 1, 2, 1],
+    [1, 2, 2, 2, 1],
+    [1, 2, 3, 2, 1],
+    [1, 3, 1, 3, 1],
+    [1, 3, 2, 3, 1],
+    [1, 3, 3, 3, 1],
 
-repeat_cnt = 1000000
-map_ = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
-rounds = 10
+    [2, 1, 1, 1, 2],
+    [2, 1, 2, 1, 2],
+    [2, 1, 3, 1, 2],
+    [2, 2, 1, 2, 2],
+    [2, 2, 2, 2, 2],
+    [2, 2, 3, 2, 2],
+    [2, 3, 1, 3, 2],
+    [2, 3, 2, 3, 2],
+    [2, 3, 3, 3, 2],
 
-for _ in range(repeat_cnt):
-    counters = [0, 0, 0, 0, 0]
+    [3, 1, 1, 1, 3],
+    [3, 1, 2, 1, 3],
+    [3, 1, 3, 1, 3],
+    [3, 2, 1, 2, 3],
+    [3, 2, 2, 2, 3],
+    [3, 2, 3, 2, 3],
+    [3, 3, 1, 3, 3],
+    [3, 3, 2, 3, 3],
+    [3, 3, 3, 3, 3],
 
-    for _ in range(rounds):
-        upper_bound = 5
-        for item in counters:
-            if item == 3:
-                upper_bound -= 1
-        if upper_bound == 0:
-            break
-        column = randint(0, upper_bound - 1)
-        rnd = uniform(0, 1)
-        while counters[column] == 3:
-            column += 1
-        if rnd < 0.62:
-            counters[column] += 1
+    [1, 1, 2, 3, 3],
+    [1, 2, 1, 2, 3],
+    [1, 3, 2, 1, 3],
+    [2, 1, 2, 3, 2],
+    [2, 3, 2, 1, 2],
+    [3, 1, 2, 3, 1],
+    [3, 2, 2, 2, 1],
+    [3, 3, 2, 1, 1],
 
-    three_counter = 0
-    for item in counters:
-        if item == 3:
-            three_counter += 1
-    map_[three_counter] += 1
+    [1, 1, 2, 1, 1],
+    [1, 2, 1, 3, 1],
+    [1, 3, 2, 2, 1],
+    [2, 1, 2, 1, 3],
+    [2, 3, 2, 2, 3],
+    [3, 1, 2, 1, 2],
+    [3, 2, 2, 1, 2],
+    [3, 3, 2, 1, 1],
+    [1, 1, 2, 2, 2],
+    [1, 2, 1, 1, 2],
+    [1, 3, 2, 3, 2],
+    [2, 1, 2, 2, 1],
+    [2, 3, 2, 3, 1],
+    [3, 1, 2, 2, 3],
+    [3, 2, 2, 1, 3],
+    [3, 3, 2, 3, 3],
 
-print(map_[0]/repeat_cnt)
-print(map_[1]/repeat_cnt)
-print(map_[2]/repeat_cnt)
-print(map_[3]/repeat_cnt)
-print(map_[4]/repeat_cnt)
-print(map_[5]/repeat_cnt)
+    [1, 2, 1, 1, 1],
+    [3, 1, 3, 3, 3]
+  ]
+
+
+end = [tuple(x) for x in start]
+res = [list(x) for x in set(end)]
+res.sort()
+
+print(len(res))
+
+for x in res:
+    print(str(x) + ",")
